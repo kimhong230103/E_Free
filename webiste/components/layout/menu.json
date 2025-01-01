@@ -1,0 +1,40 @@
+{
+  "menu": [
+    {
+      "league": "Bundesliga",
+      "logo": "/league/bundesliga/logo.png",
+      "team": [
+        {
+          "name": "Bayer 04 Leverkusen",
+          "logo": "/league/bundesliga/team/bayer_leverkusen.png"
+        },
+        {
+          "name": "FC Bayern Munich",
+          "logo": "/league/bundesliga/team/bayern_munich.png"
+        },
+        {
+          "name": "Borussia Dortmund",
+          "logo": "/league/bundesliga/team/dormund.png"
+        }
+      ]
+    },
+    {
+      "league": "Laliga",
+      "logo": "/league/laliga/logo.png",
+      "team": [
+        {
+          "name": "Real Madrid CF",
+          "logo": "/league/laliga/team/real_madrid.png"
+        },
+        {
+          "name": "FC Barcelona",
+          "logo": "/league/laliga/team/barcelona.png"
+        },
+        {
+          "name": "Girona FC",
+          "logo": "/league/laliga/team/girona.png"
+        }
+      ]
+    }
+  ]
+}
