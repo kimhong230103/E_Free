@@ -264,8 +264,8 @@
     openProfileModal.value = true;
     state.modal.show();
     if (editId) {
-      const data = await ifetch(userAPI.get_edit, { id: editId });
-      Object.assign(form, data);
+      // const data = await ifetch(userAPI.get_edit, { id: editId });
+      // Object.assign(form, data);
       userTypeChange();
     }
   };
@@ -285,9 +285,9 @@
   };
 
   const userTypeChange = async ($event) => {
-    const data = await ifetch(userAPI.get_role, {
-      user_type_id: form.user_type_id,
-    });
+    // const data = await ifetch(userAPI.get_role, {
+    //   user_type_id: form.user_type_id,
+    // });
     role.list = data;
   };
 
@@ -302,8 +302,8 @@
   };
 
   onMounted(async () => {
-    const data = await ifetch(userAPI.get_edit, { id: auth.value.id });
-    Object.assign(form, data);
+    // const data = await ifetch(userAPI.get_edit, { id: auth.value.id });
+    // Object.assign(form, data);
     userTypeChange();
   });
 </script>

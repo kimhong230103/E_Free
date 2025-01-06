@@ -338,8 +338,8 @@
   const showModal = async (editId = null) => {
     state.modal_demo.show();
     if (editId) {
-      const data = await ifetch(userAPI.get_edit, { id: editId });
-      Object.assign(form, data);
+      // const data = await ifetch(userAPI.get_edit, { id: editId });
+      // Object.assign(form, data);
       userTypeChange();
     }
   };
@@ -363,10 +363,10 @@
   };
 
   const userTypeChange = async ($event) => {
-    const data = await ifetch(userAPI.get_role, {
-      user_type_id: form.user_type_id,
-    });
-    role.list = data;
+    // const data = await ifetch(userAPI.get_role, {
+    //   user_type_id: form.user_type_id,
+    // });
+    // role.list = data;
   };
 
   const closeModal = (isRefresh = false) => {

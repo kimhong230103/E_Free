@@ -49,45 +49,21 @@ export const useUserStore = defineStore({
   },
   actions: {
     async login(request) {
-      const data = await ifetch("/login", request);
+      const data = await ifetch("auth/login", request);
       var now = new Date();
       var time = now.getTime();
-      var expireTime = time + 1000 * 36000;
-      Cookies.set(useRuntimeConfig().public.cookie_key, data.token, {
+      var expireTime = time + 1000 * 3600;
+      Cookies.set(useRuntimeConfig().public.cookie_key, data.accessToken, {
         expires: expireTime,
       });
       const initStore = useInitStore();
       initStore.setData(data);
-      this.requestToken();
+      // this.requestToken();
       useRouter().push({ path: "/" });
     },
     async requestToken() {
       try {
-        const permission = await Notification.requestPermission();
-        /** If allow notification */
-        if (permission === "granted") {
-          const { $messaging } = useNuxtApp();
-          getToken($messaging, {
-            vapidKey:
-              "BL_ycNiyaTtWg1Caq119AtJgODj8KiUVsWM0qq1MmDNUetKME6NJlb7LIGnEu7lBhKkC36mPyMPvUbkRwvbOTdo",
-          }).then((token) => {
-            if (token) {
-              // console.log("token", token);
-              /**
-               * Check and Generate Device Id
-               */
-              this.device_id = Cookies.get("browser-id");
-
-              if (nullToVoid(this.device_id) == "") {
-                this.device_id = generateUUID();
-                Cookies.set("browser-id", this.device_id, { expires: 365 });
-              }
-              this.updateToken(token);
-            } else {
-              console.log("token can not generate");
-            }
-          });
-        }
+          alert(0)
       } catch (e) {
         console.error(e);
       }
@@ -103,7 +79,7 @@ export const useUserStore = defineStore({
     },
     setData(data) {
       this.token = Cookies.get(useRuntimeConfig().public.cookie_key);
-      this.user = data.user;
+      // this.user = data.user;
       this.logged = true;
     },
     async logout() {

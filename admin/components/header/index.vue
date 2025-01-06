@@ -2,7 +2,7 @@
   <div class="header-wrapper row m-0">
     <!-- <SearchBar /> -->
     <Logo />
-    <div class="col-xxl-2 col-xl-2 col-md-3 col-4" v-if="userTypeStore.lists[0].type!='branch'">
+    <!-- <div class="col-xxl-2 col-xl-2 col-md-3 col-4" v-if="userTypeStore.lists[0].type!='branch'">
       <div class="form-group">
         <select v-model="branch_id" class="form-control" @change="changeBranch">
           <option :value="null">{{ $t("please_select_branch") }}</option>
@@ -15,7 +15,7 @@
           </option>
         </select>
       </div>
-    </div>
+    </div> -->
     <div
       class="nav-right col-xxl-7 col-xl-6 col-md-6 col-7 pull-right right-header p-0 ms-auto"
     >
@@ -70,12 +70,12 @@
   const userTypeStore = useUserTypeStore();
   const branchStore = useBranchStore();
   const branch_id=ref(userStore.user.branch_id);
-  if(userTypeStore.lists[0].type=='branch'){
-    branchStore.branch_id=userStore.user.branch_id;
-  }else{
-    branchStore.branch_id=null;
-  }
-  const changeBranch=()=>{
-    branchStore.branch_id=branch_id.value;
-  }
+  // if(userTypeStore.lists[0].type=='branch'){
+  //   branchStore.branch_id=userStore.user.branch_id;
+  // }else{
+  //   branchStore.branch_id=null;
+  // }
+  // const changeBranch=()=>{
+  //   branchStore.branch_id=branch_id.value;
+  // }
 </script>
