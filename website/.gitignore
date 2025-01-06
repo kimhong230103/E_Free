@@ -1,0 +1,11 @@
+.nuxt
+.env
+.output
+dist
+package-lock.json
+yarn-error.log
+yarn.lock
+node_modules
+public/firebase-messaging-sw.js
+ecosystem.config.cjs
+pnpm-lock.yaml

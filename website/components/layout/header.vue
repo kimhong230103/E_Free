@@ -1,0 +1,417 @@
+<template>
+  <div class="card header-card">
+    <div class="px-2 px-md-5 py-2">
+      <div class="row align-items-center">
+        <div class="col-3">
+          <div class="d-flex align-items-center">
+            <el-button class="min-992-none" @click="drawer = true">
+              <Icon name="solar:list-linear" size="30px" />
+            </el-button>
+            <h3
+              class="max-992-none"
+              @click="navigateTo('/')"
+              style="cursor: pointer"
+            >
+              <img class="for-light" height="60px" src="/e-free-logo.png" alt="" />
+            </h3>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="d-flex justify-content-center">
+            <h3
+              class="min-992-none"
+              @click="navigateTo('/')"
+              style="cursor: pointer"
+            >
+              <img class="for-light" height="50px" src="/e-free-logo.png" alt="" />
+            </h3>
+            <div class="d-none d-lg-block menu w-100" id="menu-header-desktop">
+              <ul class="d-flex justify-content-center align-items-center gap-5">
+                <li
+                  class="btn fw-bold fs-6"
+                  :class="{
+                    'active-menu': isMenuActive(menu),
+                  }"
+                  v-for="menu in menus"
+                  @click="navigateTo({ path: menu.link })"
+                  :key="menu"
+                >
+                  {{ $t(menu.title) }}
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="col-3">
+          <div class="d-flex justify-content-end">
+            <div class="d-flex align-items-center gap-2">
+              <div
+                v-if="nullToVoid(userStore.user.id) != ''"
+                class="dropdown-center"
+              >
+                <Icon
+                  v-if="userStore.user.profile_image == null"
+                  name="material-symbols:account-circle-full"
+                  size="27"
+                  style="color: #7d7d7c; cursor: pointer"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                />
+                <img
+                  v-else
+                  :src="
+                    getImagePath(userStore.user.profile_image, 'user_client')
+                  "
+                  class="rounded-circle img-thumbnail dropdown-toggle"
+                  style="cursor: pointer; width: 40px"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                />
+                <ul class="dropdown-menu dropdown-menu-end">
+                  <li @click="isFormProfilePopup = true, action_type = false">
+                    <button class="dropdown-item" type="button">
+                      <Icon
+                        name="material-symbols-light:account-circle"
+                        size="25"
+                      ></Icon>
+                      {{ $t("profile") }}
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      class="dropdown-item"
+                      type="button"
+                      @click="sign_out()"
+                    >
+                      <Icon
+                        name="material-symbols-light:logout-rounded"
+                        size="25"
+                      ></Icon>
+                      {{ $t("sign_out") }}
+                    </button>
+                  </li>
+                </ul>
+              </div>
+              <div v-else>
+                <el-button
+                  @click="signUp()"
+                  type="primary"
+                  class="btn-signup max-992-none"
+                  round
+                  >{{ $t("signup") }}</el-button
+                >
+                <el-button
+                  @click="signIn()"
+                  type="primary"
+                  class="btn-login max-992-none"
+                  round
+                  >{{ $t("login") }}</el-button
+                >
+              </div>
+
+              <el-switch
+                size="large"
+                v-model="darkMode"
+                :active-action-icon="Moon"
+                :inactive-action-icon="Sunny"
+                @change="onDarkModeChange"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div v-if="showSignUpModal">
+      <SignUp
+        ref="signUpRef"
+        @closeModal="closeModalSignOut"
+        @goToSignIn="signIn"
+      />
+    </div>
+    <div v-if="showSignInModal">
+      <SignIn
+        ref="signInRef"
+        @closeModal="closeModalSignIn"
+        @goToSignUp="signUp"
+      />
+    </div>
+    <div v-if="isFormProfilePopup" class="control-profile-popup">
+      <Modal :action_type="action_type" @closeProfilePopup="closeProfilePopup"></Modal>
+    </div>
+  </div>
+</template>
+<script setup>
+import Cookies from "js-cookie";
+import { useDark, useToggle } from "@vueuse/core";
+import { Moon, Sunny, Bell } from "@element-plus/icons-vue";
+import { useWindowSize, useLocalStorage } from "@vueuse/core";
+import { menu } from "./menu.json";
+import SignUp from "~/components/SignUp/modal.vue";
+import SignIn from "~/components/SignIn/modal.vue";
+import { useUserStore } from "~/store/user";
+import { useNotificationStore } from "~/store/notification.js";
+import { notificationApi } from "~/constants/api";
+import { isSupported } from "firebase/messaging";
+import Modal from '~/components/Profile/modal.vue';
+const useNotification = useNotificationStore();
+const userStore = useUserStore();
+const darkMode = ref(false);
+const showSignUpModal = ref(false);
+const showSignInModal = ref(false);
+const showRequestMessagingToken = ref(false);
+const signUpRef = ref(null);
+const signInRef = ref(null);
+const requestMessagingTokenRef = ref(null);
+const { isDark, toggleDark } = useToggleDarkMode();
+const isFormProfilePopup = ref(false);
+const action_type = ref(true);
+
+const menus = ref([
+  {
+    title: "home",
+    link: "/",
+  },
+  {
+    title: "product",
+    link: `/product`,
+  },
+  {
+    title: "promotion",
+    link: "/promotion",
+  },
+  {
+    title: "order",
+    link: "/order",
+  },
+]);
+onMounted(async () => {
+  darkMode.value = isDark.value;
+});
+function onDarkModeChange() {
+  toggleDark();
+}
+
+
+const isMenuActive = (item) => {
+  if (nullToVoid(useRoute().params.slug) != "") {
+    let path = useRouter().currentRoute.value.path.split("/");
+    if(path[1] == "product" || path[1] == "promotion" || path[1] == "order" || path[1] == "history"){
+      return `/` == item.link;
+    }
+    return `/${path[1]}` == item.link;
+  }
+  return useRouter().currentRoute.value.path == item.link;
+};
+const drawer = ref(false);
+
+const signUp = () => {
+  drawer.value = false;
+  showSignUpModal.value = true;
+  showSignInModal.value = false;
+
+  nextTick(() => {
+    signUpRef.value.showModal();
+  });
+};
+const signIn = () => {
+  drawer.value = false;
+  showSignInModal.value = true;
+  showSignUpModal.value = false;
+  nextTick(() => {
+    signInRef.value.showModal();
+  });
+};
+const sign_out = async () => {
+  await userStore.logout();
+};
+const closeModalSignOut = (isRefresh) => {
+  showSignUpModal.value = false;
+  isFormProfilePopup.value = true;
+  if (isRefresh) {
+  }
+};
+
+const closeModalSignIn = (isRefresh) => {
+  showSignInModal.value = false;
+  if (isRefresh) {
+  }
+};
+
+
+const closeProfilePopup = () => {
+  isFormProfilePopup.value = false;
+}
+</script>
+<style>
+.modal{
+  background-color: rgba(0, 0, 0, 0.324) !important;
+}
+.modal-backdrop{
+  display: none !important;
+}
+
+.active-menu {
+  color: var(--theme-default);
+}
+html.dark .btn-signup {
+  background-color: #fb5d1f;
+}
+html.dark .btn-login {
+  background-color: #fb5d1f;
+}
+.header-card {
+  background-color: #F0F4FF !important;
+  border-radius: 0;
+}
+
+.menu li {
+  cursor: pointer;
+}
+.menu .active {
+  background-color: var(--theme-default) !important;
+  border-color: var(--theme-default) !important;
+  color: white;
+  padding: 0.3rem 0.5rem;
+  border-radius: 6px;
+}
+.el-overlay {
+  background: none !important;
+}
+.sidebar-drawer {
+  background-color: rgba(0, 0, 0, 0.808) !important;
+  backdrop-filter: blur(2px);
+}
+html.light .sidebar-drawer {
+  background-color: rgba(255, 255, 255, 0.918) !important;
+  backdrop-filter: blur(2px);
+}
+.sidebar-drawer .el-drawer__header {
+  margin-bottom: 0;
+}
+.sidebar-drawer .el-drawer__body {
+  padding: 0;
+  padding-top: 8px;
+}
+
+.mobile-drawer-menu ul {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  color: #ffffff;
+  padding-inline: 10px;
+}
+html.light .mobile-drawer-menu ul {
+  color: black;
+}
+.mobile-drawer-menu ul li {
+  cursor: pointer;
+}
+.mobile-drawer-menu ul li:active {
+  color: white;
+}
+.mobile-drawer-menu .mobile-menu-left li {
+  width: fit-content;
+}
+.list-Leagues {
+  height: 52%;
+  overflow-y: scroll;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none;
+}
+.list-Leagues span {
+  color: #ffffff;
+}
+html.light .list-Leagues span {
+  color: black;
+}
+.border-none .is-active {
+  background: none;
+}
+.border-none li .el-sub-menu__title {
+  background: none;
+}
+.list-Leagues li .el-sub-menu__title i {
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: bold;
+}
+.list-Leagues .el-sub-menu__title {
+  padding-left: 10px !important;
+}
+.list-Leagues .el-menu-item {
+  padding-left: 30px !important;
+}
+html.light .list-Leagues li .el-sub-menu__title i {
+  color: black;
+  right: 7px !important;
+}
+.border-menu-left {
+  margin-block: 18px;
+  border: 1px solid transparent;
+  border-image: linear-gradient(to right, #ffffff9a, rgba(0, 0, 255, 0));
+  border-image-slice: 1;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+}
+html.light .border-menu-left {
+  margin-block: 18px;
+  border: 1px solid transparent;
+  border-image: linear-gradient(
+    to right,
+    rgba(90, 96, 106, 1),
+    rgba(90, 96, 106, 0)
+  );
+  border-image-slice: 1;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+}
+.onhover-show-div ul {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+html.dark .onhover-show-div {
+  background-color: rgba(43, 46, 51, 1);
+}
+.bg-notification {
+  background: rgba(211, 219, 233, 1);
+  border-radius: 7px;
+}
+html.dark .bg-notification {
+  background: rgba(18, 18, 18, 1);
+}
+.border-notification {
+  border-bottom: 1px solid rgba(211, 219, 233, 1);
+}
+html.dark .border-notification {
+  border-bottom: 1px solid rgba(90, 96, 106, 1);
+}
+
+.control-profile-popup{
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.623);
+  z-index: 9999;
+  padding: 40px 17%;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+/* .control-profile-popup .card{
+  height: 75vh !important;
+} */
+@media (max-width: 575.98px) {
+  .notification-dropdown{
+    width: 330px !important;
+    left: -310px !important;
+  }
+  .notification-dropdown .text-notification{
+    font-size: 12px;
+  }
+}
+
+</style>

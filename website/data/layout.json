@@ -1,0 +1,12 @@
+{
+  "settings": {
+    "layout_type": "ltr",
+    "layout": "Barcelona",
+    "sidebar_setting": "stroke-svg"
+  },
+  "color": {
+    "layout_version": "light",
+    "primary_color": "#FB5D1F",
+    "secondary_color": "#F1C959"
+  }
+}
