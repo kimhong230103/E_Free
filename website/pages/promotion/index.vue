@@ -13,7 +13,8 @@
             </div>
         </div>
 
-        <div class="py-5">
+        <Category />
+        <!-- <div class="py-5">
             <h2 class="text-primary mb-4 text-center fw-bold">Our Shop Categories</h2>
             <div class="d-flex justify-content-between align-items-center gap-3">
                 <button @click="scrollLeft" class="scroll-arrow cursor-pointer">
@@ -31,7 +32,7 @@
                     <img src="/svg/arrow.svg" alt="">
                 </button>
             </div>
-        </div>
+        </div> -->
 
         <!-- <div class="card p-3">
             <div class="head-product w-100 pb-2 d-flex justify-content-between">
@@ -220,59 +221,6 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
-
-const categories = ref([
-    { id: 1, name: 'Phones', icon: '/svg/cell-phone.svg' },
-    { id: 2, name: 'Computers', icon: '/svg/pc.svg' },
-    { id: 3, name: 'SmartWatch', icon: '/svg/watch.svg' },
-    { id: 4, name: 'Camera', icon: '/svg/camera.svg' },
-    { id: 5, name: 'HeadPhones', icon: '/svg/headphone.svg' },
-    { id: 6, name: 'Gaming', icon: '/svg/gamepad.svg' },
-    { id: 7, name: 'SmartWatch', icon: '/svg/watch.svg' },
-    { id: 8, name: 'Camera', icon: '/svg/camera.svg' },
-    { id: 9, name: 'HeadPhones', icon: '/svg/headphone.svg' },
-    { id: 10, name: 'Gaming', icon: '/svg/gamepad.svg' },
-    { id: 11, name: 'SmartWatch', icon: '/svg/watch.svg' },
-    { id: 12, name: 'Camera', icon: '/svg/camera.svg' },
-    { id: 13, name: 'HeadPhones', icon: '/svg/headphone.svg' },
-    { id: 14, name: 'Gaming', icon: '/svg/gamepad.svg' }
-]);
-
-const activeCategory = ref(1);
-const visibleElement = 7;
-const scroll = ref(0);
-const setActiveCategory = (id) => {
-    activeCategory.value = id
-}
-
-const scrollContainer = ref(null);
-const scrollLeft = () => {
-    if (scroll.value > 0) {
-        scroll.value -= 1;
-        scrollToIndex(scroll.value);
-    }
-};
-
-const scrollRight = () => {
-    // if ((scroll.value + visibleElement) < categories.value.length)
-    if (scroll.value < categories.value.length - visibleElement) {
-        scroll.value += 1;
-        scrollToIndex(scroll.value);
-    }
-};
-
-const scrollToIndex = (index) => {
-    const container = scrollContainer.value;
-    const categoryBoxes = container.querySelectorAll(".category-box");
-    if (categoryBoxes[index]) {
-        const box = categoryBoxes[index];
-        container.scrollTo({
-            left: box.offsetLeft - container.offsetLeft, // Adjust scroll position based on the box's position
-            behavior: "smooth",
-        });
-    }
-};
 
 </script>
 <style scoped>

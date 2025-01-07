@@ -95,10 +95,9 @@
                 >
                 <span class="invalid-feedback" v-if="v$.confirm_password.$error">{{ v$.confirm_password.$errors[0].$message }}</span>
                 <div class="w-100 text-center">
-                  <span class="btn btn-primary mt-3 px-4" @click="save">{{ $t("signup") }}</span>
-                  <p class="mt-2">{{ $t("dont_have_an_account") }} <span class="text-underline" style="color: #fb5d1f;">{{ $t("sign_in") }}</span></p>
+                  <span class="btn btn-blue mt-3 px-4" @click="save">{{ $t("signup") }}</span>
+                  <p @click="signIn()" class="mt-2">{{ $t("already_have_an_account") }} <span class="text-underline" style="color: #fb5d1f;">{{ $t("sign_in") }}</span></p>
                 </div>
-                
               </form>
             </div>
           </div>
@@ -106,11 +105,15 @@
       </div>
     </div>
     <div id="recaptcha-container"></div>
-    
+    <div v-if="showSignInModal">
+      <SignIn ref="signInRef" @closeModal="closeModalSignIn" @goToSignUp="signUp" />
+    </div>
+
   </div>
 </template>
 <script setup>
 import moment from 'moment';
+import { ref, reactive, computed } from "vue";
 import {
     required,
     email,
@@ -118,12 +121,22 @@ import {
     maxLength,
     url,
   } from "@vuelidate/validators";
-
+import SignIn from '~/components/SignIn/modal.vue';
+import ForgotPassword from '~/components/ForgotPassword.vue';
 const state = reactive({
   modal: null,
   recaptchaVerifier: null,
 });
-const emit = defineEmits(["closeModal", "goToSignIn"]);
+const showSignInModal = ref(false);
+const signInRef = ref(null);
+const signIn = () => {
+  drawer.value = false;
+  showSignInModal.value = true;
+  nextTick(() => {
+    signInRef.value.showModal();
+  });
+};
+
 let form = reactive({});
 const defaultForm = {
   first_name: null,
@@ -138,6 +151,7 @@ onMounted(() => {
   state.modal_demo = new bootstrap.Modal("#modal");
   Object.assign(form, defaultForm);
 });
+
 const rules = computed(() => {
   return {
     first_name: {
@@ -196,10 +210,11 @@ const setDefaultForm = () => {
   Object.assign(form, defaultForm);
 }
 
-
 defineExpose({
   showModal,
 });
+
+
 </script>
 <style lang="scss" scoped>
 .form-log{
@@ -235,5 +250,8 @@ html.dark .modal-dialog .modal-content {
     opacity: 1;
     color: #ffffff !important;
   }
+}
+.text-blue {
+  color: #253696 !important;
 }
 </style>
