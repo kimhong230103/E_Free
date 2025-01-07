@@ -232,7 +232,36 @@ const getData = async () => {
   const input = getInput();
   input.filter.business_id=businessTypeEnum.kdas
   try {
-    const data = await ifetch(blogAPI.get, input);
+    await fetch(`https://efree.cheakautomate.online/gateway/PRODUCT/api/v1/products/paginate?page=1&size=${pagination.value.per_page}&sortBy=${formHeader.value.sortBy}&direction=desc`, {
+    method: 'GET', // Specify the method as GET
+    headers: {
+        'Content-Type': 'application/json',
+        Authorization: "",  
+    }
+  })
+  .then(response => {
+      if (!response.ok) {
+          throw new Error('Network response was not ok ' + response.statusText);
+      }
+      return response.json(); // Parse the JSON from the response
+  })
+  .then(data => {
+    categoryList.setData(data);
+    lists.value = data.payload;
+    console.log("lists",lists.value);
+  })
+  .catch(error => {
+    console.error('There has been a problem with your fetch operation:', error);
+    categoryList.setData([]);
+    categoryList.setPagination({
+      currentPage: 1,
+      per_page: 10,
+      total: 0,
+      to: 0,
+      from: 0,
+      last_page: 0,
+    })
+  })
     
     setInput(data);
   } catch (error) {
