@@ -1,59 +1,18 @@
 <template>
+
   <div class="container mx-auto">
+    <ProductModal ref="productModal" :product="selectedProduct" />
+    
     <div class="row">
       <div class="col-12" style="padding-right: 14px">
         <div class="row">
-
-          <!-- Top Category-->
-          <div style="height: 500px;" class="container w-100 col-12 pb-5">
-            <h2 class="cat-title fw-bold text-center">Top Category</h2>
-            <div style="height: 100%; width: 100%;"
-              class="w-full d-flex flex-column flex-lg-row justify-content-center align-items-center gap-4 py-3">
-              <div style="width: 50%; height: 100%;" class="cat-card">
-                <img style="display: absolute; max-height: 100%;" width="80%" src="/images/home/playstation.png" alt="">
-                <div style="display: absolute; bottom: 10%; left: 5%" class="cat-desc">
-                  <h4>PlayStation 5</h4>
-                  <p style="font-size: 12px;" class="w-75">Black and White version of the PS5 coming out on sale.</p>
-                  <button class="cat-btn">Shop Now</button>
-                </div>
-              </div>
-              <div style="height: 100%; width: 50%" class="d-flex flex-column justify-content-between gap-4">
-                <div class="cat-card" style="height: 50%;">
-                  <img style="position: absolute; right: 0; bottom: 0px; max-width: 280px; max-height: 100%;"
-                    src="/images/home/women-collection.png" alt="">
-                  <div style="display: absolute; bottom: 10%; left: 5%" class="cat-desc">
-                    <h4>Women’s Collections</h4>
-                    <p style="font-size: 12px;" class="w-75">Featured woman collections that give you another vibe.</p>
-                    <button class="cat-btn">Shop Now</button>
-                  </div>
-                </div>
-                <div style="height: 50%;" class="d-flex justify-content-between align-items-center gap-4">
-                  <div style="height: 100%; width: 50%;" class="cat-card">
-                    <img width="150px"
-                      style="max-width: 150px; max-height: 100%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); "
-                      src="/images/home/speaker.png" alt="">
-                    <div style="display: absolute; bottom: 10%; left: 5%" class="cat-desc">
-                      <h4>{{ $t('speaker') }}</h4>
-                      <p style="font-size: 12px;">Amazon wireless speakers</p>
-                      <button class="cat-btn">Shop Now</button>
-                    </div>
-                  </div>
-                  <div style="height: 100%; width: 50%;" class="cat-card">
-                    <img width="150px"
-                      style="max-width: 150px; max-height: 100%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); "
-                      src="/images/home/perfume.png" alt="">
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
 
           <!-- Status -->
           <div class="col-12">
             <div class="w-100 card p-3">
               <div class="row border-round px-2 px-md-4 py-3 mx-0">
                 <div
-                  class="col-6 col-lg-3 mb-2 mb-lg-0 d-flex justify-content-center align-items-center box-promote border-right">
+                  class="col-6 col-lg-3 mb-2 mb-lg-0 box-promote border-right">
                   <Icon name="material-symbols:location-on" size="43" style="color: var(--theme-default);" />
                   <div class="ms-2">
                     <span class="text-top d-block">{{ $t('free_delivery') }}</span>
@@ -61,7 +20,7 @@
                   </div>
                 </div>
                 <div
-                  class="col-6 col-lg-3 mb-2 mb-lg-0 d-flex justify-content-center align-items-center box-promote border-right no-border">
+                  class="col-6 col-lg-3 mb-2 mb-lg-0 box-promote border-right no-border">
                   <Icon name="material-symbols:swap-horizontal-circle-outline-rounded" size="43"
                     style="color: var(--theme-default);" />
                   <div class="ms-2">
@@ -70,14 +29,14 @@
                   </div>
                 </div>
                 <div
-                  class="col-6 col-lg-3 mb-2 mb-lg-0 d-flex justify-content-center align-items-center box-promote border-right">
+                  class="col-6 col-lg-3 mb-2 mb-lg-0 box-promote border-right">
                   <Icon name="material-symbols:lock-sharp" size="43" style="color: var(--theme-default);" />
                   <div class="ms-2">
                     <span class="text-top d-block">{{ $t('security_payment') }}</span>
                     <span class="text-bottom d-block">100% {{ $t('security_payment') }}</span>
                   </div>
                 </div>
-                <div class="col-6 col-lg-3 mb-2 mb-lg-0 d-flex justify-content-center align-items-center box-promote">
+                <div class="col-6 col-lg-3 mb-2 mb-lg-0 box-promote">
                   <Icon name="material-symbols:support" size="43" style="color: var(--theme-default);" />
                   <div class="ms-2">
                     <span class="text-top d-block">24/7 {{ $t('support') }}</span>
@@ -94,36 +53,26 @@
               <div class="head-product-today w-100 d-flex justify-content-between">
                 <h5 class="title fw-bold max-576-none">{{ $t('promotion') }}</h5>
                 <h6 class="fw-bold min-576-none">{{ $t('promotion') }}</h6>
-                <span>{{ $t('see_all') }}</span>
+                <a href="/promotion">{{ $t('see_all') }}</a>
               </div>
               <div class="row">
-                <div v-for="(item, index) in 4" :key="index"
+                <div v-for="(item, index) in productPromotion.slice(0,4)" :key="index"
                   class="col-6 col-md-4 col-xl-3 p-10 box-product-promotion rounded-10">
-                  <figure class="p-10 box-shadow">
+                  <figure class="p-10 box-shadow" @click="showProductDetails(item)">
                     <div class="img-card img-promotion w-100">
-                      <img width="80%"
-                        src="https://off.com.ph/_next/image?url=https%3A%2F%2Fedge.sitecorecloud.io%2Fscjohnsonana080-dart-production-40df%2Fmedia%2Fproject%2Fdart%2Foff%2Fphilippines%2Fhomepage%2Fcategory-images%2Foff_ph_4x3_720x540_category_card-overtime.png%3Fh%3D540%26iar%3D0%26w%3D720&w=3840&q=75"
-                        alt="">
+                      <img width="80%" :src="item.image" alt="">
                     </div>
                     <div class="txt py-2">
                       <div class="d-flex justify-content-between align-items-center mb-2">
                         <p class="d-block product-name">
-                          Milk
+                          {{ item.title }}
                         </p>
-                        <img class="dot-3" src="/svg/dot-3.svg" alt="">
                       </div>
-                      <p class="pro-desc mb-2">Our expert guides will take you on a knowledge</p>
-                      <!-- <span class="list-star d-flex">
-                        <Icon name="material-symbols:star" size="20" style="color: var(--theme-default);" />
-                        <Icon name="material-symbols:star" size="20" style="color: var(--theme-default);" />
-                        <Icon name="material-symbols:star" size="20" style="color: var(--theme-default);" />
-                        <Icon name="material-symbols:star" size="20" style="color: var(--theme-default);" />
-                        <Icon name="material-symbols:star" size="20" />
-                      </span> -->
+                      <p class="pro-desc text-truncate-two-lines mb-2">{{ item.description }}</p>
                       <hr class="hr-promotion">
-                      <span class="d-flex justify-content-between align-items-center price my-1">
-                        <p>price <span class="text-danger">$50</span></p>
-                        <b class="fw-bold me-2">$30</b>
+                      <span class="d-flex align-items-center gap-1 price my-1">
+                        <p>{{ $t('price') }} <span class="text-danger text-decoration-line-through">${{ item.price }}</span></p>
+                        <b class="fw-bold me-2">${{ item.price - (item.price * item.discount) / 100 }}</b>
                       </span>
                     </div>
                   </figure>
@@ -136,7 +85,7 @@
           <div class="col-12">
             <div class="w-100 card p-3">
               <div class="head-product-today w-100 d-flex justify-content-between">
-                <h5 class="text-primary fw-bold max-576-none">{{ $t('product_today') }}</h5>
+                <h5 class="text-blue fw-bold max-576-none">{{ $t('product_today') }}</h5>
                 <h6 class="fw-bold min-576-none">{{ $t('product_today') }}</h6>
                 <span>{{ $t('see_all') }}</span>
               </div>
@@ -155,7 +104,7 @@
                           <p class="d-block product-name">
                             Milk
                           </p>
-                          <img class="dot-3" src="/svg/dot-3.svg" alt="">
+
                         </div>
                         <p class="pro-desc mb-2">Our expert guides will take you on a knowledge</p>
                         <span class="list-star d-flex">
@@ -182,7 +131,7 @@
           <div class="col-12">
             <div class="w-100 card p-3">
               <div class="head-product-today w-100 d-flex justify-content-between">
-                <h5 class="text-primary fw-bold max-576-none">{{ $t('top_product') }}</h5>
+                <h5 class="text-blue fw-bold max-576-none">{{ $t('top_product') }}</h5>
                 <h6 class="fw-bold min-576-none">{{ $t('top_product') }}</h6>
                 <span>{{ $t('see_all') }}</span>
               </div>
@@ -200,7 +149,6 @@
                         <p class="d-block product-name">
                           Milk
                         </p>
-                        <img class="dot-3" src="/svg/dot-3.svg" alt="">
                       </div>
                       <p class="pro-desc mb-2">Our expert guides will take you on a knowledge</p>
                       <span class="list-star d-flex">
@@ -221,13 +169,189 @@
               </div>
             </div>
           </div>
+
+          <!-- Top Category-->
+          <div style="height: 500px;" class="container w-100 col-12 pb-5">
+            <h2 class="cat-title fw-bold text-center">Top Category</h2>
+            <div style="height: 100%; width: 100%;"
+              class="w-full d-flex flex-column flex-lg-row justify-content-center align-items-center gap-4 py-3">
+              <a href="/product" style="width: 50%; height: 100%;" class="cat-card">
+                <img style="display: absolute; max-height: 100%;" width="80%" src="/images/home/playstation.png" alt="">
+                <div style="display: absolute; bottom: 10%; left: 5%" class="cat-desc">
+                  <h4>PlayStation 5</h4>
+                  <p style="font-size: 12px;" class="w-75">Black and White version of the PS5 coming out on sale.</p>
+                  <button class="cat-btn">Shop Now</button>
+                </div>
+              </a>
+              <div style="height: 100%; width: 50%" class="d-flex flex-column justify-content-between gap-4">
+                <a href="/product" class="cat-card" style="height: 50%;">
+                  <img style="position: absolute; right: 0; bottom: 0px; max-width: 280px; max-height: 100%;"
+                    src="/images/home/women-collection.png" alt="">
+                  <div style="display: absolute; bottom: 10%; left: 5%" class="cat-desc">
+                    <h4>Women’s Collections</h4>
+                    <p style="font-size: 12px;" class="w-75">Featured woman collections that give you another vibe.</p>
+                    <button class="cat-btn">Shop Now</button>
+                  </div>
+                </a>
+                <div style="height: 50%;" class="d-flex justify-content-between align-items-center gap-4">
+                  <a href="/product" style="height: 100%; width: 50%;" class="cat-card">
+                    <img width="150px"
+                      style="max-width: 150px; max-height: 100%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); "
+                      src="/images/home/speaker.png" alt="">
+                    <div style="display: absolute; bottom: 10%; left: 5%" class="cat-desc">
+                      <h4>{{ $t('speaker') }}</h4>
+                      <p style="font-size: 12px;">Amazon wireless speakers</p>
+                      <button class="cat-btn">Shop Now</button>
+                    </div>
+                  </a>
+                  <a href="/product" style="height: 100%; width: 50%;" class="cat-card">
+                    <img width="150px"
+                      style="max-width: 150px; max-height: 100%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); "
+                      src="/images/home/perfume.png" alt="">
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </template>
 <script setup>
+import { ref } from "vue";
+import ProductModal from "@/components/ProductModal.vue";
 
+const productPromotion = ref([
+  {
+    title: "Iphone 14 Pro Max",
+    price: 1450,
+    category: "Mobile Phone",
+    stock: 60,
+    discount: 10,
+    description: `
+    Screen Size: 6.7 inches, 128 GB Storage,
+    A16 Bionic Chip, Dual Camera System.
+  `,
+    image: "/images/sample.png",
+  },
+  {
+    title: "Milk",
+    price: 1450,
+    category: "Mobile Phone",
+    stock: 60,
+    discount: 10,
+    description: `
+    Screen Size: 6.7 inches, 128 GB Storage,
+    A16 Bionic Chip, Dual Camera System.
+  `,
+    image: "/images/sample.png",
+  },
+  {
+    title: "Iphone 14 Pro Max",
+    price: 1450,
+    category: "Mobile Phone",
+    stock: 60,
+    discount: 10,
+    description: `
+    Screen Size: 6.7 inches, 128 GB Storage,
+    A16 Bionic Chip, Dual Camera System.
+  `,
+    image: "/images/sample.png",
+  },
+  {
+    title: "Iphone 14 Pro Max",
+    price: 1450,
+    category: "Mobile Phone",
+    stock: 60,
+    discount: 10,
+    description: `
+    Screen Size: 6.7 inches, 128 GB Storage,
+    A16 Bionic Chip, Dual Camera System.
+  `,
+    image: "/images/sample.png",
+  },
+  {
+    title: "Iphone 14 Pro Max",
+    price: 1450,
+    category: "Mobile Phone",
+    stock: 60,
+    discount: 10,
+    description: `
+    Screen Size: 6.7 inches, 128 GB Storage,
+    A16 Bionic Chip, Dual Camera System.
+  `,
+    image: "/images/sample.png",
+  },
+  {
+    title: "Iphone 14 Pro Max",
+    price: 1450,
+    category: "Mobile Phone",
+    stock: 60,
+    discount: 10,
+    description: `
+    Screen Size: 6.7 inches, 128 GB Storage,
+    A16 Bionic Chip, Dual Camera System.
+  `,
+    image: "/images/sample.png",
+  },
+  {
+    title: "Iphone 14 Pro Max",
+    price: 1450,
+    category: "Mobile Phone",
+    stock: 60,
+    discount: 10,
+    description: `
+    Screen Size: 6.7 inches, 128 GB Storage,
+    A16 Bionic Chip, Dual Camera System.
+  `,
+    image: "/images/sample.png",
+  },
+  {
+    title: "Iphone 14 Pro Max",
+    price: 1450,
+    category: "Mobile Phone",
+    stock: 60,
+    discount: 10,
+    description: `
+    Screen Size: 6.7 inches, 128 GB Storage,
+    A16 Bionic Chip, Dual Camera System.
+  `,
+    image: "/images/sample.png",
+  },
+  {
+    title: "Iphone 14 Pro Max",
+    price: 1450,
+    category: "Mobile Phone",
+    stock: 60,
+    discount: 10,
+    description: `
+    Screen Size: 6.7 inches, 128 GB Storage,
+    A16 Bionic Chip, Dual Camera System.
+  `,
+    image: "/images/sample.png",
+  },
+  {
+    title: "Iphone 14 Pro Max",
+    price: 1450,
+    category: "Mobile Phone",
+    stock: 60,
+    discount: 10,
+    description: `
+    Screen Size: 6.7 inches, 128 GB Storage,
+    A16 Bionic Chip, Dual Camera System.
+  `,
+    image: "/images/sample.png",
+  },
+])
+
+const productModal = ref(null);
+const selectedProduct = ref({});
+
+const showProductDetails = (product) => {
+  selectedProduct.value = product;
+  productModal.value.openModal();
+};
 
 useSeoMeta({
   title: "E-Free",
@@ -237,9 +361,49 @@ useSeoMeta({
   description: "ផលិតផលល្អ លឿន រហ័ស ទាន់ចិត្ត",
   ogDescription: "ផលិតផលល្អ លឿន រហ័ស ទាន់ចិត្ត",
 });
+
+
 </script>
 
 <style>
+
+.box-promote {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@media (max-width: 991.98px) {
+  .box-promote {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+  }
+}
+
+.text-blue {
+  color: #253696;
+}
+
+.btn-blue {
+  background-color: #253696 !important;
+  color: white;
+  border: none;
+  font-weight: bold;
+}
+
+.text-truncate-two-lines {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.5;
+  /* Adjust line height if needed */
+  max-height: 3em;
+  /* 2 lines x line-height (1.5em) */
+}
+
 figure {
   cursor: pointer;
   border-radius: 10px;
@@ -401,7 +565,7 @@ html:dark .img-promotion {
 .product-name {
   font-size: larger;
   font-weight: 600;
-  color: #0D394F;
+  color: #253696;
   text-decoration: underline;
 }
 

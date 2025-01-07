@@ -13,7 +13,9 @@
             </div>
         </div>
 
-        <div class="py-5">
+        <!-- Category -->
+         <Category />
+        <!-- <div class="py-5">
             <h2 class="text-primary mb-4 text-center fw-bold">Our Shop Categories</h2>
             <div class="d-flex justify-content-between align-items-center gap-3">
                 <button @click="scrollLeft" class="scroll-arrow cursor-pointer">
@@ -31,7 +33,7 @@
                     <img src="/svg/arrow.svg" alt="">
                 </button>
             </div>
-        </div>
+        </div> -->
 
         <!-- <div class="card p-3">
             <div class="head-product w-100 pb-2 d-flex justify-content-between">
@@ -170,59 +172,6 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
-
-const categories = ref([
-    { id: 1, name: 'Phones', icon: '/svg/cell-phone.svg' },
-    { id: 2, name: 'Computers', icon: '/svg/pc.svg' },
-    { id: 3, name: 'SmartWatch', icon: '/svg/watch.svg' },
-    { id: 4, name: 'Camera', icon: '/svg/camera.svg' },
-    { id: 5, name: 'HeadPhones', icon: '/svg/headphone.svg' },
-    { id: 6, name: 'Gaming', icon: '/svg/gamepad.svg' },
-    { id: 7, name: 'SmartWatch', icon: '/svg/watch.svg' },
-    { id: 8, name: 'Camera', icon: '/svg/camera.svg' },
-    { id: 9, name: 'HeadPhones', icon: '/svg/headphone.svg' },
-    { id: 10, name: 'Gaming', icon: '/svg/gamepad.svg' },
-    { id: 11, name: 'SmartWatch', icon: '/svg/watch.svg' },
-    { id: 12, name: 'Camera', icon: '/svg/camera.svg' },
-    { id: 13, name: 'HeadPhones', icon: '/svg/headphone.svg' },
-    { id: 14, name: 'Gaming', icon: '/svg/gamepad.svg' }
-]);
-
-const activeCategory = ref(1);
-const visibleElement = 7;
-const scroll = ref(0);
-const setActiveCategory = (id) => {
-    activeCategory.value = id
-}
-
-const scrollContainer = ref(null);
-const scrollLeft = () => {
-    if (scroll.value > 0) {
-        scroll.value -= 1;
-        scrollToIndex(scroll.value);
-    }
-};
-
-const scrollRight = () => {
-    // if ((scroll.value + visibleElement) < categories.value.length)
-    if (scroll.value < categories.value.length - visibleElement) {
-        scroll.value += 1;
-        scrollToIndex(scroll.value);
-    }
-};
-
-const scrollToIndex = (index) => {
-    const container = scrollContainer.value;
-    const categoryBoxes = container.querySelectorAll(".category-box");
-    if (categoryBoxes[index]) {
-        const box = categoryBoxes[index];
-        container.scrollTo({
-            left: box.offsetLeft - container.offsetLeft, // Adjust scroll position based on the box's position
-            behavior: "smooth",
-        });
-    }
-};
 
 </script>
 <style scoped>
@@ -279,80 +228,6 @@ input.form-control {
     transform: translateY(-50%);
 }
 
-.scroll-arrow {
-    border: none;
-    background-color: whitesmoke;
-    padding: 10px;
-    border-radius: 100%;
-}
-.category-box {
-    width: 120px;
-    height: 120px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background-color: #f1f1f1;
-    cursor: pointer;
-    transition: all 0.3s;
-    white-space: nowrap;
-    flex-shrink: 0; /* Prevent shrinking in flexbox layout */
-}
-
-.category-box.active {
-    background-color: #ff8c00;
-    color: white;
-}
-
-.category-box:hover {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transform: translateY(-5px);
-}
-
-.cat-text {
-    color: black;
-}
-
-.category-icon {
-    width: 60px;
-    height: 60px;
-}
-
-/* Scrollbar Hide */
-.scrollbar-hide {
-    scrollbar-width: none;
-    /* Firefox */
-    -ms-overflow-style: none;
-    /* IE 10+ */
-}
-
-.scrollbar-hide::-webkit-scrollbar {
-    display: none;
-    /* Chrome, Safari */
-}
-
-.overflow-auto {
-    cursor: grab;
-    overflow-x: auto;
-    white-space: nowrap;
-    /* Prevent wrapping */
-    scrollbar-width: none;
-    /* Firefox */
-    -ms-overflow-style: none;
-    /* Internet Explorer 10+ */
-}
-
-.overflow-auto:active {
-    cursor: grabbing;
-    /* Change cursor while dragging */
-}
-
-.overflow-auto::-webkit-scrollbar {
-    display: none;
-    /* Safari and Chrome */
-}
 </style>
 <style>
 .box-search {
