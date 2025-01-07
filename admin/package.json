@@ -27,6 +27,7 @@
     "@wangeditor/editor-for-vue": "^5.1.12",
     "apexcharts": "^3.49.1",
     "bootstrap": "^5.3.3",
+    "buffer": "^6.0.3",
     "crypto-js": "^4.2.0",
     "date-fns": "^3.6.0",
     "date-fns-tz": "^3.1.3",

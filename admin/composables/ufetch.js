@@ -4,7 +4,7 @@ import Cookies from "js-cookie";
 import { useLoadingStore } from "~/store/loading";
 import { useUserStore } from "~/store/user";
 
-export function ifetch(url, data, responseType = "json",typeMethod='POST') {
+export function ifetch(url, data, responseType = "json",typeMethod='GET') {
   const userStore = useUserStore();
   const loadingStore = useLoadingStore();
   const fetch = ofetch.create({

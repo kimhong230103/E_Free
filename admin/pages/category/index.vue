@@ -37,6 +37,7 @@
       </template>
       <template #image="{row}">
         <img :src="row.imageUrl" height="40px" :alt="row.imageUrl">
+        <!-- <img src="D:/ITCB_News/Admin/Image/logo-news.png" height="40px" alt=""> -->
       </template>
       <template #kh_name="{row}">
         <span>{{ row.nameKh }}</span>
@@ -62,6 +63,7 @@ import { permissionConst } from "~/constants/permission";
 import { useCategoryList } from "~/store/category_list.js";
 import { useCategoryType } from "~/store/category_type.js";
 import { useBranchStore } from "~/store/branch";
+import { useUserStore } from "~/store/user";
 let tableHeader = [
   {
     label: "action",
@@ -114,7 +116,7 @@ const actionType = ref("add");
 const categoryList = useCategoryList();
 const categoryType = useCategoryType();
 const branchStore = useBranchStore();
-
+const userStore = useUserStore();
 const branch_id = ref(null)
 const pagination = ref({
   currentPage: 1,
@@ -137,6 +139,12 @@ const addNew = () => {
 onMounted(() => {
   getData();
   // getTest()
+  if (checkCookieExpiration()) {
+    console.log('Access token is still valid.');
+  } else {
+    console.error('Access token has expired or does not exist.');
+    useUserStore().clearToken();
+  }
 });
 const setInput = (data) => {
   lists.value = data.data;
@@ -206,11 +214,19 @@ const deleteItem = (id) => {
     showLoaderOnConfirm: true,
     preConfirm: () => {
       return new Promise(async (resolve) => {
-       const data = await ifetch(categoryAPI.delete, { id: id });
-        iAlert().success();
-        categoryList.setData(data.data);
-        getData();
-        resolve();
+        await fetch("https://efree.cheakautomate.online/gateway/CATEGORY/api/v1/categories/" + id, {
+          method: 'DELETE', // Specify the method as GET
+          headers: {
+              'Content-Type': 'application/json',
+              Authorization: userStore.logged ? `Bearer ${userStore.token}` : "",  
+          }
+        }).then((response) => response.json())
+        .then((data) => {
+          iAlert().success();
+          getData();
+          resolve();
+        })
+        
       });
     },
     allowOutsideClick: () => !swal.isLoading(),
