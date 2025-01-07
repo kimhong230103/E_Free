@@ -594,6 +594,8 @@
     "add_working_time": "Add Working Time",
     "time": "Time",
     "all_logo_are_required": "All logos are required",
-    "all_title_are_required": "All title are required"
+    "all_title_are_required": "All title are required",
+    "kh_name": "Khmer Name",
+    "en_name": "English Name"
   }
 }

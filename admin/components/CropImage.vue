@@ -280,11 +280,21 @@ defineExpose({
 
 <style>
 .cropper {
-  height: 600px;
+  height: 70vh;
   width: auto;
   background: #ddd;
 }
 .cropper-background {
   background: none;
 }
+.vue-advanced-cropper__foreground {
+  height: 100% !important;
+}
+.vue-advanced-cropper__image-wrapper {
+  overflow: hidden;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
 </style>

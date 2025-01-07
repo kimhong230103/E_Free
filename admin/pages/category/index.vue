@@ -26,30 +26,23 @@
           <IDropdownOption
             label="edit"
             icon="material-symbols:edit-square-outline"
-            v-can="permissionConst.UPDATE"
             @click="editItem(row.id, row)"
           />
           <IDropdownOption
             label="delete"
             icon="mdi:trash-can-outline"
-            v-can="permissionConst.DELETE"
             @click="deleteItem(row.id)"
           />
         </IDropdown>
       </template>
-      <!-- <template #type="{type}">
-        <div v-for="item in categoryType.getList" :key="item.id">
-          <span v-if="type === item.id">{{ $t(item.name) }}</span>
-        </div>
-      </template> -->
-      <template #created_at="{created_at}">
-        <span>{{dateTimeFormat(created_at)}}</span>
+      <template #image="{row}">
+        <img :src="row.imageUrl" height="40px" :alt="row.imageUrl">
       </template>
-      <template #image="{image}">
-        <img :src="getImagePath(image)" height="40px" :alt="image">
+      <template #kh_name="{row}">
+        <span>{{ row.nameKh }}</span>
       </template>
-      <template #copy_link="{slug}">
-        <span class="btn btn-info" @click="copyLinkCategory(slug)">{{ $t("copy_link") }}</span>
+      <template #en_name="{row}">
+        <span>{{ row.nameEn }}</span>
       </template>
     </IFormTable>
 
@@ -64,16 +57,11 @@
 <script setup>
 import ActionModal from "~/components/category/modal.vue";
 import { categoryAPI } from "~/constants/api";
-import { moduleKey } from "~/constants/moduleKey";
 import { appConst, msgConst } from "~/constants/app";
 import { permissionConst } from "~/constants/permission";
 import { useCategoryList } from "~/store/category_list.js";
 import { useCategoryType } from "~/store/category_type.js";
 import { useBranchStore } from "~/store/branch";
-definePageMeta({
-  middleware: "alc",
-  moduleKey: moduleKey.CATEGORY,
-});
 let tableHeader = [
   {
     label: "action",
@@ -93,25 +81,30 @@ let tableHeader = [
   },
 
   {
-    label: "name",
-    key: "name",
+    label: "kh_name",
+    key: "kh_name",
     sort: true,
     textAlign: "left",
-    textAlign: "center",
   },
   {
-    label: "created_at",
-    key: "created_at",
+    label: "en_name",
+    key: "en_name",
     sort: true,
-    classes: "createdby-col",
-    textAlign: "center",
-    textAlignHeader: "center",
+    textAlign: "left",
   },
-  {
-    label: "copy_link",
-    key: "copy_link",
-    textAlign: "center",
-  },
+  // {
+  //   label: "created_at",
+  //   key: "created_at",
+  //   sort: true,
+  //   classes: "createdby-col",
+  //   textAlign: "center",
+  //   textAlignHeader: "center",
+  // },
+  // {
+  //   label: "copy_link",
+  //   key: "copy_link",
+  //   textAlign: "center",
+  // },
 ];
 let lists = ref([]);
 const formHeader = ref(null);
@@ -137,21 +130,6 @@ const filter = reactive({
 });
 
 const addNew = () => {
-  branch_id.value=branchStore.branch_id
-  if(nullToVoid(branch_id.value)==""){
-    const { $i18n } = useNuxtApp();
-    swal({
-      title: $i18n.t("branch_is_required"),
-      text: $i18n.t("please_select_branch"),
-      icon: "warning",
-      cancelButtonText: $i18n.t("cancel"),
-      reverseButtons: true,
-      showLoaderOnConfirm: true,
-      preConfirm: () => {},
-      allowOutsideClick: () => !swal.isLoading(),
-    });
-    return;
-  }
   actionType.value = appConst.modalAction.add;
   modal.value.showModal();
 };
@@ -184,8 +162,36 @@ const getData = async () => {
   branch_id.value=branchStore.branch_id
   input.filter.branch_id=branch_id.value
   
-  const data = await ifetch(categoryAPI.get, input);
-  setInput(data);
+  const data = await fetch("https://efree.cheakautomate.online/gateway/CATEGORY/api/v1/categories", {
+    method: 'GET', // Specify the method as GET
+    headers: {
+        'Content-Type': 'application/json',
+        Authorization: "",  
+    }
+  })
+  .then(response => {
+      if (!response.ok) {
+          throw new Error('Network response was not ok ' + response.statusText);
+      }
+      return response.json(); // Parse the JSON from the response
+  })
+  .then(data => {
+    categoryList.setData(data);
+    lists.value = data.payload;
+    console.log("lists",lists.value);
+  })
+  .catch(error => {
+    console.error('There has been a problem with your fetch operation:', error);
+    categoryList.setData([]);
+    categoryList.setPagination({
+      currentPage: 1,
+      per_page: 10,
+      total: 0,
+      to: 0,
+      from: 0,
+      last_page: 0,
+    })
+  })
 };
 const deleteItem = (id) => {
   const { $i18n } = useNuxtApp();
