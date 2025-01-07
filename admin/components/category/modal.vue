@@ -75,7 +75,7 @@
               <div class="col-12 col-lg-4">
                 <div class="text-center m-t-25">
                   <img
-                    :src="getImagePath(form.image)"
+                    :src="form.image"
                     width="200"
                     class="rounded mx-auto d-block"
                   />
@@ -165,17 +165,18 @@ const state = reactive({
   modal: null,
 });
 
+
 const defaultForm = {
   id: null,
   nameKh: null,
   nameEn: null,
   isActive: 1,
   descriptionKh: null,
-  descriptionEn: null
+  descriptionEn: null,
+  image: appConst.defaultImage
 };
-let form = reactive({});
 
-
+let form = reactive({ ...defaultForm });
 
 const rules = computed(() => {
   return {
@@ -201,11 +202,11 @@ const cropImageModal = ref(null);
 const modalShowCropperImage = ref(null);
 const hideShowCropperImage = ref(false);
 const imagePath = ref(null);
-
+const imageName = ref(null);
+const imageFile = ref(null);
 const chooseImage = () => {
   fileInput.value.click();
 };
-const imageName = ref(null);
 const onFileChange = ($event) => {
   const files = $event.target.files || $event.dataTransfer.files;
   if (files[0]) {
@@ -239,19 +240,14 @@ const onFileChange = ($event) => {
       return;
     }
   }
-  imageName.value = files[0].name;
+  
   cropImageModal.value.showModal($event);
+  imageFile.value = files[0];
+  imageName.value = files[0].name;
   fileInput.value.value = null; 
 };
-
-
-
-const imagecroped = (data) =>{
-  // data = JSON.stringify(data);
-  // saveBase64Image(data, imageName);
-  
+const imagecroped = async (data) =>{
   form.image = data;
-
 }
 onMounted(() => {
   setDefaultForm();
@@ -260,14 +256,20 @@ onMounted(() => {
 });
 
 const showModal = (editId = null, row) => {
+  imageFile.value = null;
+  imageName.value = null;
   state.modal.show();
   if (editId) {
-    const { id, nameEn,nameKh,descriptionEn,descriptionKh } = row;
+    const { id, nameEn,nameKh,descriptionEn,descriptionKh,imageUrl } = row;
     form.id = id;
     form.nameEn = nameEn;
     form.nameKh = nameKh;
     form.descriptionEn = descriptionEn;
     form.descriptionKh = descriptionKh;
+    form.image = imageUrl
+    if(nullToVoid(imageUrl) == ""){
+      form.image = appConst.defaultImage
+    }
   } else {
     setDefaultForm();
   }
@@ -288,15 +290,41 @@ const save = async (event) => {
         Authorization: userStore.logged ? `Bearer ${userStore.token}` : "",
       },
       body: JSON.stringify(form),
+    }).then((response) => response.json())
+    .then(async (data) =>{
+      if(nullToVoid(imageFile.value) != "" && nullToVoid(imageName.value) != ""){
+        const myHeaders = new Headers();
+        myHeaders.append("Authorization", userStore.logged ? `Bearer ${userStore.token}` : "");
+        const formdata = new FormData();
+        formdata.append("file", imageFile.value, imageName.value);
+        const requestOptions = {
+          method: "POST",
+          headers: myHeaders,
+          body: formdata,
+          redirect: "follow"
+        };
+        await fetch(`https://efree.cheakautomate.online/gateway/CATEGORY/api/v1/categories/upload/single/${data.payload.id}`, 
+          requestOptions
+        ).then((response) => response.json())
+        .then((data) => {
+          console.log("dataResponse",data);
+          
+        })
+      }
+      imageFile.value = null;
+      imageName.value = null;
+      iAlert().success();
+      categoryList.setData(data.data);
+      if (event) {
+        emit("closeModal", true);
+        closeModal(true);
+      } else {
+        setDefaultForm();
+      }
+    })
+    .catch((error) => {
+      console.log(error);
     });
-    iAlert().success();
-    categoryList.setData(data.data);
-    if (event) {
-      emit("closeModal", true);
-      closeModal(true);
-    } else {
-      setDefaultForm();
-    }
   } else {
     useNuxtApp().$showToast({ msg: "Invalid Input.", type: "error" });
   }
