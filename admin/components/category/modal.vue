@@ -205,6 +205,7 @@ const imagePath = ref(null);
 const chooseImage = () => {
   fileInput.value.click();
 };
+const imageName = ref(null);
 const onFileChange = ($event) => {
   const files = $event.target.files || $event.dataTransfer.files;
   if (files[0]) {
@@ -238,12 +239,19 @@ const onFileChange = ($event) => {
       return;
     }
   }
-  
+  imageName.value = files[0].name;
   cropImageModal.value.showModal($event);
   fileInput.value.value = null; 
 };
+
+
+
 const imagecroped = (data) =>{
+  // data = JSON.stringify(data);
+  // saveBase64Image(data, imageName);
+  
   form.image = data;
+
 }
 onMounted(() => {
   setDefaultForm();
@@ -254,12 +262,12 @@ onMounted(() => {
 const showModal = (editId = null, row) => {
   state.modal.show();
   if (editId) {
-    const { id, name, type, image,slug } = row;
+    const { id, nameEn,nameKh,descriptionEn,descriptionKh } = row;
     form.id = id;
-    form.name = name;
-    form.type = type;
-    form.image = image;
-    form.slug = slug;
+    form.nameEn = nameEn;
+    form.nameKh = nameKh;
+    form.descriptionEn = descriptionEn;
+    form.descriptionKh = descriptionKh;
   } else {
     setDefaultForm();
   }
@@ -270,7 +278,7 @@ const save = async (event) => {
     let url = "https://efree.cheakautomate.online/gateway/CATEGORY/api/v1/categories";
     let method = "POST";
     if (props.actionType == appConst.modalAction.update) {
-      url = "https://efree.cheakautomate.online/gateway/CATEGORY/api/v1/categories/2e55b32d-d83a-46fd-a7bf-4dd14f283475";
+      url = "https://efree.cheakautomate.online/gateway/CATEGORY/api/v1/categories/" + form.id;
       method = "PATCH";
     }
     const data = await fetch(url, {

@@ -200,7 +200,7 @@ const save = async () => {
           const reader = new FileReader();
           reader.onload = () => {
             const reducedDataUrl = reader.result;
-            emit('imageCroped', reducedDataUrl);  
+            emit('imageCroped', cropper.value);  
           };
           reader.readAsDataURL(reducedBlob);
         } catch (error) {

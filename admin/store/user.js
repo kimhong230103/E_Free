@@ -49,21 +49,46 @@ export const useUserStore = defineStore({
   },
   actions: {
     async login(request) {
-      const data = await ifetch("auth/login", request);
-      var now = new Date();
-      var time = now.getTime();
-      var expireTime = time + 1000 * 3600;
-      Cookies.set(useRuntimeConfig().public.cookie_key, data.accessToken, {
-        expires: expireTime,
-      });
-      const initStore = useInitStore();
-      initStore.setData(data);
-      // this.requestToken();
-      useRouter().push({ path: "/" });
+      await fetch(`${useRuntimeConfig().public.prod}auth/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(request),
+      })
+      .then((response) => response.json())
+      .then((data) => {
+        var now = new Date();
+        var time = now.getTime();
+        var expireTime = time + 1000 * 3600;
+        Cookies.set(useRuntimeConfig().public.cookie_key, data.accessToken, {
+          expires: expireTime,
+        });
+        Cookies.set(`${useRuntimeConfig().public.cookie_key}_expire`, expireTime.toString(), {
+          expires: expireTime, // Same expiration as the main cookie
+        });
+        setInterval(() => {
+          // Usage example
+          if (checkCookieExpiration()) {
+            console.log('Access token is still valid.');
+          } else {
+            console.error('Access token has expired or does not exist.');
+            this.clearToken();
+          }
+        },300000)
+
+        const initStore = useInitStore();
+        initStore.setData(data);
+        // this.requestToken();
+        useRouter().push({ path: "/" });
+        })
+        .catch((error) => {
+          console.error(error);
+      })
     },
     async requestToken() {
       try {
-          alert(0)
+
       } catch (e) {
         console.error(e);
       }
