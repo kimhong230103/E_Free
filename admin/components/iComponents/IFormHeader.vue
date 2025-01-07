@@ -36,7 +36,6 @@
               </button>
               <button
                 @click="emit('addClick')"
-                v-can="permissionConst.CREATE"
                 class="btn btn-primary"
                 v-if="buttonAdd"
               >

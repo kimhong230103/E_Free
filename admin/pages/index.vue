@@ -3,8 +3,11 @@
     <defaultDashboard />
   </div>
 </template>
-<script>
+<script >
 import defaultDashboard from "./dashboard/index.vue";
+import { useUserStore } from "~/store/user";
+  // const userStore = useUserStore();
+  
 export default {
   components: {
     defaultDashboard,

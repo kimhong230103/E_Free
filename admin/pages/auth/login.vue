@@ -18,19 +18,19 @@
               <div class="login-main">
                 <form class="theme-form">
                   <h4>Sign in to account</h4>
-                  <p>Enter your username & password to login</p>
+                  <p>Enter your email address & password to login</p>
                   <div class="form-group">
-                    <label class="form-label">{{ $t("username") }}</label>
+                    <label class="form-label">{{ $t("email") }}</label>
                     <input
                       class="form-control"
-                      :class="{ 'is-invalid': v$.username.$error }"
-                      name="username"
-                      :placeholder="$t('username')"
-                      v-model="form.username"
-                      @change="v$.username.$touch"
+                      :class="{ 'is-invalid': v$.email.$error }"
+                      name="email"
+                      :placeholder="$t('email')"
+                      v-model="form.email"
+                      @change="v$.email.$touch"
                     />
-                    <span class="invalid-feedback" v-if="v$.username.$error">{{
-                      v$.username.$errors[0].$message
+                    <span class="invalid-feedback" v-if="v$.email.$error">{{
+                      v$.email.$errors[0].$message
                     }}</span>
                   </div>
                   <div class="form-group">
@@ -92,7 +92,7 @@ definePageMeta({
 
 // Declare data
 const form = reactive({
-  username: "",
+  email: "",
   password: "",
 });
 
@@ -100,7 +100,7 @@ const userStore = useUserStore();
 
 // Define validation rules
 const rules = {
-  username: {
+  email: {
     required,
   },
   password: {
@@ -113,8 +113,26 @@ const rules = {
 const v$ = vuelidate(rules, form);
 
 // Define login function
-const login = () => {
+const login = async () => {
   if (v$.value.$invalid) return; // Check if form is invalid
+  // console.log("form",form);
+  
+  // await fetch("https://efree.cheakautomate.online/gateway/api/v1/auth/login", {
+  //   method: "POST",
+  //   headers: {
+  //     "Content-Type": "application/json",
+  //   },
+  //   body: JSON.stringify(form),
+  // })
+  //   .then((response) => response.json())
+  //   .then((data) => {
+  //     // localStorage.setItem("token", data.token);
+  //     // localStorage.setItem("user", JSON.stringify(data.user));
+  //     // navigateTo("/dashboard");
+  //     console.log(data);
+      
+  //   });
+  
   userStore.login(form);
 };
 </script>
