@@ -15,20 +15,24 @@
             </div>
 
             <div class="col-md-7">
+              <div class="d-flex align-items-center">
+                <span>{{product.rate}}</span>
+                <span>{{product.releaseDate}}</span>
+              </div>
               <h5 class="text-orange">
                 ${{ product.price }}
               </h5>
               <p class="text-gray py-1">
-                <strong class="text-blue">Category:</strong> {{ product.category }}
+                <strong class="text-blue">{{ $t('category')}}:</strong> {{ product.category }}
               </p>
               <p class="text-gray py-1">
-                <strong class="text-blue">Stock:</strong> {{ product.stock }}
+                <strong class="text-blue">{{ $t('stock') }}:</strong> {{ product.stock }}
               </p>
               <p class="text-gray py-1">
-                <strong class="text-blue">Discount:</strong> {{ product.discount }}%
+                <strong class="text-blue">{{ $t('discount') }}:</strong> {{ product.discount }}%
               </p>
               <p class="text-gray py-1">
-                <strong class="text-blue">Description:</strong> {{ product.description }}
+                <strong class="text-blue">{{ $t('description')}}:</strong> {{ product.description }}
               </p>
 
               <div class="d-flex align-items-center">
@@ -54,15 +58,17 @@ import { ref, defineExpose } from "vue";
 defineProps({
   product: {
     type: Object,
-    required: true,
+    required: false,
     default: () => ({
       title: "Product Title",
       price: 0,
       category: "Unknown Category",
       stock: 0,
       discount: 0,
+      releaseDate: "12, December, 2024",
+      rate: 123,
       description: "No description provided",
-      image: "https://via.placeholder.com/150",
+      image: "/images/sample.png",
     }),
   },
 });

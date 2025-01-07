@@ -12,7 +12,7 @@
             <div class="w-100 card p-3">
               <div class="row border-round px-2 px-md-4 py-3 mx-0">
                 <div
-                  class="col-6 col-lg-3 mb-2 mb-lg-0 d-flex justify-content-center align-items-center box-promote border-right">
+                  class="col-6 col-lg-3 mb-2 mb-lg-0 box-promote border-right">
                   <Icon name="material-symbols:location-on" size="43" style="color: var(--theme-default);" />
                   <div class="ms-2">
                     <span class="text-top d-block">{{ $t('free_delivery') }}</span>
@@ -20,7 +20,7 @@
                   </div>
                 </div>
                 <div
-                  class="col-6 col-lg-3 mb-2 mb-lg-0 d-flex justify-content-center align-items-center box-promote border-right no-border">
+                  class="col-6 col-lg-3 mb-2 mb-lg-0 box-promote border-right no-border">
                   <Icon name="material-symbols:swap-horizontal-circle-outline-rounded" size="43"
                     style="color: var(--theme-default);" />
                   <div class="ms-2">
@@ -29,14 +29,14 @@
                   </div>
                 </div>
                 <div
-                  class="col-6 col-lg-3 mb-2 mb-lg-0 d-flex justify-content-center align-items-center box-promote border-right">
+                  class="col-6 col-lg-3 mb-2 mb-lg-0 box-promote border-right">
                   <Icon name="material-symbols:lock-sharp" size="43" style="color: var(--theme-default);" />
                   <div class="ms-2">
                     <span class="text-top d-block">{{ $t('security_payment') }}</span>
                     <span class="text-bottom d-block">100% {{ $t('security_payment') }}</span>
                   </div>
                 </div>
-                <div class="col-6 col-lg-3 mb-2 mb-lg-0 d-flex justify-content-center align-items-center box-promote">
+                <div class="col-6 col-lg-3 mb-2 mb-lg-0 box-promote">
                   <Icon name="material-symbols:support" size="43" style="color: var(--theme-default);" />
                   <div class="ms-2">
                     <span class="text-top d-block">24/7 {{ $t('support') }}</span>
@@ -366,6 +366,21 @@ useSeoMeta({
 </script>
 
 <style>
+
+.box-promote {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@media (max-width: 991.98px) {
+  .box-promote {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+  }
+}
+
 .text-blue {
   color: #253696;
 }

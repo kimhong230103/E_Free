@@ -2,20 +2,20 @@
     <div class="container mx-auto">
         <div class="row g-4 d-flex flex-column justify-content-between align-items-center">
             <!-- My Card Section -->
-            <div class="col-lg-5 col-md-12 p-4">
+            <div class="col-lg-8 col-md-12 p-4">
                 <div class="d-flex justify-content-between align-items-center">
-                    <h3 class="fw-bold text-blue">My Card</h3>
+                    <h3 class="fw-bold text-blue">{{ $t('ordered_product') }}</h3>
                     <a href="/product"
-                        class="d-flex justify-content-end align-items-center  text-blue fw-bold">
+                        class="d-flex justify-content-end align-items-center text-blue fw-bold">
                         <img src="/svg/back.svg" alt="">
-                        <p class="text-blue">Back</p>
+                        <p class="text-blue">{{ $t('back') }}</p>
                     </a>
                 </div>
                 <div class="block">
                     <div class="form-check mb-2 mt-2">
                         <input class="form-check-input" type="checkbox" id="select-all" v-model="selectAll"
                             @change="toggleAll" />
-                        <label class="form-check-label" for="select-all">Select all</label>
+                        <label class="form-check-label" for="select-all">{{ $t('select_all') }}</label>
                     </div>
 
                     <!-- Items List -->
@@ -35,7 +35,7 @@
                         <div class="flex-grow-1">
                             <h6 class="mb-1 text-blue">{{ item.name }}</h6>
                             <small class="text-muted d-block">{{ item.description }}</small>
-                            <button class="btn btn-sm btn-danger mt-2 px-3">cancel</button>
+                            <button class="btn btn-sm btn-danger mt-2 px-3">{{ $t('cancel') }}</button>
                         </div>
 
                         <!-- Quantity and Price -->
@@ -52,27 +52,28 @@
                         </div>
                     </div>
                 </div>
-                <h5 class="text-blue mt-2 mb-2">Pricing detail</h5>
+                <h5 class="text-blue mt-2 mb-2">{{ $t('pricing_detail') }}</h5>
                 <div class="card p-4 shadow-sm my-card">
                     <!-- Pricing Details -->
                     <div class="py-2 d-flex justify-content-between">
-                        <span>Discount</span>
+                        <span>{{ $t('discount') }}</span>
                         <span>0%</span>
                     </div>
                     <div class="py-2 d-flex justify-content-between">
-                        <span>Promotion</span>
+                        <span>{{ $t('promotion') }}</span>
                         <span>0%</span>
                     </div>
                     <div class="py-2 d-flex justify-content-between">
-                        <span>Sub order</span>
+                        <span>{{ $t('sub_total') }}</span>
                         <span>{{ totalQuantity }}</span>
                     </div>
+                    <hr>
                     <div class="py-2 d-flex justify-content-between fw-bold">
-                        <span>Total</span>
+                        <span>{{ $t('total_price') }}</span>
                         <span>${{ totalPrice.toFixed(2) }}</span>
                     </div>
                 </div>
-                <button class="btn btn-blue w-100 mt-4 py-2">Please Order</button>
+                <button class="btn btn-blue w-100 mt-4 py-2">{{ $t('click_to_order') }}</button>
             </div>
         </div>
     </div>

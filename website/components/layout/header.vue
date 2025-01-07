@@ -3,17 +3,46 @@
     <div class="px-2 px-md-5 py-2">
       <div class="row align-items-center">
         <div class="col-3">
+          <h3 class="max-992-none" @click="navigateTo('/')" style="cursor: pointer">
+            <img class="for-light" height="50px" src="/e-free-logo.png" alt="" />
+          </h3>
           <div class="d-flex align-items-center">
-            <el-button class="min-992-none" @click="drawer = true">
+            <el-button class="min-992-none" @click="toggleSidebar">
               <Icon name="solar:list-linear" size="30px" />
             </el-button>
-            <h3 class="max-992-none" @click="navigateTo('/')" style="cursor: pointer">
-              <img class="for-light" height="60px" src="/e-free-logo.png" alt="" />
-            </h3>
+
+            <!-- Sidebar -->
+            <div class="sidebar-container" :class="{ 'show-sidebar': drawer }">
+              <div class="sidebar-header">
+                <h3 class="min-992-none" @click="navigateTo('/')" style="cursor: pointer">
+                  <img class="for-light" height="50px" src="/e-free-logo.png" alt="" />
+                </h3>
+                <div @click="toggleSidebar">
+                  <Icon name="solar:close-circle-bold" size="30px" style="color: #253696;" />
+                </div>
+              </div>
+              <ul class="sidebar-menu">
+                <li v-for="menu in menus" :key="menu.title" @click="navigateTo(menu.link)">
+                  {{ $t(menu.title) }}
+                </li>
+                <div v-if="!nullToVoid(userStore.user.id) != ''">
+                  <el-button @click="signUp()" type="primary" class="sidebar_button w-100 d-block" round>{{
+                    $t("sign_up")
+                  }}</el-button>
+                  <el-button @click="signIn()" type="primary" class="sidebar_button w-100 d-block" round>{{
+                    $t("sign_in")
+                  }}</el-button>
+                </div>
+              </ul>
+
+            </div>
+
+            <!-- Overlay for Sidebar -->
+            <div class="sidebar-overlay" v-if="drawer" @click="toggleSidebar"></div>
           </div>
         </div>
         <div class="col-6">
-          <div class="d-flex justify-content-center">
+          <div class="d-flex justify-content-center align-items-center">
             <h3 class="min-992-none" @click="navigateTo('/')" style="cursor: pointer">
               <img class="for-light" height="50px" src="/e-free-logo.png" alt="" />
             </h3>
@@ -148,6 +177,18 @@ const menus = ref([
     link: "/order",
   },
 ]);
+
+const router = useRouter();
+
+const toggleSidebar = () => {
+  drawer.value = !drawer.value;
+};
+
+const navigateTo = (link) => {
+  drawer.value = false; // Close sidebar after navigation
+  router.push(link);
+};
+
 onMounted(async () => {
   darkMode.value = isDark.value;
 });
@@ -231,6 +272,82 @@ const closeProfilePopup = () => {
 }
 </script>
 <style>
+el-button.btn-close {
+  padding: 0px !important;
+}
+
+/* Sidebar Container */
+.sidebar-container {
+  position: fixed;
+  top: 0;
+  left: -250px;
+  /* Start off-screen */
+  width: 250px;
+  height: 100%;
+  background-color: #E5F0FF;
+  color: #253696;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
+  z-index: 1050;
+  overflow-y: auto;
+  transition: left 0.3s ease;
+  /* Smooth slide-in animation */
+}
+
+/* Sidebar Visible State */
+.show-sidebar {
+  left: 0;
+  /* Slide into view */
+}
+
+.sidebar_button {
+  margin: 5px 0px !important;
+
+}
+
+/* Sidebar Header */
+.sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  border-bottom: 1px solid #3b4a6b;
+}
+
+/* Sidebar Menu */
+.sidebar-menu {
+  list-style: none;
+  margin: 0;
+  padding: 10px;
+}
+
+.sidebar-menu li {
+  background: none !important;
+  font-size: large;
+}
+
+.sidebar-menu li {
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.sidebar-menu li:hover {
+  background-color: #253696;
+  color: white;
+  border-radius: 4px;
+}
+
+/* Overlay for Sidebar */
+.sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1049;
+}
+
 .modal {
   background-color: rgba(0, 0, 0, 0.324) !important;
 }
@@ -243,13 +360,6 @@ const closeProfilePopup = () => {
   color: var(--theme-default);
 }
 
-html.dark .btn-signup {
-  background-color: #fb5d1f;
-}
-
-html.dark .btn-login {
-  background-color: #fb5d1f;
-}
 
 .header-card {
   background-color: #F0F4FF !important;

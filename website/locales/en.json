@@ -476,6 +476,14 @@
     "resend_email": "Resend Email",
     "reset_password": "Reset Password",
     "reset_password_text": "Choose a new password for your account.",
-    "new_password": "New Password"
+    "new_password": "New Password",
+    "ordered_product": "Ordered products",
+    "back": "Back",
+    "pricing_detail": "Pricing Detail",
+    "discount": "Discount",
+    "sub_total": "Sub Total",
+    "total_price": "Total Price",
+    "click_to_order": "Click to Order",
+    "stock": "Stock"
   }
 }
