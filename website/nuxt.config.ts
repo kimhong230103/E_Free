@@ -1,8 +1,13 @@
 import { defineNuxtConfig } from "nuxt/config";
 export default defineNuxtConfig({
   builder: "vite",
-  css: ["@/assets/scss/app.scss"],
-
+  css: ["@/assets/scss/app.scss",'@/assets/css/tailwind.css'],
+  postcss: {
+    plugins: {
+      tailwindcss: {},
+      autoprefixer: {},
+    },
+  },
   routeRules: {
     "/**": { ssr: true },
   },

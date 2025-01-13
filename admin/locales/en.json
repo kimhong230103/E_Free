@@ -597,6 +597,7 @@
     "all_title_are_required": "All title are required",
     "kh_name": "Khmer Name",
     "en_name": "English Name",
-    "qty": "Quantity"
+    "qty": "Quantity",
+    "content": "Content"
   }
 }
