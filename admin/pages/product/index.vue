@@ -262,8 +262,6 @@ const getData = async () => {
   .catch(error => {
     console.error('There has been a problem with your fetch operation:', error);
   })
-    
-    setInput(data);
   } catch (error) {
     console.error("Error fetching data:", error);
   }

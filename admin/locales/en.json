@@ -598,6 +598,18 @@
     "kh_name": "Khmer Name",
     "en_name": "English Name",
     "qty": "Quantity",
-    "content": "Content"
+    "content": "Content",
+    "en": "English",
+    "kh": "Khmer",
+    "unit": "Unit",
+    "unit_value": "Unit Value",
+    "dimension": "Dimension",
+    "yes":"Yes",
+    "no":"No",
+    "second_hand": "Second Hand",
+    "featured": "Featured",
+    "new_arrival": "New Arrival",
+    "best_seller": "Best Seller",
+    "warranty_period": "Warranty Period"
   }
 }

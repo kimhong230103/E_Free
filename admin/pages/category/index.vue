@@ -184,7 +184,7 @@ const getData = async () => {
       return response.json(); // Parse the JSON from the response
   })
   .then(data => {
-    categoryList.setData(data);
+    categoryList.setData(data.payload);
     lists.value = data.payload;
     console.log("lists",lists.value);
   })
