@@ -118,16 +118,8 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
-      apiUrl: process.env.API_URL,
-      baseUrl: process.env.BASE_URL,
       cookie_key: process.env.COOKIE_KEY,
-      apiKey: process.env.API_KEY,
-      authDomain: process.env.AUTH_DOMAIN,
-      projectId: process.env.PROJECT_ID,
-      storageBucket: process.env.STORAGE_BUCKET,
-      messagingSenderId: process.env.MESSAGING_SENDER_ID,
-      appId: process.env.APP_ID,
-      measurementId: process.env.MEASUREMENT_ID,
+      prod: process.env.PROD
     },
     serviceWorker: true,
   },

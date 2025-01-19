@@ -16,7 +16,6 @@
             : scrollToLeft()
         "
       >
-        <!-- <vue-feather type="arrow-left"></vue-feather> -->
       </li>
     </div>
     <Navmenu />
@@ -35,7 +34,6 @@
           : scrollToRight()
       "
     >
-      <!-- <vue-feather type="arrow-right"></vue-feather> -->
     </li>
   </nav>
 </template>

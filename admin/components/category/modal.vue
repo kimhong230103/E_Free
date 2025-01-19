@@ -1,5 +1,5 @@
 <template>
-  <div class="modal modal-lg fade" id="modal">
+  <div class="modal modal-xl fade" id="modal">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -16,11 +16,66 @@
         </div>
         <div class="modal-body">
           <div class="row">
-            <div class="col-12">
-              <div class="col-12">
+              <div class="col-12 col-lg-8">
+                <div class="row">
+                  <div class="col-12">
+                    <div class="form-group mb-2">
+                      <label for="en_name" class="required">{{ $t("en_name") }}</label>
+                      <input
+                        v-model="form.nameEn"
+                        required
+                        type="text"
+                        class="form-control"
+                        id="en_name"
+                        :class="{ 'is-invalid': v$.nameEn.$error }"
+                        @change="v$.nameEn.$touch"
+                        :placeholder="$t('en_name')"
+                      />
+                      <span class="invalid-feedback" v-if="v$.nameEn.$error">{{
+                        v$.nameEn.$errors[0].$message
+                      }}</span>
+                    </div>
+                  </div>
+                  <div class="col-12">
+                    <div class="form-group mb-2">
+                      <label for="kh_name">{{ $t("kh_name") }}</label>
+                      <input
+                        v-model="form.nameKh"
+                        required
+                        type="text"
+                        class="form-control"
+                        id="kh_name"
+                        :placeholder="$t('kh_name')"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-12">
+                    <div class="form-group mb-2">
+                      <label for="status" class="required">{{ $t("status") }}</label>
+                      <select
+                        class="form-select"
+                        v-model="form.isActive"
+                        :class="{ 'is-invalid': v$.isActive.$error }"
+                        @change="v$.isActive.$touch"
+                      >
+                        <option value="1">
+                          {{ $t("enable") }}
+                        </option>
+                        <option value="0">
+                          {{ $t("disable") }}
+                        </option>
+                      </select>
+                      <span class="invalid-feedback" v-if="v$.isActive.$error">{{
+                        v$.isActive.$errors[0].$message
+                      }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 col-lg-4">
                 <div class="text-center m-t-25">
                   <img
-                    :src="getImagePath(form.image)"
+                    :src="form.image"
                     width="200"
                     class="rounded mx-auto d-block"
                   />
@@ -47,46 +102,6 @@
                   </div>
                 </div>
               </div>
-              <div class="form-group mb-2">
-                <label for="name" class="required">{{ $t("name") }}</label>
-                <input
-                  v-model="form.name"
-                  required
-                  type="text"
-                  class="form-control"
-                  id="name"
-                  :class="{ 'is-invalid': v$.name.$error }"
-                  @change="v$.name.$touch"
-                  :placeholder="$t('name')"
-                />
-                <span class="invalid-feedback" v-if="v$.name.$error">{{
-                  v$.name.$errors[0].$message
-                }}</span>
-              </div>
-              <!-- <div class="form-group mb-2">
-                <label for="link" class="required">{{ $t("type") }}</label>
-                <select
-                  class="form-select"
-                  v-model="form.type"
-                  :class="{ 'is-invalid': v$.type.$error }"
-                  @change="v$.type.$touch"
-                >
-                  <option :value="null" selected>
-                    {{ $t("please_select") }}
-                  </option>
-                  <option
-                    v-for="(obj, index) in categoryType.lists"
-                    :key="index"
-                    :value="obj.id"
-                  >
-                    {{ $t(obj.name) }}
-                  </option>
-                </select>
-                <span class="invalid-feedback" v-if="v$.type.$error">{{
-                  v$.type.$errors[0].$message
-                }}</span>
-              </div> -->
-            </div>
           </div>
         </div>
         <div class="modal-footer">
@@ -117,18 +132,14 @@
       </div>
     </div>
 
-    <div v-if="hideShowCropperImage">
-      <ModalCropperImage
-        ref="modalShowCropperImage"
-        :target-file.sync="targetFile"
-        :aspectRatio="aspectRatio"
-        :previewWidth="cropWidth"
-        :previewHeight="cropHeight"
-        :cropBoxResizable="false"
-        @closeModal="closeModalCropperImage"
-        @save="saveModalCropperImage"
-      />
-    </div>
+    <CropImage
+        ref="cropImageModal"
+        :auto-zoom="false"
+        :freeSize="true"
+        :resizable="true"
+        :movable="true"
+        @imageCroped="imagecroped"
+      ></CropImage>
   </div>
 </template>
 
@@ -142,9 +153,11 @@ import { appConst } from "~/constants/app";
 import { useCategoryList } from "~/store/category_list.js";
 import ModalCropperImage from "~/components/ModalCropperImage.vue";
 import { useBranchStore } from "~/store/branch";
+import { useUserStore } from "~/store/user";
 const branchStore = useBranchStore();
 const categoryType = useCategoryType();
 const categoryList = useCategoryList();
+const userStore = useUserStore();
 const props = defineProps({
   actionType: String,
 });
@@ -152,25 +165,31 @@ const state = reactive({
   modal: null,
 });
 
+
 const defaultForm = {
   id: null,
-  name: null,
-  type: categoryType.survey,
-  image: null,
-  slug: null,
+  nameKh: null,
+  nameEn: null,
+  isActive: 1,
+  descriptionKh: null,
+  descriptionEn: null,
+  image: appConst.defaultImage
 };
-let form = reactive({});
 
-
+let form = reactive({ ...defaultForm });
 
 const rules = computed(() => {
   return {
-    name: {
+    nameEn: {
       required,
       maxLength: maxLength(100),
       $autoDirty: true,
     },
-  };
+    isActive: {
+      required,
+      $autoDirty: true,
+    }
+  }
 });
 const v$ = vuelidate(rules, form);
 const emit = defineEmits(["closeModal"]);
@@ -179,17 +198,17 @@ let aspectRatio = ref(null);
 let cropWidth = ref(null);
 let cropHeight = ref(null);
 const fileInput = ref(null);
+const cropImageModal = ref(null);
 const modalShowCropperImage = ref(null);
 const hideShowCropperImage = ref(false);
 const imagePath = ref(null);
-
+const imageName = ref(null);
+const imageFile = ref(null);
 const chooseImage = () => {
   fileInput.value.click();
 };
-
 const onFileChange = ($event) => {
   const files = $event.target.files || $event.dataTransfer.files;
-  
   if (files[0]) {
     if (files[0].size > 15000000) {
       fileInput.value = "";
@@ -200,31 +219,36 @@ const onFileChange = ($event) => {
       });
       return;
     }
-    targetFile.value = $event;
-    openModalCropperImage();
+    // Check if the file is an image and if it is of type jpg, jpeg, or gif
+    const allowedTypes = [
+      "image/jpeg",
+      "image/png",
+      "image/jpg",
+      "image/gif",
+      "image/webp",
+      "image/svg+xml",
+    ];
+    if (
+      files[0].type.indexOf("image/") === -1 ||
+      !allowedTypes.includes(files[0].type.toLowerCase())
+    ) {
+      swal({
+        icon: "warning",
+        title: "Image Validation",
+        text: "Please select a JPG, JPEG, or GIF image file.",
+      });
+      return;
+    }
   }
+  
+  cropImageModal.value.showModal($event);
+  imageFile.value = files[0];
+  imageName.value = files[0].name;
+  fileInput.value.value = null; 
 };
-
-const openModalCropperImage = () => {
-  hideShowCropperImage.value = true;
-  nextTick(() => {
-    modalShowCropperImage.value.showModal(targetFile.value);
-  });
-};
-
-const closeModalCropperImage = () => {
-  hideShowCropperImage.value = false;
-  fileInput.value = "";
-  targetFile.value = null;
-  aspectRatio.value = null;
-  cropWidth.value = null;
-  cropHeight.value = null;
-};
-const saveModalCropperImage = (base64) => {
-  imagePath.value = "";
-  form.image = base64;
-  closeModalCropperImage();
-};
+const imagecroped = async (data) =>{
+  form.image = data;
+}
 onMounted(() => {
   setDefaultForm();
   const bootstrap = useNuxtApp().$bootstrap;
@@ -232,14 +256,20 @@ onMounted(() => {
 });
 
 const showModal = (editId = null, row) => {
+  imageFile.value = null;
+  imageName.value = null;
   state.modal.show();
   if (editId) {
-    const { id, name, type, image,slug } = row;
+    const { id, nameEn,nameKh,descriptionEn,descriptionKh,imageUrl } = row;
     form.id = id;
-    form.name = name;
-    form.type = type;
-    form.image = image;
-    form.slug = slug;
+    form.nameEn = nameEn;
+    form.nameKh = nameKh;
+    form.descriptionEn = descriptionEn;
+    form.descriptionKh = descriptionKh;
+    form.image = imageUrl
+    if(nullToVoid(imageUrl) == ""){
+      form.image = appConst.defaultImage
+    }
   } else {
     setDefaultForm();
   }
@@ -247,21 +277,54 @@ const showModal = (editId = null, row) => {
 const save = async (event) => {
   const result = await v$.value.$validate();
   if (result) {
-    let url = categoryAPI.store;
+    let url = "https://efree.cheakautomate.online/gateway/CATEGORY/api/v1/categories";
+    let method = "POST";
     if (props.actionType == appConst.modalAction.update) {
-      url = categoryAPI.update;
+      url = "https://efree.cheakautomate.online/gateway/CATEGORY/api/v1/categories/" + form.id;
+      method = "PATCH";
     }
-    form.branch_id = branchStore.branch_id;
-    form.slug = convertToSlug(form.name);
-    const data = await ifetch(url, form);
-    iAlert().success();
-    categoryList.setData(data.data);
-    if (event) {
-      emit("closeModal", true);
-      closeModal(true);
-    } else {
-      setDefaultForm();
-    }
+    const data = await fetch(url, {
+      method: method, // Specify the method as GET
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: userStore.logged ? `Bearer ${userStore.token}` : "",
+      },
+      body: JSON.stringify(form),
+    }).then((response) => response.json())
+    .then(async (data) =>{
+      if(nullToVoid(imageFile.value) != "" && nullToVoid(imageName.value) != ""){
+        const myHeaders = new Headers();
+        myHeaders.append("Authorization", userStore.logged ? `Bearer ${userStore.token}` : "");
+        const formdata = new FormData();
+        formdata.append("file", imageFile.value, imageName.value);
+        const requestOptions = {
+          method: "POST",
+          headers: myHeaders,
+          body: formdata,
+          redirect: "follow"
+        };
+        await fetch(`https://efree.cheakautomate.online/gateway/CATEGORY/api/v1/categories/upload/single/${data.payload.id}`, 
+          requestOptions
+        ).then((response) => response.json())
+        .then((data) => {
+          console.log("dataResponse",data);
+          
+        })
+      }
+      imageFile.value = null;
+      imageName.value = null;
+      iAlert().success();
+      categoryList.setData(data.data);
+      if (event) {
+        emit("closeModal", true);
+        closeModal(true);
+      } else {
+        setDefaultForm();
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+    });
   } else {
     useNuxtApp().$showToast({ msg: "Invalid Input.", type: "error" });
   }

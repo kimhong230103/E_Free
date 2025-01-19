@@ -41,6 +41,8 @@ import getImageFromSoccerAPI from './helpers/getImageFromSoccerAPI'
 import dateTimeZoneFormat from "./helpers/dateTimeZoneFormat"
 import convertToSlug from "./helpers/convertToSlug";
 import getNameByLang from "./helpers/getNameByLang";
+import goTo from "./goTo";
+import { checkCookieExpiration } from "./checkCookies";
 export {
   getNameByLang,
   convertToSlug,
@@ -84,5 +86,7 @@ export {
   generateUUID,
   viewContact,
   viewPassword,
-  convertToWebp
+  convertToWebp,
+  checkCookieExpiration,
+  goTo
 };

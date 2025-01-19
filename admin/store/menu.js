@@ -120,87 +120,87 @@ export const useMenuStore = defineStore({
       const roleModuleStore = useRoleModuleStore();
       const userStore = useUserStore();
       const menuItmes = Menu.data;
-
-      if (isEmpty(userStore.user)) {
-        this.data = [];
-      }
-      if (userStore.isSuperUser) {
-        this.data = Menu.data;
-      } else {
-        let moduleMenu = roleModuleStore.getList;
-        let menu = [];
-        for (let obj of menuItmes) {
-          if (empty(obj.children)) {
-            moduleMenu.forEach((b) => {
-              if (obj.key == b?.module_key) {
-                let view = empty(obj.view_key) ? "view" : obj.view_key;
-                let viewPermission = b.permissions.find(
-                  (ele) => ele.permission_name == view
-                );
-                if (!isEmpty(viewPermission)) {
-                  menu.push(obj);
-                }
-              }
-            });
-          } else {
-            let subs = [];
-            let lastSubs = [];
-            for (let subsObj of obj.children) {
-              if (empty(subsObj.children)) {
-                moduleMenu.forEach((b) => {
-                  if (subsObj.key == b?.module_key) {
-                    let view = empty(subsObj.view_key)
-                      ? "view"
-                      : subsObj.view_key;
-                    let viewPermission = b.permissions.find(
-                      (obj) => obj.permission_name == view
-                    );
-                    if (!isEmpty(viewPermission)) {
-                      subs.push(subsObj);
-                    }
-                  }
-                });
-              } else {
-                subsObj.children.forEach((lastSubsObj) => {
-                  moduleMenu.forEach((b) => {
-                    if (lastSubsObj.key == b?.module_key) {
-                      let view = empty(lastSubsObj.view_key)
-                        ? "view"
-                        : lastSubsObj.view_key;
-                      let viewPermission = b.permissions.find(
-                        (obj) => obj.permission_name == view
-                      );
-                      if (!isEmpty(viewPermission)) {
-                        lastSubs.push(lastSubsObj);
-                      }
-                    }
-                  });
-                });
-              }
-              if (lastSubs.length > 0) {
-                subs.push({
-                  title: subsObj.title,
-                  icon: subsObj.icon,
-                  type: "sub",
-                  children: lastSubs,
-                });
-              }
-              lastSubs = [];
-            }
-            if (subs.length > 0) {
-              menu.push({
-                title: obj.title,
-                path: obj.path,
-                icon: obj.icon,
-                key: obj.key,
-                type: "sub",
-                children: subs,
-              });
-            }
-          }
-        }
-        this.data = menu;
-      }
+      this.data = Menu.data;
+      // if (isEmpty(userStore.user)) {
+      //   this.data = [];
+      // }
+      // if (userStore.isSuperUser) {
+      //   this.data = Menu.data;
+      // } else {
+      //   let moduleMenu = roleModuleStore.getList;
+      //   let menu = [];
+      //   for (let obj of menuItmes) {
+      //     if (empty(obj.children)) {
+      //       moduleMenu.forEach((b) => {
+      //         if (obj.key == b?.module_key) {
+      //           let view = empty(obj.view_key) ? "view" : obj.view_key;
+      //           let viewPermission = b.permissions.find(
+      //             (ele) => ele.permission_name == view
+      //           );
+      //           if (!isEmpty(viewPermission)) {
+      //             menu.push(obj);
+      //           }
+      //         }
+      //       });
+      //     } else {
+      //       let subs = [];
+      //       let lastSubs = [];
+      //       for (let subsObj of obj.children) {
+      //         if (empty(subsObj.children)) {
+      //           moduleMenu.forEach((b) => {
+      //             if (subsObj.key == b?.module_key) {
+      //               let view = empty(subsObj.view_key)
+      //                 ? "view"
+      //                 : subsObj.view_key;
+      //               let viewPermission = b.permissions.find(
+      //                 (obj) => obj.permission_name == view
+      //               );
+      //               if (!isEmpty(viewPermission)) {
+      //                 subs.push(subsObj);
+      //               }
+      //             }
+      //           });
+      //         } else {
+      //           subsObj.children.forEach((lastSubsObj) => {
+      //             moduleMenu.forEach((b) => {
+      //               if (lastSubsObj.key == b?.module_key) {
+      //                 let view = empty(lastSubsObj.view_key)
+      //                   ? "view"
+      //                   : lastSubsObj.view_key;
+      //                 let viewPermission = b.permissions.find(
+      //                   (obj) => obj.permission_name == view
+      //                 );
+      //                 if (!isEmpty(viewPermission)) {
+      //                   lastSubs.push(lastSubsObj);
+      //                 }
+      //               }
+      //             });
+      //           });
+      //         }
+      //         if (lastSubs.length > 0) {
+      //           subs.push({
+      //             title: subsObj.title,
+      //             icon: subsObj.icon,
+      //             type: "sub",
+      //             children: lastSubs,
+      //           });
+      //         }
+      //         lastSubs = [];
+      //       }
+      //       if (subs.length > 0) {
+      //         menu.push({
+      //           title: obj.title,
+      //           path: obj.path,
+      //           icon: obj.icon,
+      //           key: obj.key,
+      //           type: "sub",
+      //           children: subs,
+      //         });
+      //       }
+      //     }
+      //   }
+      //   this.data = menu;
+      // }
     },
   },
 });

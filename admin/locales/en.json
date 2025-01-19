@@ -594,6 +594,22 @@
     "add_working_time": "Add Working Time",
     "time": "Time",
     "all_logo_are_required": "All logos are required",
-    "all_title_are_required": "All title are required"
+    "all_title_are_required": "All title are required",
+    "kh_name": "Khmer Name",
+    "en_name": "English Name",
+    "qty": "Quantity",
+    "content": "Content",
+    "en": "English",
+    "kh": "Khmer",
+    "unit": "Unit",
+    "unit_value": "Unit Value",
+    "dimension": "Dimension",
+    "yes":"Yes",
+    "no":"No",
+    "second_hand": "Second Hand",
+    "featured": "Featured",
+    "new_arrival": "New Arrival",
+    "best_seller": "Best Seller",
+    "warranty_period": "Warranty Period"
   }
 }

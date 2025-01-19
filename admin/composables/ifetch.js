@@ -4,12 +4,12 @@ import Cookies from "js-cookie";
 import { useLoadingStore } from "~/store/loading";
 import { useUserStore } from "~/store/user";
 
-export function ifetch(url, data, responseType = "json") {
+export function ifetch(url, data, responseType = "json",typeMethod='POST') {
   const userStore = useUserStore();
   const loadingStore = useLoadingStore();
   const fetch = ofetch.create({
-    baseURL: useRuntimeConfig().public.apiUrl,
-    method: "POST",
+    baseURL: useRuntimeConfig().public.prod,
+    method: typeMethod,
     body: data,
     responseType: responseType,
     headers: {
@@ -32,6 +32,8 @@ export function ifetch(url, data, responseType = "json") {
       }
     },
     async onResponseError({ response, error }) {
+      console.log(response);
+      
       loadingStore.setInprogress(false);
       const status = response.status;
       console.log('ifetch return status ', status)
