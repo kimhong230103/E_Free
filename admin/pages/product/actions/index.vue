@@ -92,7 +92,7 @@
                         }}</span>
                       </div>
                     </div>
-                    <div class="col-12 mt-2">
+                    <div class="col-12 col-lg-6 mt-2">
                       <div class="form-group">
                         <label for="warranty_period">{{ $t("warranty_period") }}</label>
                         <input
@@ -101,6 +101,18 @@
                           class="form-control mb-2"
                           id="warranty_period"
                           :placeholder="$t('warranty_period')"
+                        />
+                      </div>
+                    </div>
+                    <div class="col-12 col-lg-6 mt-2">
+                      <div class="form-group">
+                        <label for="brand">{{ $t("brand") }}</label>
+                        <input
+                          v-model="form.brand"
+                          type="text"
+                          class="form-control mb-2"
+                          id="brand"
+                          :placeholder="$t('brand')"
                         />
                       </div>
                     </div>
@@ -302,6 +314,75 @@
                     </textarea>
                   </div>
                 </div>
+                <!-- List banner -->
+
+                <div class="col-12 mt-2">
+                  <div class="form-group">
+                    <label class="required">{{ $t("gallery") }}</label>
+                    <span>
+                      <Icon
+                        size="20"
+                        class="text-primary"
+                        name="material-symbols-light:image-outline-rounded"
+                      ></Icon>
+                    </span>
+                    <div class="border border-gray rounded">
+                      <div
+                        v-if="form.gallery.length <= 0"
+                        class="flex-column d-flex align-items-center justify-content-center p-5"
+                      >
+                        <p>{{ $t("please_upload") + " " + $t("gallery") }}</p>
+                        <Icon
+                          style="cursor: pointer"
+                          @click="uploadGallery"
+                          size="100"
+                          class="text-gray"
+                          name="material-symbols-light:add-photo-alternate-outline-rounded"
+                        ></Icon>
+                      </div>
+                      <div
+                        class="d-flex align-items-center"
+                        style="flex-wrap: wrap"
+                        v-else
+                      >
+                        <draggable
+                          :list="form.gallery"
+                          class="draggable-list d-flex"
+                          style="flex-wrap: wrap"
+                        >
+                          <transition-group>
+                            <div
+                              v-for="item,index in form.gallery"
+                              :key="index"
+                              class="position-relative"
+                            >
+                              <Icon
+                                name="material-symbols-light:cancel-outline-rounded"
+                                class="position-absolute text-danger"
+                                size="25"
+                                style="right: 0px; top: 0px;cursor: pointer;"
+                                @click="removeGallery(item.id,index)"
+                              ></Icon>
+                              <img
+                                :src="getImagePath(item.image, 'gallery')"
+                                class="m-3"
+                                alt=""
+                                height="200"
+                              />
+                            </div>
+                          </transition-group>
+                        </draggable>
+                        <Icon
+                          @click="uploadGallery"
+                          size="100"
+                          style="cursor: pointer"
+                          class="text-gray"
+                          name="material-symbols-light:add-photo-alternate-outline-rounded"
+                        ></Icon>
+                      </div>
+                    </div>
+                  </div>
+                </div>
                 <div class="col-12 mt-2">
                   <div class="form-group required">
                     <label for="descriptionkh">{{ $t("description") }} ( {{ $t('kh') }} )</label>
@@ -372,7 +453,7 @@
     weighType: '',
     weight: '',
     dimension:'',
-    brank: '',
+    brand: '',
     warrantyPeriod: '',
     isFeatured: true,
     isNewArrival: true,
@@ -385,22 +466,13 @@
     secondHandDescription: '',
     categoryId: '',
     status: true,
+    img: '',
+    gallery: [],
   };
   const editor = ref(null);
   const categories = ref([]);
   const categoryList = useCategoryList();
-  categoryList.lists.forEach((item) => {
-    let name = {
-        'en': item.nameEn,
-        'kh': item.nameKh
-      }
-      name = JSON.stringify(name);
-    let data = {
-      id: item.id,
-      name: name
-    };
-    categories.value.push(data);
-  })
+  
   
   const route = useRoute();
   const fileInput = ref(null);
@@ -414,6 +486,20 @@
   const changeDate = (date) => {
     form.publish_date = moment(date).format("YYYY-MM-DD");
   }
+  const getListCategory =  () => {
+    categoryList.lists.forEach((item) => {
+    let name = {
+        'en': item.nameEn,
+        'kh': item.nameKh
+      }
+      name = JSON.stringify(name);
+    let data = {
+      id: item.id,
+      name: name
+    };
+    categories.value.push(data);
+  })
+  };
   
   const rules = computed(() => {
     return {
@@ -447,6 +533,7 @@
     } else {
       setDefaultForm();
     }
+    getListCategory();
     if (checkCookieExpiration()) {
         console.log('Access token is still valid.');
     } else {
@@ -454,13 +541,13 @@
         useUserStore().clearToken();
     }
   });
-  const copyNameEnglish = (code, index) => {
-    if (code == "en") {
-      form.slug = convertString(form.post_translate[index].name);
-      form.meta_title = form.post_translate[index].name;
-      form.name=form.post_translate[index].name
-    }
-  }
+  // const copyNameEnglish = (code, index) => {
+  //   if (code == "en") {
+  //     form.slug = convertString(form.post_translate[index].name);
+  //     form.meta_title = form.post_translate[index].name;
+  //     form.name=form.post_translate[index].name
+  //   }
+  // }
   function convertString(input) {
       return input.toLowerCase().replace(/ /g, '-');
   }
@@ -517,14 +604,29 @@
     return {
       id: form.id,
       img: form.img,
-      category_id: form.category_id,
-      slug: form.slug,
-      meta_title: form.meta_title,
-      publish_date: form.publish_date,
-      post_translate: form.post_translate,
-      business_id: businessTypeEnum.kdac,
-      name: form.name,
-      status: form.status
+      category_id: form.categoryId,
+      nameEn: form.nameEn,
+      nameKh: form.nameKh,
+      descriptionEn: form.descriptionEn,
+      descriptionKh: form.descriptionKh,
+      price: form.price,
+      stockQty: form.stockQty,
+      metaTitle: form.metaTitle,
+      metaDescription: form.metaDescription,
+      isSecondHand: form.isSecondHand,
+      secondHandDescription: form.secondHandDescription,
+      status: form.status,
+      weighType: form.weighType,
+      weight: form.weight,
+      dimension: form.dimension,
+      shippingClass: form.shippingClass,
+      brand: form.brand,
+      warrantyPeriod: form.warrantyPeriod,
+      returnPolicy: form.returnPolicy,
+      isFeatured: form.isFeatured,
+      isNewArrival: form.isNewArrival,
+      isBestSeller:  form.isBestSeller,
+      gallery: form.gallery,
     };
   };
   

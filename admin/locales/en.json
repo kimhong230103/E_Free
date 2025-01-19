@@ -610,6 +610,9 @@
     "featured": "Featured",
     "new_arrival": "New Arrival",
     "best_seller": "Best Seller",
-    "warranty_period": "Warranty Period"
+    "warranty_period": "Warranty Period",
+    "please_upload": "Please Upload",
+    "gallery":"Gallery",
+    "brand": "Brand"
   }
 }
