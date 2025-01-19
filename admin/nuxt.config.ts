@@ -68,7 +68,6 @@ export default defineNuxtConfig({
       },
     ],
   ],
-
   image:{
     provider: 'ipx',  // Default provider for local image serving
     dir: 'public',  // Local images should be placed in the public folder

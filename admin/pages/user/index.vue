@@ -125,6 +125,9 @@
   import { get } from "@vueuse/core";
   const useLanguage = useLanguageStore();
   const languageList = ref(useLanguage.lists);
+  definePageMeta({
+    middleware: "global",
+  });
   const tableHeader = ref([
     {
       label: "action",
@@ -262,8 +265,6 @@
     .catch(error => {
       console.error('There has been a problem with your fetch operation:', error);
     })
-      
-      setInput(data);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
