@@ -15,7 +15,7 @@ import Cookies from "js-cookie";
 
 export default defineNuxtRouteMiddleware((to, from) => {
   console.log("router middleware");
-alert(0)
+
   // Ensure `to` is defined before accessing `to.path`
   if (!to || !to.path) {
     return;
@@ -41,4 +41,3 @@ alert(0)
     }
   }
 });
-
