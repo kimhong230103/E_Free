@@ -3,10 +3,11 @@ import { defineNuxtConfig } from "nuxt/config";
 export default defineNuxtConfig({
   builder: "vite",
   css: ["@/assets/scss/app.scss"],
+  ssr: false,
 
-  routeRules: {
-    "/**": { ssr: true },
-  },
+  // routeRules: {
+  //   "/**": { ssr: true },
+  // },
 
   components: [
     {
@@ -55,7 +56,7 @@ export default defineNuxtConfig({
         { rel: "icon", type: "image/png", href: "/images/e-free-logo.png" },
       ],
     },
-    baseURL: "/",
+    // baseURL: "/",
   },
 
   modules: [
@@ -131,6 +132,10 @@ export default defineNuxtConfig({
   build: {
     transpile: ["@vuepic/vue-datepicker"],
   },
+
+  // devServer: {
+  //   port: 3000,
+  // },
 
   // vite: {
   //     build: {
