@@ -3,7 +3,6 @@ import { useUserStore } from "~/store/user";
 export default defineNuxtRouteMiddleware((to, from, route) => {
 	const moduleKey = to.matched[0].meta.moduleKey;
 	const viewKey = to.matched[0].meta.viewKey;
-
 	const roleModuleStore = useRoleModuleStore();
 	const userStore = useUserStore();
 	const view_key =
