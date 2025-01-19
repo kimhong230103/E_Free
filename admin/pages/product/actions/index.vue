@@ -631,16 +631,7 @@
   };
   
   const setInput = (res) => {
-    form.id = res.data.id;
-    form.img = res.data.image;
-    form.category_id = res.data.category_id;
-    form.slug = res.data.slug;
-    form.meta_title = res.data.meta_title;
-    form.publish_date = res.data.publish_date;
-    form.post_translate = res.data.post_translate;
-    form.business_id = businessTypeEnum.kdac;
-    form.status = res.data.status
-    
+
   };
   
   const getData = async (id) => {
@@ -651,7 +642,7 @@
   const save = async (type) => {
     const result = await v$.value.$validate();
     if (result) {
-      let url = blogAPI.store;
+      let url = "";
       if (!isEmpty(route.query)) {
         url = blogAPI.update;
       }
