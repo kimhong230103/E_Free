@@ -3,6 +3,8 @@
 </template>
 
 <script setup>
-  
+  definePageMeta({
+    middleware: "global",
+  });
   
 </script>

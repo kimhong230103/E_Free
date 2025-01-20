@@ -6,6 +6,9 @@
 <script setup>
 import defaultDashboard from "./dashboard/index.vue";
 import { useUserStore } from "~/store/user"
+definePageMeta({
+  middleware: "global",
+});
 onMounted(() => {
   if (checkCookieExpiration()) {
     console.log('Access token is still valid.');

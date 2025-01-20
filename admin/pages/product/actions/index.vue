@@ -12,7 +12,7 @@
                   <div class="d-flex gap-2">
                     <button
                       class="btn btn-warning"
-                      @click="navigateTo({ path: '/product' });"
+                      @click="goTo({ path: '/product' });"
                     >
                       <Icon
                         name="material-symbols:arrow-back-ios-rounded"
@@ -37,66 +37,136 @@
               <div class="row">
                 <div class="col-12 col-lg-8">
                   <div class="row">
-                    <div class="col-12" v-for="item, index in language" :key="index">
+                    <div class="col-12">
                       <div class="form-group required">
-                        <label for="name">{{ $t("name") }} ( {{ item.code.toUpperCase() }} )</label>
-                        <input
-                          v-model="form.post_translate[index].name"
-                          type="text"
-                          class="form-control mb-2"
-                          id="name"
-                          :class="{ 'is-invalid': v$.post_translate[index].name.$error }"
-                          @change="v$.post_translate[index].name.$touch"
-                          @keyup="copyNameEnglish(item.code, index)"
-                          :placeholder="$t('name') + ' ( ' + item.code.toUpperCase()+' )'"
-                        />
-                        <span class="invalid-feedback" v-if="v$.post_translate[index].name.$error">{{
-                          $t('name')+' ( '+item.code.toUpperCase()+') '+$t(v$.post_translate[index].name.$errors[0].$message)
+                        <label for="category">{{ $t("category") }}</label>
+                        <select 
+                        v-model="form.categoryId"
+                          name="" 
+                          id="category"
+                          class="form-select"
+                          :class="{ 'is-invalid': v$.categoryId.$error }"
+                          @change="v$.categoryId.$touch"
+                        >
+                          <option value="" selected>{{ $t("please_select") }}</option>
+                          <option v-for="(item,index) in categories" :value="index">
+                            {{ getNameByLang(item.name) }}
+                          </option>
+                        </select>
+                        <span class="invalid-feedback" v-if="v$.categoryId.$error">{{
+                          $t('category')+$t(v$.categoryId.$errors[0].$message)
                         }}</span>
                       </div>
                     </div>
-                    <div class="col-12 mb-2">
-                      <div class="form-group">
-                        <label for="publish_date">{{ $t("publish_date") }}</label>
-                        <IDatePicker
-                          v-model="form.publish_date"
-                          :multi-calendars="false"
-                          :range="false"
-                          :placeholder="$t('publish_date')"
-                          @changeDate="changeDate"
-                        />
-                      </div>
-                    </div>
                     <div class="col-12">
-                      <div class="form-group">
-                        <label for="slug">{{ $t("slug") }}</label>
+                      <div class="form-group required">
+                        <label for="namekh">{{ $t("name") }} ( {{ $t('kh') }} )</label>
                         <input
-                          v-model="form.slug"
+                          v-model="form.nameKh"
                           type="text"
                           class="form-control mb-2"
-                          id="slug"
-                          :placeholder="$t('slug')"
+                          id="namekh"
+                          :class="{ 'is-invalid': v$.nameKh.$error }"
+                          @change="v$.nameKh.$touch"
+                          :placeholder="$t('name') + ' ( ' + $t('kh') +' )'"
                         />
+                        <span class="invalid-feedback" v-if="v$.nameKh.$error">{{
+                          $t('name')+' ( '+$t('kh')+') '+$t(v$.nameKh.$errors[0].$message)
+                        }}</span>
                       </div>
                     </div>
                     <div class="col-12">
-                      <div class="form-group">
-                        <label for="meta_title">{{ $t("meta_title") }}</label>
+                      <div class="form-group required">
+                        <label for="nameen">{{ $t("name") }} ( {{ $t('en') }} )</label>
                         <input
-                          v-model="form.meta_title"
+                          v-model="form.nameEn"
                           type="text"
                           class="form-control mb-2"
-                          id="meta_title"
-                          :placeholder="$t('meta_title')"
+                          id="nameen"
+                          :class="{ 'is-invalid': v$.nameEn.$error }"
+                          @change="v$.nameEn.$touch"
+                          :placeholder="$t('name') + ' ( ' + $t('en') +' )'"
+                        />
+                        <span class="invalid-feedback" v-if="v$.nameEn.$error">{{
+                          $t('name')+' ( '+$t('en')+') '+$t(v$.nameEn.$errors[0].$message)
+                        }}</span>
+                      </div>
+                    </div>
+                    <div class="col-12 col-lg-6 mt-2">
+                      <div class="form-group">
+                        <label for="warranty_period">{{ $t("warranty_period") }}</label>
+                        <input
+                          v-model="form.warrantyPeriod"
+                          type="text"
+                          class="form-control mb-2"
+                          id="warranty_period"
+                          :placeholder="$t('warranty_period')"
                         />
                       </div>
                     </div>
-                    <div class="col-12">
+                    <div class="col-12 col-lg-6 mt-2">
+                      <div class="form-group">
+                        <label for="brand">{{ $t("brand") }}</label>
+                        <input
+                          v-model="form.brand"
+                          type="text"
+                          class="form-control mb-2"
+                          id="brand"
+                          :placeholder="$t('brand')"
+                        />
+                      </div>
+                    </div>
+                    <div class="col-12 col-lg-6">
+                      <div class="form-group required">
+                        <label for="price">{{ $t("price") }}</label>
+                        <div class="input-group">
+                          <input
+                            v-model="form.price"
+                            type="text"
+                            class="form-control mb-2"
+                            id="price"
+                            :class="{ 'is-invalid': v$.price.$error }"
+                            @change="v$.price.$touch"
+                            :placeholder="$t('price')"
+                          />
+                        </div>
+                        <span class="invalid-feedback" v-if="v$.price.$error">
+                          {{ $t('price') + ' ' + $t(v$.price.$errors[0]?.$message) }}
+                        </span>
+                      </div>
+                    </div>
+                    <div class="col-12 col-lg-6">
+                      <div class="form-group required">
+                        <label for="qty">{{ $t("qty") }}</label>
+                        <input
+                          v-model="form.stockQty"
+                          type="text"
+                          class="form-control mb-2"
+                          id="qty"
+                          :class="{ 'is-invalid': v$.stockQty.$error }"
+                          @change="v$.stockQty.$touch"
+                          :placeholder="$t('qty')"
+                        />
+                        <span class="invalid-feedback" v-if="v$.stockQty.$error">{{
+                          $t('qty')+$t(v$.stockQty.$errors[0].$message)
+                        }}</span>
+                      </div>
+                    </div>
+                    <div class="col-12 col-lg-6">
                       <div class="form-group">
                         <label for="status">{{ $t("status") }}</label>
                         <select name="" id="status" class="form-control" v-model="form.status">
-                          <option value="1">{{ $t("enable") }}</option>
-                          <option value="0">{{ $t("disable") }}</option>
+                          <option :value="true">{{ $t("enable") }}</option>
+                          <option :value="false">{{ $t("disable") }}</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-12 col-lg-6">
+                      <div class="form-group required">
+                        <label for="second_hand">{{ $t("second_hand") }}</label>
+                        <select name="" id="second_hand" class="form-control" v-model="form.isSecondHand">
+                          <option :value="true">{{ $t("yes") }}</option>
+                          <option :value="false">{{ $t("no") }}</option>
                         </select>
                       </div>
                     </div>
@@ -112,8 +182,8 @@
                         <div class="text-center">
                           <img
                             :src="getImagePath(form.img,'post')"
-                            width="300"
-                            style="height: 300px; object-fit: cover"
+                            width="220"
+                            style="height: 220px; object-fit: cover"
                             class="rounded mx-auto d-block img-fluid"
                           />
                         </div>
@@ -156,14 +226,175 @@
                     </div>
                   </div>
                 </div>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-12" v-for="item, index in language" :key="index">
-              <div class="form-group">
-                <label for="title">{{ $t("description") }} ({{ item.code.toUpperCase() }})</label>
-                <WangEditor ref="editor" :valueEditHtml="form.post_translate[index].description" v-model="form.post_translate[index].description" />
+                <div class="col-12 col-lg-4 mt-2">
+                  <div class="form-group">
+                    <label for="unit">{{ $t("unit") }}</label>
+                    <input
+                      v-model="form.weighType"
+                      type="text"
+                      class="form-control mb-2"
+                      id="unit"
+                      :placeholder="$t('unit')"
+                    />
+                  </div>
+                </div>
+                <div class="col-12 col-lg-4 mt-2">
+                  <div class="form-group">
+                    <label for="unit_value">{{ $t("unit_value") }}</label>
+                    <input
+                      v-model="form.weight"
+                      type="text"
+                      class="form-control mb-2"
+                      id="unit_value"
+                      :placeholder="$t('unit_value')"
+                    />
+                  </div>
+                </div>
+                <div class="col-12 col-lg-4 mt-2">
+                  <div class="form-group">
+                    <label for="dimension">{{ $t("dimension") }}</label>
+                    <input
+                      v-model="form.dimension"
+                      type="text"
+                      class="form-control mb-2"
+                      id="dimension"
+                      :placeholder="$t('dimension')"
+                    />
+                  </div>
+                </div>
+                <div class="col-12 col-lg-4">
+                  <div class="form-group">
+                    <label for="featured">{{ $t("featured") }}</label>
+                    <select name="" id="featured" class="form-control" v-model="form.isFeatured">
+                      <option :value="true">{{ $t("yes") }}</option>
+                      <option :value="false">{{ $t("no") }}</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-12 col-lg-4">
+                  <div class="form-group">
+                    <label for="new_arrival">{{ $t("new_arrival") }}</label>
+                    <select name="" id="new_arrival" class="form-control" v-model="form.isNewArrival">
+                      <option :value="true">{{ $t("yes") }}</option>
+                      <option :value="false">{{ $t("no") }}</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-12 col-lg-4">
+                  <div class="form-group">
+                    <label for="best_seller">{{ $t("best_seller") }}</label>
+                    <select name="" id="best_seller" class="form-control" v-model="form.isBestSeller">
+                      <option :value="true">{{ $t("yes") }}</option>
+                      <option :value="false">{{ $t("no") }}</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-12 mt-2">
+                  <div class="form-group">
+                    <label for="meta_title">{{ $t("meta_title") }}</label>
+                    <input
+                      v-model="form.metaTitle"
+                      type="text"
+                      class="form-control mb-2"
+                      id="meta_title"
+                      :placeholder="$t('meta_title')"
+                    />
+                  </div>
+                </div>
+                <div class="col-12">
+                  <div class="form-group">
+                    <label for="meta_description">{{ $t("meta_description") }}</label>
+                    <textarea
+                      v-model="form.metaDescription"
+                      class="form-control"
+                      rows="4"
+                      id="meta_description"
+                      :placeholder="$t('meta_description')"
+                    >
+                    </textarea>
+                  </div>
+                </div>
+                <!-- List banner -->
+
+                <div class="col-12 mt-2">
+                  <div class="form-group">
+                    <label class="required">{{ $t("gallery") }}</label>
+                    <span>
+                      <Icon
+                        size="20"
+                        class="text-primary"
+                        name="material-symbols-light:image-outline-rounded"
+                      ></Icon>
+                    </span>
+                    <div class="border border-gray rounded">
+                      <div
+                        v-if="form.gallery.length <= 0"
+                        class="flex-column d-flex align-items-center justify-content-center p-5"
+                      >
+                        <p>{{ $t("please_upload") + " " + $t("gallery") }}</p>
+                        <Icon
+                          style="cursor: pointer"
+                          @click="uploadGallery"
+                          size="100"
+                          class="text-gray"
+                          name="material-symbols-light:add-photo-alternate-outline-rounded"
+                        ></Icon>
+                      </div>
+                      <div
+                        class="d-flex align-items-center"
+                        style="flex-wrap: wrap"
+                        v-else
+                      >
+                        <draggable
+                          :list="form.gallery"
+                          class="draggable-list d-flex"
+                          style="flex-wrap: wrap"
+                        >
+                          <transition-group>
+                            <div
+                              v-for="item,index in form.gallery"
+                              :key="index"
+                              class="position-relative"
+                            >
+                              <Icon
+                                name="material-symbols-light:cancel-outline-rounded"
+                                class="position-absolute text-danger"
+                                size="25"
+                                style="right: 0px; top: 0px;cursor: pointer;"
+                                @click="removeGallery(item.id,index)"
+                              ></Icon>
+                              <img
+                                :src="getImagePath(item.image, 'gallery')"
+                                class="m-3"
+                                alt=""
+                                height="200"
+                              />
+                            </div>
+                          </transition-group>
+                        </draggable>
+                        <Icon
+                          @click="uploadGallery"
+                          size="100"
+                          style="cursor: pointer"
+                          class="text-gray"
+                          name="material-symbols-light:add-photo-alternate-outline-rounded"
+                        ></Icon>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12 mt-2">
+                  <div class="form-group required">
+                    <label for="descriptionkh">{{ $t("description") }} ( {{ $t('kh') }} )</label>
+                    <WangEditor ref="editor" :valueEditHtml="form.descriptionKh" v-model="form.descriptionKh" />
+                  </div>
+                </div>
+                <div class="col-12 mt-2">
+                  <div class="form-group required">
+                    <label for="descriptionen">{{ $t("description") }} ( {{ $t('en') }} )</label>
+                    <WangEditor ref="editor" :valueEditHtml="form.descriptionEn" v-model="form.descriptionEn" />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -202,33 +433,49 @@
   import businessTypeEnum from "~/composables/enum/businessTypeEnum";
   import { useLanguageStore } from "~/store/language";
   import { useCategoryType } from "~/store/category_type";
+  import { useUserStore } from "~/store/user";
   const languageStore = useLanguageStore();
   const language = ref(languageStore.lists);
-  
+  definePageMeta({
+    middleware: "global",
+  });
   const modalShowCropperImage = ref(null);
   const hideShowCropperImage = ref(false);
   let aspectRatio = ref(480/260);
   let cropWidth = ref(null);
   let cropHeight = ref(null);
   const defaultForm = {
-    id: null,
-    post_translate: language.value.map(lang => ({
-        language_code: lang.code,
-        language_id: lang.id,  // Add language_id from the language list
-        name: null, // Initialize title as null
-        description: null
-      })),
-    img: null,
-    slug: null,
-    meta_title: null,
-    publish_date: moment().format("YYYY-MM-DD HH:mm:ss"),
-    business_id: businessTypeEnum.kdac,
-    category_id: null,
-    status: 1,
-    name: null
+    id: '',
+    nameEn: '',
+    nameKh: '',
+    descriptionEn: '',
+    descriptionKh: '',
+    price: '',
+    stockQty: '',
+    weighType: '',
+    weight: '',
+    dimension:'',
+    brand: '',
+    warrantyPeriod: '',
+    isFeatured: true,
+    isNewArrival: true,
+    isBestSeller: false,
+    shippingClass: 'Standard',
+    returnPolicy: '30-day return policy',
+    metaTitle: '',
+    metaDescription: '',
+    isSecondHand: false,
+    secondHandDescription: '',
+    categoryId: '',
+    status: true,
+    img: '',
+    gallery: [],
   };
   const editor = ref(null);
+  const categories = ref([]);
   const categoryList = useCategoryList();
+  
+  
   const route = useRoute();
   const fileInput = ref(null);
   const cropImageModal = ref(null);
@@ -241,13 +488,40 @@
   const changeDate = (date) => {
     form.publish_date = moment(date).format("YYYY-MM-DD");
   }
+  const getListCategory =  () => {
+    categoryList.lists.forEach((item) => {
+    let name = {
+        'en': item.nameEn,
+        'kh': item.nameKh
+      }
+      name = JSON.stringify(name);
+    let data = {
+      id: item.id,
+      name: name
+    };
+    categories.value.push(data);
+  })
+  };
   
   const rules = computed(() => {
     return {
-      post_translate: language.value.map(lang => ({
-        name: { required, $autoDirty: true },
-      })),
-      category_id: {
+      nameEn: {
+        required,
+        $autoDirty: true,
+      },
+      nameKh: {
+        required,
+        $autoDirty: true,
+      },
+      price: {
+        required,
+        $autoDirty: true,
+      },
+      stockQty: {
+        required,
+        $autoDirty: true,
+      },
+      categoryId: {
         required,
         $autoDirty: true,
       },
@@ -261,6 +535,7 @@
     } else {
       setDefaultForm();
     }
+    getListCategory();
     if (checkCookieExpiration()) {
         console.log('Access token is still valid.');
     } else {
@@ -268,13 +543,13 @@
         useUserStore().clearToken();
     }
   });
-  const copyNameEnglish = (code, index) => {
-    if (code == "en") {
-      form.slug = convertString(form.post_translate[index].name);
-      form.meta_title = form.post_translate[index].name;
-      form.name=form.post_translate[index].name
-    }
-  }
+  // const copyNameEnglish = (code, index) => {
+  //   if (code == "en") {
+  //     form.slug = convertString(form.post_translate[index].name);
+  //     form.meta_title = form.post_translate[index].name;
+  //     form.name=form.post_translate[index].name
+  //   }
+  // }
   function convertString(input) {
       return input.toLowerCase().replace(/ /g, '-');
   }
@@ -331,28 +606,34 @@
     return {
       id: form.id,
       img: form.img,
-      category_id: form.category_id,
-      slug: form.slug,
-      meta_title: form.meta_title,
-      publish_date: form.publish_date,
-      post_translate: form.post_translate,
-      business_id: businessTypeEnum.kdac,
-      name: form.name,
-      status: form.status
+      category_id: form.categoryId,
+      nameEn: form.nameEn,
+      nameKh: form.nameKh,
+      descriptionEn: form.descriptionEn,
+      descriptionKh: form.descriptionKh,
+      price: form.price,
+      stockQty: form.stockQty,
+      metaTitle: form.metaTitle,
+      metaDescription: form.metaDescription,
+      isSecondHand: form.isSecondHand,
+      secondHandDescription: form.secondHandDescription,
+      status: form.status,
+      weighType: form.weighType,
+      weight: form.weight,
+      dimension: form.dimension,
+      shippingClass: form.shippingClass,
+      brand: form.brand,
+      warrantyPeriod: form.warrantyPeriod,
+      returnPolicy: form.returnPolicy,
+      isFeatured: form.isFeatured,
+      isNewArrival: form.isNewArrival,
+      isBestSeller:  form.isBestSeller,
+      gallery: form.gallery,
     };
   };
   
   const setInput = (res) => {
-    form.id = res.data.id;
-    form.img = res.data.image;
-    form.category_id = res.data.category_id;
-    form.slug = res.data.slug;
-    form.meta_title = res.data.meta_title;
-    form.publish_date = res.data.publish_date;
-    form.post_translate = res.data.post_translate;
-    form.business_id = businessTypeEnum.kdac;
-    form.status = res.data.status
-    
+
   };
   
   const getData = async (id) => {
@@ -361,11 +642,9 @@
   };
   
   const save = async (type) => {
-    let category = categoryList.lists.find((item) => item.type == useCategoryType().blog);
-    form.category_id = category.id;
     const result = await v$.value.$validate();
     if (result) {
-      let url = blogAPI.store;
+      let url = "";
       if (!isEmpty(route.query)) {
         url = blogAPI.update;
       }

@@ -64,6 +64,10 @@ import { useCategoryList } from "~/store/category_list.js";
 import { useCategoryType } from "~/store/category_type.js";
 import { useBranchStore } from "~/store/branch";
 import { useUserStore } from "~/store/user";
+definePageMeta({
+  middleware: "global",
+});
+
 let tableHeader = [
   {
     label: "action",
@@ -184,7 +188,7 @@ const getData = async () => {
       return response.json(); // Parse the JSON from the response
   })
   .then(data => {
-    categoryList.setData(data);
+    categoryList.setData(data.payload);
     lists.value = data.payload;
     console.log("lists",lists.value);
   })

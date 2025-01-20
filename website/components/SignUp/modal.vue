@@ -95,7 +95,7 @@ const state = reactive({
 const showSignInModal = ref(false);
 const signInRef = ref(null);
 const signIn = () => {
-  drawer.value = false;
+  // drawer.value = false;
   showSignInModal.value = true;
   nextTick(() => {
     signInRef.value.showModal();

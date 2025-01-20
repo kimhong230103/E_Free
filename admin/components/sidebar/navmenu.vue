@@ -34,9 +34,10 @@
         v-for="(menuItem, index) in menuItems"
         :key="index"
         class="sidebar-list"
+        v-show="menuItem.title != 'file'"
       >
         <router-link
-          :to="localPath(menuItem.path.replace('**', '').replace('/gateway', ''))"
+          :to="localPath('/'+menuItem.title.toLowerCase())"
           class="sidebar-link sidebar-title"
         >
           <Icon :name="iconFollowKeyMenu[menuItem.key]" />

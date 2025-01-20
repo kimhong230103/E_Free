@@ -108,9 +108,9 @@
       <SignUp ref="signUpRef" @closeModal="closeModalSignOut" @goToSignIn="signIn" />
     </div>
     <div v-if="showSignInModal">
-      <SignIn ref="signInRef" @closeModal="closeModalSignIn" @goToSignUp="signUp" />
+      <SignIn ref="signInRef" @closeModal="closeModalSignIn" @switchToSignUp="signUp" />
     </div>
-    <div v-if="showForgotPasswordModal">
+    <!-- <div v-if="showForgotPasswordModal">
       <ForgotPassword ref="forgotPasswordRef" />
     </div>
     <div v-if="showEmailVerificationModal">
@@ -118,7 +118,7 @@
     </div>
     <div v-if="showResetPasswordModal">
       <ResetPassword ref="ResetPasswordRef" />
-    </div>
+    </div> -->
     <div v-if="isFormProfilePopup" class="control-profile-popup">
       <Modal :action_type="action_type" @closeProfilePopup="closeProfilePopup"></Modal>
     </div>
@@ -179,7 +179,6 @@ const menus = ref([
 ]);
 
 const router = useRouter();
-
 const toggleSidebar = () => {
   drawer.value = !drawer.value;
 };
@@ -210,18 +209,21 @@ const isMenuActive = (item) => {
 const drawer = ref(false);
 
 const signUp = () => {
+  alert(0)
   drawer.value = false;
   showSignUpModal.value = true;
   showSignInModal.value = false;
-
+  
   nextTick(() => {
     signUpRef.value.showModal();
   });
 };
 const signIn = () => {
+  alert(1)
   drawer.value = false;
   showSignInModal.value = true;
   showSignUpModal.value = false;
+  
   nextTick(() => {
     signInRef.value.showModal();
   });

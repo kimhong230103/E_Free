@@ -51,6 +51,7 @@
       </div>
     </div>
     <div id="recaptcha-container"></div>
+    
   </div>
 </template>
 
@@ -118,12 +119,14 @@ const save = async () => {
 
 // Switch to the Sign-Up modal
 const switchToSignUp = () => {
-  emit("switchToSignUp");
+  closeModal();
+  state.modalInstance.hide();
 };
 
 // Expose methods to parent
 defineExpose({
   showModal,
+  switchToSignUp
 });
 </script>
 

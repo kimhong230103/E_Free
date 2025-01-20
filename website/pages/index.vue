@@ -394,8 +394,8 @@ useSeoMeta({
 
 .text-truncate-two-lines {
   display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
+  --webkit-line-clamp: 2;
+  --webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
   line-height: 1.5;

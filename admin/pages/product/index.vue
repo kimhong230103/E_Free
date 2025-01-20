@@ -93,8 +93,12 @@
       <template #name="{ row }">
         <span>{{ getNameByLang(row.post_translate, 'name') }}</span>
       </template>
-      <template #image="{ image }">
-          <img height="40px":src="getImagePath(image, 'post')" alt="">
+      <template #price="{ price }">
+        <span class="fw-bold">{{ currencyFormat(price) }}</span>
+      </template>
+      <template #image="{ row }">
+          <img v-if="!row.imageUrl" height="40px" :src="getImagePath(row.imageUrl)" alt="">
+          <img v-else height="40px" :src="row.imageUrl" :alt="row.imageUrl">
       </template>
       </IFormTable>
     <ActionModal
@@ -117,6 +121,8 @@ import { useLanguageStore } from "~/store/language";
 import menuTypeEnum from "~/composables/enum/menuTypeEnum";
 import businessTypeEnum from "~/composables/enum/businessTypeEnum";
 import { useCategoryType } from "~/store/category_type";
+import { useUserStore } from "~/store/user";
+import { get } from "@vueuse/core";
 const useLanguage = useLanguageStore();
 const languageList = ref(useLanguage.lists);
 const tableHeader = ref([
@@ -128,35 +134,40 @@ const tableHeader = ref([
     classes: "action-dropdown",
   },
   {
-    label: "name",
-    key: "name",
-    textAlign: "center",
-  },
-  {
     label: "image",
     key: "image",
     textAlign: "center",
   },
   {
-    label: "publish_date",
-    key: "publish_date",
+    label: "kh_name",
+    key: "nameKh",
     textAlign: "center",
   },
   {
-    label: "slug",
-    key: "slug",
+    label: "en_name",
+    key: "nameEn",
     textAlign: "center",
+  },
+  {
+    label: "qty",
+    key: "stockQty",
+    textAlign: "center",
+  },
+  {
+    label: "price",
+    key: "price",
+    textAlign: "right",
   },
   {
     label: "meta_title",
-    key: "meta_title",
+    key: "metaTitle",
     textAlign: "center",
   },
-  {
-    label: "status",
-    key: "status",
-    textAlign: "center",
-  }
+  // {
+  //   label: "status",
+  //   key: "status",
+  //   textAlign: "center",
+  // }
 ]);
 
 
@@ -167,7 +178,9 @@ const modal = ref();
 const addModal = ref(null);
 const actionType = ref("");
 const branch_id=ref(null);
-
+definePageMeta({
+  middleware: "global",
+});
 const pagination = ref({
   currentPage: 1,
   per_page: 10,
@@ -232,17 +245,35 @@ const getData = async () => {
   const input = getInput();
   input.filter.business_id=businessTypeEnum.kdas
   try {
-    const data = await ifetch(blogAPI.get, input);
-    
+    await fetch(`https://efree.cheakautomate.online/gateway/PRODUCT/api/v1/products/paginate?page=${pagination.value.currentPage}&size=${pagination.value.per_page}&sortBy=${formHeader.value.sortBy}&direction=${formHeader.value.sortType}`, {
+    method: 'GET', // Specify the method as GET
+    headers: {
+        'Content-Type': 'application/json',
+        Authorization: "",  
+    }
+  })
+  .then(response => {
+      if (!response.ok) {
+          throw new Error('Network response was not ok ' + response.statusText);
+      }
+      return response.json(); // Parse the JSON from the response
+  })
+  .then(data => {
     setInput(data);
+  })
+  .catch(error => {
+    console.error('There has been a problem with your fetch operation:', error);
+  })
   } catch (error) {
     console.error("Error fetching data:", error);
   }
 };
 
 const setInput = (data) => {
-  lists.value = data.data;
-  pagination.value = data.pagination;
+  lists.value = data.payload.content;
+  pagination.value.currentPage = parseInt(data.payload.page.pageNumber)+1;
+  pagination.value.per_page = data.payload.page.size;
+  pagination.value.total = data.payload.page.totalPages;
 };
 
 
