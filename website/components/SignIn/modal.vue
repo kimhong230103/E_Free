@@ -3,12 +3,9 @@
     <div class="modal-dialog modal-dialog-centered modal-md">
       <div class="modal-content">
         <div class="modal-header">
-          <button
-            class="btn-close color-mode-btn-close"
-            type="button"
-            data-bs-dismiss="modal"
-            aria-label="Close"
-          ></button>
+          <div class="w-100 text-end cursor-pointer" type="button" data-bs-dismiss="modal" aria-label="Close">
+            <Icon name="solar:close-circle-bold" size="2.5rem" style="color: #253696;" />
+          </div>
         </div>
         <div class="modal-body p-l-25 p-r-25 py-4 pt-3">
           <img src="/e-free-logo.png" width="160px" alt="E-Free">
@@ -20,29 +17,16 @@
             <div class="col-12 form-log">
               <form>
                 <label for="email" class="my-2 required">{{ $t("email") }}</label>
-                <input 
-                  v-model="form.email"
-                  type="text"
-                  id="email"
-                  class="form-control" 
-                  :placeholder="$t('email')"
-                  :class="{ 'is-invalid': v$.email.$error }"
-                  @change="v$.email.$touch"
-                >
+                <input v-model="form.email" type="text" id="email" class="form-control" :placeholder="$t('email')"
+                  :class="{ 'is-invalid': v$.email.$error }" @change="v$.email.$touch">
                 <span class="invalid-feedback" v-if="v$.email.$error">
                   {{ v$.email.$errors[0].$message }}
                 </span>
 
                 <label for="password" class="my-2 required">{{ $t("password") }}</label>
-                <input 
-                  v-model="form.password"
-                  type="password" 
-                  id="password" 
-                  class="form-control" 
-                  :placeholder="$t('password')"
-                  :class="{ 'is-invalid': v$.password.$error }"
-                  @change="v$.password.$touch"
-                >
+                <input v-model="form.password" type="password" id="password" class="form-control"
+                  :placeholder="$t('password')" :class="{ 'is-invalid': v$.password.$error }"
+                  @change="v$.password.$touch">
                 <span class="invalid-feedback" v-if="v$.password.$error">
                   {{ v$.password.$errors[0].$message }}
                 </span>

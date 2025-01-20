@@ -14,7 +14,7 @@
         </div>
 
         <!-- Category -->
-         <Category />
+        <Category :list="categoryList" />
         <!-- <div class="py-5">
             <h2 class="text-primary mb-4 text-center fw-bold">Our Shop Categories</h2>
             <div class="d-flex justify-content-between align-items-center gap-3">
@@ -173,6 +173,36 @@
 
 <script setup>
 
+import { onMounted } from 'vue';
+const categoryList = ref([])
+const getCategory = async () => {
+
+    await fetch("https://efree.cheakautomate.online/gateway/CATEGORY/api/v1/categories", {
+        method: 'GET', // Specify the method as GET
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: "",
+        }
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok ' + response.statusText);
+            }
+            return response.json(); // Parse the JSON from the response
+        })
+        .then(data => {
+            console.log("data", data);
+            categoryList.value = data.payload;
+        })
+        .catch(error => {
+            console.error('There has been a problem with your fetch operation:', error);
+        })
+
+}
+
+onMounted(() => {
+    getCategory();
+})
 </script>
 <style scoped>
 .hero-container {
@@ -227,7 +257,6 @@ input.form-control {
     top: 50%;
     transform: translateY(-50%);
 }
-
 </style>
 <style>
 .box-search {

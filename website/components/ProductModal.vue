@@ -4,26 +4,27 @@
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title text-blue fw-bold">{{ product.title }}</h5>
-          <button type="button" class="btn-close" @click="closeModal"></button>
+          <h5 class="modal-title text-blue fw-bold w-100">{{ product.title }}</h5>
+          <div class="cursor-pointer" @click="closeModal">
+            <Icon name="solar:close-circle-bold" size="30px" style="color: #253696;" />
+          </div>
         </div>
         <div class="modal-body">
           <div class="row">
-
             <div class="col-md-5 text-center">
               <img :src="product.image" alt="Product Image" class="img-fluid rounded fixed-size-img" />
             </div>
 
             <div class="col-md-7">
               <div class="d-flex align-items-center">
-                <span>{{product.rate}}</span>
-                <span>{{product.releaseDate}}</span>
+                <span>{{ product.rate }}</span>
+                <span>{{ product.releaseDate }}</span>
               </div>
               <h5 class="text-orange">
                 ${{ product.price }}
               </h5>
               <p class="text-gray py-1">
-                <strong class="text-blue">{{ $t('category')}}:</strong> {{ product.category }}
+                <strong class="text-blue">{{ $t('category') }}:</strong> {{ product.category }}
               </p>
               <p class="text-gray py-1">
                 <strong class="text-blue">{{ $t('stock') }}:</strong> {{ product.stock }}
@@ -32,16 +33,26 @@
                 <strong class="text-blue">{{ $t('discount') }}:</strong> {{ product.discount }}%
               </p>
               <p class="text-gray py-1">
-                <strong class="text-blue">{{ $t('description')}}:</strong> {{ product.description }}
+                <strong class="text-blue">{{ $t('description') }}:</strong> {{ product.description }}
               </p>
 
-              <div class="d-flex align-items-center">
-                <button class="btn btn-secondary me-2" @click="decreaseQuantity">-</button>
-                <span>{{ quantity }}</span>
-                <button class="btn btn-secondary ms-2" @click="increaseQuantity">+</button>
-                <button class="btn btn-blue ms-auto" @click="orderNow">
-                  Order Now
-                </button>
+              <hr>
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="quantity">
+                  <button class="btn btn-sm px-2" @click="decreaseQuantity">-</button>
+                  <div class="quantity-input">
+                      <span class="rounded border px-3" style="font-size: 12px;">{{ quantity }}</span>
+                  </div>
+                  <button class="btn btn-sm px-2" @click="increaseQuantity">+</button>
+              </div>
+                <div class="w-100 d-flex align-items-center gap-3">
+                  <button class="btn btn-blue ms-auto" style="font-size: small;" @click="orderNow">
+                    {{ $t("order_now") }}
+                  </button>
+                  <div class="btn btn-blue">
+                    <img src="/svg/cart.svg" alt="">
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -112,7 +123,6 @@ defineExpose({
 </script>
 
 <style scoped>
-
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -133,6 +143,13 @@ defineExpose({
   }
 }
 
+.quantity {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+}
 
 .modal.show::before {
   content: "";
@@ -144,7 +161,7 @@ defineExpose({
   background-color: rgba(0, 0, 0, 0.5);
   animation: fadeIn 0.3s ease-out;
   z-index: 1040;
-  
+
 }
 
 .modal.closing::before {

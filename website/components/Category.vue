@@ -22,6 +22,14 @@
 <script setup>
 import { ref } from "vue";
 
+const props = defineProps({
+    list: {
+        type: Array,
+        required: false,
+        default: []
+    }
+})
+
 const categories = ref([
     { id: 1, name: 'Phones', icon: '/svg/cell-phone.svg' },
     { id: 2, name: 'Computers', icon: '/svg/pc.svg' },
@@ -53,6 +61,7 @@ const scrollLeft = () => {
         scrollToIndex(scroll.value);
     }
 };
+
 
 const scrollRight = () => {
     if (scroll.value < categories.value.length - visibleElement) {

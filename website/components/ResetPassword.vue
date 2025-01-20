@@ -2,11 +2,15 @@
     <div class="modal fade" id="modal">
         <div class="modal-dialog modal-dialog-centered modal-md">
             <div class="modal-content">
-                <div class="modal-header">
-                    <!-- <Icon name="material-symbols:keyboard-backspace-rounded" class="back btn" size="35" style="color: #a6a6a6;" /> -->
-                    <button class="btn-close color-mode-btn-close" type="button" data-bs-dismiss="modal"
-                        aria-label="Close"></button>
-                </div>
+                <div class="modal-header d-flex justify-content-between align-items-center">
+                    <div data-bs-dismiss="modal" aria-label="Close" class="cursor-pointer" @click="closeModal">
+                      <Icon name="solar:round-alt-arrow-left-bold" size="2.5rem" style="color: #253696;" />
+                    </div>
+          
+                    <div data-bs-dismiss="modal" aria-label="Close" class="cursor-pointer" @click="closeModal">
+                      <Icon name="solar:close-circle-bold" size="2.5rem" style="color: #253696;" />
+                    </div>
+                  </div>
                 <div class="modal-body p-l-25 p-r-25 py-4 pt-3">
                     <img src="/e-free-logo.png" width="160px" alt="">
                     <h5 class="fw-bold mt-2 welcome_to">{{ $t("reset_password") }}</h5>

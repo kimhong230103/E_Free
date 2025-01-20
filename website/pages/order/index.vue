@@ -5,8 +5,7 @@
             <div class="col-lg-8 col-md-12 p-4">
                 <div class="d-flex justify-content-between align-items-center">
                     <h3 class="fw-bold text-blue">{{ $t('ordered_product') }}</h3>
-                    <a href="/product"
-                        class="d-flex justify-content-end align-items-center text-blue fw-bold">
+                    <a href="/product" class="d-flex justify-content-end align-items-center text-blue fw-bold">
                         <img src="/svg/back.svg" alt="">
                         <p class="text-blue">{{ $t('back') }}</p>
                     </a>
@@ -39,16 +38,15 @@
                         </div>
 
                         <!-- Quantity and Price -->
-                        <div class="text-end justify-content-end" style="width: 30%;">
+                        <div class="text-end justify-content-end">
                             <div class="quantity">
-                                <button class="btn btn-sm px-3" @click="decrement()">-</button>
+                                <button class="btn btn-sm px-3" @click="decreaseQuantity">-</button>
                                 <div class="quantity-input">
-                                    <input type="text" class="form-control form-control-sm text-center"
-                                        v-model="quantity" readonly />
+                                    <span class="rounded border px-3" style="font-size: 12px;">{{ quantity }}</span>
                                 </div>
-                                <button class="btn btn-sm px-3" @click="increment()">+</button>
+                                <button class="btn btn-sm px-3" @click="increaseQuantity">+</button>
                             </div>
-                            <p class="fw-bold mt-2 text-blue">${{ item.price.toFixed(2) }}</p>
+                            <p class="fw-bold mt-3 text-blue">${{ item.price.toFixed(2) }}</p>
                         </div>
                     </div>
                 </div>
@@ -93,21 +91,13 @@ const quantity = ref(0);
 const toggleAll = () => {
     items.value.forEach((item) => (item.selected = selectAll.value));
 };
-console.log(items.quantity);
-// Increment quantity
-const increment = () => {
-    if (quantity <= items.quantity) {
-        quantity.value += 1;
-    }
+
+const increaseQuantity = () => {
+  quantity.value++;
 };
 
-
-
-// Decrement quantity
-const decrement = () => {
-    if (quantity > 0) {
-        quantity.value--;
-    }
+const decreaseQuantity = () => {
+  if (quantity.value > 0) quantity.value--;
 };
 
 // Calculate total quantity
@@ -165,17 +155,13 @@ const totalPrice = computed(() =>
 }
 
 .quantity {
-    width: 100%;
     border: 1px solid #ddd;
     border-radius: 8px;
-    display: flex;
+    display: inline-flex;
     justify-content: center;
     align-items: center;
 }
 
-.quantity .quantity-input {
-    margin: 5px 3px;
-}
 
 .pricing-details {
     border-top: 1px solid #ddd;

@@ -484,6 +484,7 @@
     "sub_total": "Sub Total",
     "total_price": "Total Price",
     "click_to_order": "Click to Order",
-    "stock": "Stock"
+    "stock": "Stock",
+    "order_now": "Order Now"
   }
 }
