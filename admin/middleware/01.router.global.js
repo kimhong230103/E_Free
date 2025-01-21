@@ -1,24 +1,24 @@
 import Cookies from "js-cookie";
 import { useUserStore } from "~/store/user";
 export default defineNuxtRouteMiddleware((to, from) => {
-  // console.log("router middleware");
-  // if (nullToVoid(Cookies.get(useRuntimeConfig().public.cookie_key)) != "") {
-  //   if(to.path){
-  //     if (to.path.includes("/auth/login")) {
-  //       return navigateTo("/");
-  //     }
-  //   }
-  // } else {
-  //   if (!to.path.includes("/auth/login")) {
-  //     return navigateTo("/auth/login");
-  //   }
-  // }
-  if (checkCookieExpiration()) {
-    console.log('Access token is still valid.');
+  console.log("router middleware");
+  if (nullToVoid(Cookies.get(useRuntimeConfig().public.cookie_key)) != "") {
+    if(to.path){
+      if (to.path.includes("/auth/login")) {
+        return navigateTo("/");
+      }
+    }
   } else {
-    console.error('Access token has expired or does not exist.');
-    useUserStore().clearToken();
+    if (!to.path.includes("/auth/login")) {
+      return navigateTo("/auth/login");
+    }
   }
+  // if (checkCookieExpiration()) {
+  //   console.log('Access token is still valid.');
+  // } else {
+  //   console.error('Access token has expired or does not exist.');
+  //   useUserStore().clearToken();
+  // }
 });
 // import Cookies from "js-cookie";
 

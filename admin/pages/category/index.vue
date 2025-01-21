@@ -64,9 +64,6 @@ import { useCategoryList } from "~/store/category_list.js";
 import { useCategoryType } from "~/store/category_type.js";
 import { useBranchStore } from "~/store/branch";
 import { useUserStore } from "~/store/user";
-definePageMeta({
-  middleware: "global",
-});
 
 let tableHeader = [
   {

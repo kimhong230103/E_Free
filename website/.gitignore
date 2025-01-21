@@ -1,5 +1,5 @@
 .nuxt
-.env
+# .env
 .output
 dist
 package-lock.json
