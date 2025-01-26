@@ -125,9 +125,6 @@
   import { get } from "@vueuse/core";
   const useLanguage = useLanguageStore();
   const languageList = ref(useLanguage.lists);
-  definePageMeta({
-    middleware: "global",
-  });
   const tableHeader = ref([
     {
       label: "action",

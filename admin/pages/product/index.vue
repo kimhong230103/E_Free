@@ -178,9 +178,6 @@ const modal = ref();
 const addModal = ref(null);
 const actionType = ref("");
 const branch_id=ref(null);
-definePageMeta({
-  middleware: "global",
-});
 const pagination = ref({
   currentPage: 1,
   per_page: 10,

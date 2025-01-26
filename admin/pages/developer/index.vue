@@ -67,9 +67,6 @@ import actionModal from "~/components/module/modal";
 import { appConst } from "~/constants/app";
 import { moduleAPI } from "~/constants/api";
 import { moduleKey } from "~/constants/moduleKey";
-  definePageMeta({
-    middleware: "global",
-  });
 const module_key = "module";
 let tableHeader = [
   {

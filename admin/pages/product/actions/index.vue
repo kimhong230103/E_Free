@@ -436,9 +436,6 @@
   import { useUserStore } from "~/store/user";
   const languageStore = useLanguageStore();
   const language = ref(languageStore.lists);
-  definePageMeta({
-    middleware: "global",
-  });
   const modalShowCropperImage = ref(null);
   const hideShowCropperImage = ref(false);
   let aspectRatio = ref(480/260);
