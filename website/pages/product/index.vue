@@ -1,18 +1,5 @@
 <template>
     <div class="container mx-auto">
-        <div class="hero-container d-flex align-items-center justify-content-center">
-            <div class="overlay"></div>
-            <div class="text-center content">
-                <h1 class="display-10 fw-bold text-white mb-4">Finding your product Here!</h1>
-                <div class="search-bar position-relative">
-                    <input type="text" class="form-control rounded-pill px-4" placeholder="Search..." />
-                    <button class="btn-search rounded-pill px-4 position-absolute end-0 top-50 translate-middle-y me-2">
-                        Search
-                    </button>
-                </div>
-            </div>
-        </div>
-
         <!-- Category -->
         <Category :list="categoryList" />
         <!-- <div class="py-5">
@@ -205,58 +192,7 @@ onMounted(() => {
 })
 </script>
 <style scoped>
-.hero-container {
-    background-image: url('/images/product-banner.png');
-    /* Replace with your image URL */
-    background-size: cover;
-    background-position: center;
-    height: 500px;
-    position: relative;
-    overflow: hidden;
-    margin: 10px 0;
-    border-radius: 20px;
-}
 
-.overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    /* Adjust darkness */
-    z-index: 1;
-}
-
-.content {
-    position: relative;
-    z-index: 2;
-}
-
-.search-bar {
-    display: flex;
-    align-items: center;
-    max-width: 550px;
-    margin: 0 auto;
-    position: relative;
-}
-
-input.form-control {
-    flex: 1;
-    padding-right: 100px;
-    height: 5vh;
-    /* Add space for the button */
-}
-
-.btn-search {
-    height: 4vh;
-    background-color: #0D394F;
-    color: white;
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-}
 </style>
 <style>
 .box-search {

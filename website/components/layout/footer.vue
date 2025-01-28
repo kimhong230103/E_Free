@@ -1,8 +1,7 @@
 <template>
   <div>
     <div class="footer-container">
-      <div class="row">
-        <div class="col-1 d-none d-lg-block"></div>
+      <div class="w-100 row d-flex justify-content-around">
         <div class="col-12 col-lg-10">
           <div class="row text-ccc py-3">
             <div class="col-12 col-md-6 col-xl-3">
@@ -61,7 +60,6 @@
             </p>
           </div>
         </div>
-        <div class="col-1 d-none d-lg-block"></div>
       </div>
         
     </div>
@@ -69,7 +67,8 @@
 </template>
 <script setup>
 </script>
-<style>
+
+<style scoped>
 h5{
   color: #cccccc;
 }
@@ -109,3 +108,4 @@ p svg{
   font-size: 12px;
 }
 </style>
+

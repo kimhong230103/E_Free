@@ -1,44 +1,70 @@
 <template>
-  <div class="modal fade" id="modal">
+  <div class="modal fade" id="signInModal">
     <div class="modal-dialog modal-dialog-centered modal-md">
       <div class="modal-content">
+        <!-- Modal Header -->
         <div class="modal-header">
-          <div class="w-100 text-end cursor-pointer" type="button" data-bs-dismiss="modal" aria-label="Close">
+          <div 
+            class="w-100 text-end cursor-pointer" 
+            type="button" 
+            data-bs-dismiss="modal" 
+            aria-label="Close"
+          >
             <Icon name="solar:close-circle-bold" size="2.5rem" style="color: #253696;" />
           </div>
         </div>
+
+        <!-- Modal Body -->
         <div class="modal-body p-l-25 p-r-25 py-4 pt-3">
-          <img src="/e-free-logo.png" width="160px" alt="E-Free">
+          <img src="/e-free-logo.png" width="160px" alt="E-Free" />
           <h5 class="fw-bold mt-2 welcome_to">
-            {{ $t("welcome_back_to") }}
+            {{ $t("welcome_back_to") }} 
             <span style="color: var(--theme-default);">E-Free</span>
           </h5>
+
+          <!-- Sign In Form -->
           <div class="row mt-1">
             <div class="col-12 form-log">
-              <form>
+              <form @submit.prevent="handleSubmit">
                 <label for="email" class="my-2 required">{{ $t("email") }}</label>
-                <input v-model="form.email" type="text" id="email" class="form-control" :placeholder="$t('email')"
-                  :class="{ 'is-invalid': v$.email.$error }" @change="v$.email.$touch">
+                <input 
+                  v-model="form.email" 
+                  type="text" 
+                  id="email" 
+                  class="form-control" 
+                  :placeholder="$t('email')"
+                  :class="{ 'is-invalid': v$.email.$error }" 
+                  @change="v$.email.$touch"
+                />
                 <span class="invalid-feedback" v-if="v$.email.$error">
                   {{ v$.email.$errors[0].$message }}
                 </span>
 
                 <label for="password" class="my-2 required">{{ $t("password") }}</label>
-                <input v-model="form.password" type="password" id="password" class="form-control"
-                  :placeholder="$t('password')" :class="{ 'is-invalid': v$.password.$error }"
-                  @change="v$.password.$touch">
+                <input 
+                  v-model="form.password" 
+                  type="password" 
+                  id="password" 
+                  class="form-control"
+                  :placeholder="$t('password')" 
+                  :class="{ 'is-invalid': v$.password.$error }"
+                  @change="v$.password.$touch"
+                />
                 <span class="invalid-feedback" v-if="v$.password.$error">
                   {{ v$.password.$errors[0].$message }}
                 </span>
 
-                <p class="forgot-password mt-2 text-underline cursor-pointer">
+                <p 
+                  class="forgot-password mt-2 text-underline cursor-pointer"
+                  @click="switchToForgotPassword"
+                >
                   {{ $t("forgot_password") }}
                 </p>
 
                 <div class="w-100 text-center">
-                  <span class="btn btn-blue mt-3 px-4" @click="save">
+                  <button type="submit" class="w-25 btn btn-blue mt-3 px-4">
                     {{ $t("sign_in") }}
-                  </span>
+                  </button>
                   <p @click="switchToSignUp" class="mt-2">
                     {{ $t("dont_have_an_account") }}
                     <span class="text-underline" style="color: #fb5d1f;">{{ $t("signup") }}</span>
@@ -50,28 +76,24 @@
         </div>
       </div>
     </div>
+
+    <!-- Google Recaptcha -->
     <div id="recaptcha-container"></div>
-    
   </div>
 </template>
 
 <script setup>
-import {
-  required,
-  email,
-  minLength,
-  maxLength,
-} from "@vuelidate/validators";
-import { reactive, computed } from "vue";
+import { reactive, computed, onMounted } from "vue";
 import useVuelidate from "@vuelidate/core";
+import { required, email, minLength, maxLength } from "@vuelidate/validators";
 
-// Emits for switching modal and closing
+// Define component emits
 const emit = defineEmits(["switchToSignUp", "closeModal"]);
 
 // Reactive form data
 const form = reactive({
-  email: null,
-  password: null,
+  email: "",
+  password: "",
 });
 
 // Validation rules
@@ -82,15 +104,15 @@ const rules = computed(() => ({
 
 const v$ = useVuelidate(rules, form);
 
-// State for Bootstrap modal
+// Bootstrap modal instance
 const state = reactive({
   modalInstance: null,
 });
 
-// On mounted, initialize Bootstrap modal
+// Initialize Bootstrap modal on mount
 onMounted(() => {
   const bootstrap = useNuxtApp().$bootstrap;
-  state.modalInstance = new bootstrap.Modal("#modal");
+  state.modalInstance = new bootstrap.Modal("#signInModal");
 });
 
 // Show the modal
@@ -98,21 +120,19 @@ const showModal = () => {
   state.modalInstance.show();
 };
 
-// Close the modal
+// Close the modal and optionally refresh
 const closeModal = (isRefresh = false) => {
   emit("closeModal", isRefresh);
   state.modalInstance.hide();
 };
 
-// Save form data
-const save = async () => {
-  const result = await v$.value.$validate();
-  if (result) {
-    // Handle successful sign-in logic
+// Form submit handler
+const handleSubmit = async () => {
+  const isValid = await v$.value.$validate();
+  if (isValid) {
     alert("Sign-in successful!");
     closeModal(true);
   } else {
-    // Show validation error message
     useNuxtApp().$showToast({ msg: "Invalid Input.", type: "error" });
   }
 };
@@ -120,7 +140,13 @@ const save = async () => {
 // Switch to the Sign-Up modal
 const switchToSignUp = () => {
   closeModal();
-  state.modalInstance.hide();
+  emit("switchToSignUp");
+};
+
+// Emit event to show Forgot Password modal
+const switchToForgotPassword = () => {
+  closeModal(); // Close the current modal
+  emit("switchToForgotPassword"); // Notify parent to open Forgot Password modal
 };
 
 // Expose methods to parent
@@ -167,15 +193,18 @@ html.dark .modal-dialog .modal-content {
   label.required {
     color: #ffffff;
   }
-
-  .back {
-    background-color: #fb5d1f;
-    opacity: 1;
-    color: #ffffff !important;
-  }
 }
 
 .text-blue {
   color: #253696 !important;
+}
+.text-underline {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.btn-blue {
+  background-color: var(--theme-default);
+  color: white;
 }
 </style>

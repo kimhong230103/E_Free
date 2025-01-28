@@ -2,10 +2,10 @@
   <div class="modal fade" id="modal">
     <div class="modal-dialog modal-dialog-centered modal-md">
       <div class="modal-content">
-        <div class="modal-header d-flex justify-content-between align-items-center">
-          <div data-bs-dismiss="modal" aria-label="Close" class="cursor-pointer" @click="closeModal">
+        <div class="modal-header d-flex justify-content-end align-items-center">
+          <!-- <div data-bs-dismiss="modal" aria-label="Close" class="cursor-pointer" @click="closeModal">
             <Icon name="solar:round-alt-arrow-left-bold" size="2.5rem" style="color: #253696;" />
-          </div>
+          </div> -->
 
           <div data-bs-dismiss="modal" aria-label="Close" class="cursor-pointer" @click="closeModal">
             <Icon name="solar:close-circle-bold" size="2.5rem" style="color: #253696;" />
@@ -23,7 +23,7 @@
                   :class="{ 'is-invalid': v$.email.$error }" @change="v$.email.$touch">
                 <span class="invalid-feedback" v-if="v$.email.$error">{{ v$.email.$errors[0].$message }}</span>
                 <div class="w-100 text-center">
-                  <span class="btn btn-blue mt-3 px-4" @click="save">{{ $t("send") }}</span>
+                  <span class="w-25 btn btn-blue mt-3 px-4" @click="save">{{ $t("send") }}</span>
                 </div>
 
               </form>

@@ -49,6 +49,6 @@ export default defineNuxtPlugin((nuxtApp) => {
   nuxtApp.vueApp.component("Multiselect", Multiselect);
   nuxtApp.vueApp.component("ISelect", ISelect);
   nuxtApp.vueApp.component("IPopper", Popper);
-  // nuxtApp.vueApp.component('VueAwesomePaginate', VueAwesomePaginate);
+  nuxtApp.vueApp.component('VueAwesomePaginate', VueAwesomePaginate);
   nuxtApp.vueApp.use(VueAwesomePaginate);
 });

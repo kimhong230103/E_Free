@@ -208,9 +208,6 @@
   });
   
   onMounted(() => {
-  
-  
-  
     setData();
   });
 
@@ -284,9 +281,9 @@
     form.phone = number;
   };
   
-  // defineExpose([
-  //   'closeProfilePopup'
-  // ])
+  defineExpose([
+    closeProfilePopup,
+  ])
   </script>
   <style>
   .change_profile_image {

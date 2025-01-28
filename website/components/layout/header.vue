@@ -21,19 +21,21 @@
                   <Icon name="solar:close-circle-bold" size="30px" style="color: #253696;" />
                 </div>
               </div>
-              <ul class="sidebar-menu">
-                <li v-for="menu in menus" :key="menu.title" @click="navigateTo(menu.link)">
+              <div class="d-block">
+                <div class="d-flex justify-content-center btn fw-bold fs-6" :class="[
+                  isMenuActive(menu) ? 'active-menu': 'non-active-menu',
+                ]" v-for="menu in menus" @click="navigateTo({ path: menu.link })" :key="menu">
                   {{ $t(menu.title) }}
-                </li>
-                <div v-if="!nullToVoid(userStore.user.id) != ''">
-                  <el-button @click="signUp()" type="primary" class="sidebar_button w-100 d-block" round>{{
+                </div>
+                <div v-if="!nullToVoid(userStore.user.id) != ''" class="w-100 d-flex flex-column align-items-center">
+                  <el-button @click="signUp()" type="primary" class="sidebar_button w-75 d-block" round>{{
                     $t("sign_up")
                   }}</el-button>
-                  <el-button @click="signIn()" type="primary" class="sidebar_button w-100 d-block" round>{{
+                  <el-button @click="signIn()" type="primary" class="sidebar_button w-75 d-block" round>{{
                     $t("sign_in")
                   }}</el-button>
                 </div>
-              </ul>
+              </div>
 
             </div>
 
@@ -47,13 +49,13 @@
               <img class="for-light" height="50px" src="/e-free-logo.png" alt="" />
             </h3>
             <div class="d-none d-lg-block menu w-100" id="menu-header-desktop">
-              <ul class="d-flex justify-content-center align-items-center gap-5">
-                <li class="btn fw-bold fs-6" :class="{
-                  'active-menu': isMenuActive(menu),
-                }" v-for="menu in menus" @click="navigateTo({ path: menu.link })" :key="menu">
+              <div class="d-flex justify-content-center align-items-center gap-5">
+                <div class="btn fw-bold fs-6" :class="[
+                  isMenuActive(menu) ? 'active-menu': 'non-active-menu',
+                ]" v-for="menu in menus" @click="navigateTo({ path: menu.link })" :key="menu">
                   {{ $t(menu.title) }}
-                </li>
-              </ul>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -84,7 +86,7 @@
               <div v-else>
                 <el-button @click="signUp()" type="primary" class="btn-signup max-992-none" round>{{ $t("sign_up")
                   }}</el-button>
-                <el-button @click="signIn()" type="primary" class="btn-login max-992-none" round>{{ $t("sign_in")
+                <el-button @click="signIn()" class="btn-signin max-992-none" round>{{ $t("sign_in")
                   }}</el-button>
                 <!-- <el-button @click="forgotPassword()" type="primary" class="btn-login max-992-none" round>{{
                   $t("forgot_password")
@@ -105,11 +107,12 @@
       </div>
     </div>
     <div v-if="showSignUpModal">
-      <SignUp ref="signUpRef" @closeModal="closeModalSignOut" @goToSignIn="signIn" />
+      <SignUp ref="signUpRef" @closeModal="closeModalSignOut" @switchToSignIn="signIn" />
     </div>
     <div v-if="showSignInModal">
-      <SignIn ref="signInRef" @closeModal="closeModalSignIn" @switchToSignUp="signUp" />
+      <SignIn ref="signInRef" @closeModal="closeModalSignIn" @switchToSignUp="signUp" @switchToForgotPassword="openForgotPasswordModal" />
     </div>
+    <ForgotPassword ref="forgotPasswordModal" />
     <!-- <div v-if="showForgotPasswordModal">
       <ForgotPassword ref="forgotPasswordRef" />
     </div>
@@ -151,7 +154,7 @@ const showResetPasswordModal = ref(false);
 const showRequestMessagingToken = ref(false);
 const signUpRef = ref(null);
 const signInRef = ref(null);
-const forgotPasswordRef = ref(null);
+const forgotPasswordModal = ref(null);
 const EmailVerificationRef = ref(null);
 const ResetPasswordRef = ref(null);
 const requestMessagingTokenRef = ref(null);
@@ -209,7 +212,6 @@ const isMenuActive = (item) => {
 const drawer = ref(false);
 
 const signUp = () => {
-  alert(0)
   drawer.value = false;
   showSignUpModal.value = true;
   showSignInModal.value = false;
@@ -219,7 +221,6 @@ const signUp = () => {
   });
 };
 const signIn = () => {
-  alert(1)
   drawer.value = false;
   showSignInModal.value = true;
   showSignUpModal.value = false;
@@ -228,13 +229,11 @@ const signIn = () => {
     signInRef.value.showModal();
   });
 };
-const forgotPassword = () => {
-  drawer.value = false;
-  showForgotPasswordModal.value = true;
-  nextTick(() => {
-    forgotPasswordRef.value.showModal();
-  })
-}
+
+const openForgotPasswordModal = () => {
+  signInModal.value?.closeModal(); // Close Sign In Modal
+  forgotPasswordModal.value?.showModal(); // Show Forgot Password Modal
+};
 
 const emailVerification = () => {
   drawer.value = false;
@@ -274,6 +273,21 @@ const closeProfilePopup = () => {
 }
 </script>
 <style>
+.btn-signup, .btn-signin:hover {
+  background-color: var(--theme-default);
+  color:white;
+}
+.btn-signin {
+  background-color: transparent;
+  color: var(--theme-default);
+  border: 1px solid var(--theme-default);
+}
+
+.btn-signin:hover {
+  background-color: var(--theme-default);
+  color:white;
+}
+
 el-button.btn-close {
   padding: 0px !important;
 }
@@ -315,28 +329,8 @@ el-button.btn-close {
   border-bottom: 1px solid #3b4a6b;
 }
 
-/* Sidebar Menu */
-.sidebar-menu {
-  list-style: none;
-  margin: 0;
-  padding: 10px;
-}
-
-.sidebar-menu li {
-  background: none !important;
-  font-size: large;
-}
-
-.sidebar-menu li {
-  padding: 10px 16px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.sidebar-menu li:hover {
-  background-color: #253696;
-  color: white;
-  border-radius: 4px;
+.active-menu, .active-menu:hover, .non-active-menu:hover {
+  color: var(--theme-default);
 }
 
 /* Overlay for Sidebar */
@@ -356,10 +350,6 @@ el-button.btn-close {
 
 .modal-backdrop {
   display: none !important;
-}
-
-.active-menu {
-  color: var(--theme-default);
 }
 
 

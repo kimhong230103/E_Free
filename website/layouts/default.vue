@@ -92,6 +92,10 @@ export default {
 };
 </script>
 <style>
+.text-blue {
+  color: #253696;
+}
+
 .box-fix-telegram{
   position: fixed;
   bottom: 20px;

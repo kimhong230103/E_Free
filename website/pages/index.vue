@@ -4,9 +4,33 @@
     <ProductModal ref="productModal" :product="selectedProduct" />
     
     <div class="row">
-      <div class="col-12" style="padding-right: 14px">
+      <div class="col-12">
         <div class="row">
+          <div class="hero-container d-flex align-items-center justify-content-center">
+            <div class="overlay"></div>
+            
+            <!-- Desktop View -->
+            <div class="d-none d-lg-block text-center content">
+                <h1 class="display-10 fw-bold text-white mb-4">Finding your product Here!</h1>
+                <div class="search-bar position-relative">
+                    <input type="text" class="form-control rounded-pill px-4 h-125" placeholder="Search..." />
+                    <button class="btn-search rounded-pill px-4 position-absolute end-0 top-50 translate-middle-y me-2 h-75">
+                        Search
+                    </button>
+                </div>
+            </div>
 
+            <!-- Mobile View -->
+            <div class="d-block d-lg-none text-center content w-75">
+              <h4 class="display-10 fw-bold text-white mb-2">Finding your product Here!</h4>
+              <div class="search-bar position-relative">
+                  <input type="text" class="form-control rounded-pill px-4 h-100" placeholder="Search..." />
+                  <button class="btn-search rounded-pill px-4 position-absolute end-0 top-50 translate-middle-y me-2 h-75">
+                      Search
+                  </button>
+              </div>
+            </div>
+        </div>
           <!-- Status -->
           <div class="col-12">
             <div class="w-100 card p-3">
@@ -56,7 +80,7 @@
                 <a href="/promotion">{{ $t('see_all') }}</a>
               </div>
               <div class="row">
-                <div v-for="(item, index) in productPromotion.slice(0,4)" :key="index"
+                <div v-for="(item, index) in productPromotion" :key="index"
                   class="col-6 col-md-4 col-xl-3 p-10 box-product-promotion rounded-10">
                   <figure class="p-10 box-shadow" @click="showProductDetails(item)">
                     <div class="img-card img-promotion w-100">
@@ -64,15 +88,15 @@
                     </div>
                     <div class="txt py-2">
                       <div class="d-flex justify-content-between align-items-center mb-2">
-                        <p class="d-block product-name">
+                        <p class="d-block product-name text-truncate">
                           {{ item.title }}
                         </p>
                       </div>
                       <p class="pro-desc text-truncate-two-lines mb-2">{{ item.description }}</p>
                       <hr class="hr-promotion">
-                      <span class="d-flex align-items-center gap-1 price my-1">
-                        <p>{{ $t('price') }} <span class="text-danger text-decoration-line-through">${{ item.price }}</span></p>
-                        <b class="fw-bold me-2">${{ item.price - (item.price * item.discount) / 100 }}</b>
+                      <span class="d-flex justify-content-between gap-1 price my-1">
+                        <p>{{ $t('price') }} <span class="item-price text-danger text-decoration-line-through">${{ item.price }}</span></p>
+                        <b class="item-price fw-bold me-2">${{ item.price - (item.price * item.discount) / 100 }}</b>
                       </span>
                     </div>
                   </figure>
@@ -82,10 +106,10 @@
           </div>
 
           <!-- Product Today -->
-          <div class="col-12">
+          <!-- <div class="col-12">
             <div class="w-100 card p-3">
               <div class="head-product-today w-100 d-flex justify-content-between">
-                <h5 class="text-blue fw-bold max-576-none">{{ $t('product_today') }}</h5>
+                <h5 class="!text-blue-900 !font-bold  max-576-none">{{ $t('product_today') }}</h5>
                 <h6 class="fw-bold min-576-none">{{ $t('product_today') }}</h6>
                 <span>{{ $t('see_all') }}</span>
               </div>
@@ -125,10 +149,10 @@
                 </div>
               </div>
             </div>
-          </div>
+          </div> -->
 
           <!-- Popular Product -->
-          <div class="col-12">
+          <!-- <div class="col-12">
             <div class="w-100 card p-3">
               <div class="head-product-today w-100 d-flex justify-content-between">
                 <h5 class="text-blue fw-bold max-576-none">{{ $t('top_product') }}</h5>
@@ -168,50 +192,95 @@
                 </div>
               </div>
             </div>
-          </div>
+          </div> -->
 
           <!-- Top Category-->
-          <div style="height: 500px;" class="container w-100 col-12 pb-5">
-            <h2 class="cat-title fw-bold text-center">Top Category</h2>
-            <div style="height: 100%; width: 100%;"
-              class="w-full d-flex flex-column flex-lg-row justify-content-center align-items-center gap-4 py-3">
-              <a href="/product" style="width: 50%; height: 100%;" class="cat-card">
-                <img style="display: absolute; max-height: 100%;" width="80%" src="/images/home/playstation.png" alt="">
-                <div style="display: absolute; bottom: 10%; left: 5%" class="cat-desc">
-                  <h4>PlayStation 5</h4>
-                  <p style="font-size: 12px;" class="w-75">Black and White version of the PS5 coming out on sale.</p>
-                  <button class="cat-btn">Shop Now</button>
-                </div>
-              </a>
-              <div style="height: 100%; width: 50%" class="d-flex flex-column justify-content-between gap-4">
-                <a href="/product" class="cat-card" style="height: 50%;">
-                  <img style="position: absolute; right: 0; bottom: 0px; max-width: 280px; max-height: 100%;"
-                    src="/images/home/women-collection.png" alt="">
-                  <div style="display: absolute; bottom: 10%; left: 5%" class="cat-desc">
-                    <h4>Women’s Collections</h4>
-                    <p style="font-size: 12px;" class="w-75">Featured woman collections that give you another vibe.</p>
+          <div class="container w-100 col-12 pb-5">
+            <p class="text-blue fw-bold text-2xl">Top Category</p>
+
+            <!-- Desktop View -->
+            <div class="d-none d-lg-flex row w-full h-full py-3">
+              <!-- PlayStation Section -->
+              <div class="col-lg-6 col-12 d-flex justify-content-center align-items-center">
+                <a href="/product" class="cat-card w-100 h-100">
+                  <img style="width: 60%;" src="/images/home/playstation.png" alt="PlayStation 5">
+                  <div class="cat-desc bottom-30 left-30">
+                    <h4>PlayStation 5</h4>
+                    <p class="w-75" style="font-size: 12px;">Black and White version of the PS5 coming out on sale.</p>
                     <button class="cat-btn">Shop Now</button>
                   </div>
                 </a>
-                <div style="height: 50%;" class="d-flex justify-content-between align-items-center gap-4">
-                  <a href="/product" style="height: 100%; width: 50%;" class="cat-card">
-                    <img width="150px"
-                      style="max-width: 150px; max-height: 100%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); "
-                      src="/images/home/speaker.png" alt="">
-                    <div style="display: absolute; bottom: 10%; left: 5%" class="cat-desc">
+              </div>
+          
+              <!-- Right Side Section -->
+              <div class="col-lg-6 col-12 d-flex flex-column gap-4">
+                <a href="/product" class="cat-card w-100 h-50">
+                  <div class="w-100 d-flex justify-content-end">
+                    <img style="width: 45%;" src="/images/home/women-collection.png" alt="Women's Collection">
+                  </div>
+                  <div class="cat-desc position-absolute bottom-30 left-30">
+                    <h4>Women’s Collections</h4>
+                    <p class="w-75" style="font-size: 12px;">Featured woman collections that give you another vibe.</p>
+                    <button class="cat-btn">Shop Now</button>
+                  </div>
+                </a>
+          
+                <div class="d-flex gap-4 h-50">
+                  <a href="/product" class="cat-card w-50 position-relative">
+                    <img style="max-width: 150px; max-height: 100%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);" src="/images/home/speaker.png" alt="Speaker">
+                    <div class="cat-desc position-absolute bottom-30 left-30">
                       <h4>{{ $t('speaker') }}</h4>
                       <p style="font-size: 12px;">Amazon wireless speakers</p>
                       <button class="cat-btn">Shop Now</button>
                     </div>
                   </a>
-                  <a href="/product" style="height: 100%; width: 50%;" class="cat-card">
-                    <img width="150px"
-                      style="max-width: 150px; max-height: 100%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); "
-                      src="/images/home/perfume.png" alt="">
+                  <a href="/product" class="cat-card w-50 position-relative">
+                    <img style="max-width: 150px; max-height: 100%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);" src="/images/home/perfume.png" alt="Perfume">
                   </a>
                 </div>
               </div>
             </div>
+
+            <!-- Mobile View -->
+            <div class="d-flex d-lg-none flex-column gap-1 w-full h-full py-3">
+              <!-- PlayStation Section -->
+              <a href="/product" class="cat-card w-100 h-100">
+                <div class="w-100 d-flex justify-content-end">
+                  <img style="width: 60%;" src="/images/home/playstation.png" alt="PlayStation 5">
+                </div>
+                <div class="cat-desc bottom-10 left-10">
+                  <h5 class="text-white">PlayStation 5</h5>
+                  <p class="w-75" style="font-size: 11px;">Black and White version of the PS5 coming out on sale.</p>
+                  <button class="cat-btn">Shop Now</button>
+                </div>
+              </a>
+              <a href="/product" class="cat-card w-100 h-50">
+                <div class="w-100 d-flex justify-content-end">
+                  <img style="width: 45%;" src="/images/home/women-collection.png" alt="Women's Collection">
+                </div>
+                <div class="cat-desc position-absolute bottom-10 left-10">
+                  <h5 class="text-white">Women’s Collections</h5>
+                  <p class="w-75" style="font-size: 12px;">Featured woman collections that give you another vibe.</p>
+                  <button class="cat-btn">Shop Now</button>
+                </div>
+              </a>
+              <div class="d-flex gap-1 h-50">
+                <a href="/product" class="cat-card w-50 position-relative">
+                  <div class="w-100 d-flex justify-content-center">
+                    <img style="width: 50%;" class="p-10" src="/images/home/speaker.png" alt="Speaker">
+                  </div>
+                  <div class="cat-desc position-absolute bottom-10 left-10">
+                    <h5 class="text-white">{{ $t('speaker') }}</h5>
+                    <p style="font-size: 12px;">Amazon wireless speakers</p>
+                    <button class="cat-btn">Shop Now</button>
+                  </div>
+                </a>
+                <a href="/product" class="cat-card w-50 position-relative">
+                  <img style="max-width: 150px; max-height: 100%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 10px" src="/images/home/perfume.png" alt="Perfume">
+                </a>
+              </div>
+            </div>
+
           </div>
         </div>
       </div>
@@ -224,126 +293,131 @@ import ProductModal from "@/components/ProductModal.vue";
 
 const productPromotion = ref([
   {
-    title: "Iphone 14 Pro Max",
+    title: "iPhone 14 Pro Max",
     price: 1450,
     category: "Mobile Phone",
     stock: 60,
     discount: 10,
     description: `
-    Screen Size: 6.7 inches, 128 GB Storage,
-    A16 Bionic Chip, Dual Camera System.
-  `,
+      Screen Size: 6.7 inches, 128 GB Storage,
+      A16 Bionic Chip, Dual Camera System.
+    `,
     image: "/images/sample.png",
+    review: 1200,
+    releaseDate: "September 14, 2023",
   },
   {
-    title: "Milk",
-    price: 1450,
+    title: "Samsung Galaxy S23 Ultra",
+    price: 1250,
     category: "Mobile Phone",
-    stock: 60,
-    discount: 10,
-    description: `
-    Screen Size: 6.7 inches, 128 GB Storage,
-    A16 Bionic Chip, Dual Camera System.
-  `,
+    stock: 80,
+    discount: 15,
+    description: `Dynamic AMOLED, Snapdragon 8 Gen 2, 200MP Camera.`,
     image: "/images/sample.png",
+    review: 875,
+    releaseDate: "February 17, 2023",
   },
   {
-    title: "Iphone 14 Pro Max",
-    price: 1450,
-    category: "Mobile Phone",
-    stock: 60,
-    discount: 10,
-    description: `
-    Screen Size: 6.7 inches, 128 GB Storage,
-    A16 Bionic Chip, Dual Camera System.
-  `,
+    title: "MacBook Pro 16 M2 Max",
+    price: 3499,
+    category: "Laptop",
+    stock: 30,
+    discount: 8,
+    description: `16-inch Liquid Retina XDR display, M2 Max Chip.`,
     image: "/images/sample.png",
+    review: 340,
+    releaseDate: "January 24, 2023",
   },
   {
-    title: "Iphone 14 Pro Max",
-    price: 1450,
-    category: "Mobile Phone",
-    stock: 60,
-    discount: 10,
-    description: `
-    Screen Size: 6.7 inches, 128 GB Storage,
-    A16 Bionic Chip, Dual Camera System.
-  `,
+    title: "Sony WH-1000XM5",
+    price: 399,
+    category: "Headphone",
+    stock: 100,
+    discount: 12,
+    description: `Wireless Noise-Canceling Headphones, 30-hour battery.`,
     image: "/images/sample.png",
+    review: 652,
+    releaseDate: "May 20, 2022",
   },
   {
-    title: "Iphone 14 Pro Max",
-    price: 1450,
-    category: "Mobile Phone",
-    stock: 60,
-    discount: 10,
-    description: `
-    Screen Size: 6.7 inches, 128 GB Storage,
-    A16 Bionic Chip, Dual Camera System.
-  `,
+    title: "Amazon Echo Dot 5th Gen",
+    price: 49,
+    category: "Smart Home",
+    stock: 300,
+    discount: 20,
+    description: `Smart speaker with Alexa, compact size.`,
     image: "/images/sample.png",
+    review: 1980,
+    releaseDate: "October 12, 2022",
   },
   {
-    title: "Iphone 14 Pro Max",
-    price: 1450,
-    category: "Mobile Phone",
-    stock: 60,
+    title: "Apple Watch Series 9",
+    price: 529,
+    category: "Wearable",
+    stock: 90,
     discount: 10,
-    description: `
-    Screen Size: 6.7 inches, 128 GB Storage,
-    A16 Bionic Chip, Dual Camera System.
-  `,
+    description: `GPS + Cellular, Always-On Retina display.`,
     image: "/images/sample.png",
+    review: 1023,
+    releaseDate: "September 18, 2023",
   },
   {
-    title: "Iphone 14 Pro Max",
-    price: 1450,
-    category: "Mobile Phone",
-    stock: 60,
+    title: "Dell XPS 13 Plus",
+    price: 1199,
+    category: "Laptop",
+    stock: 50,
     discount: 10,
-    description: `
-    Screen Size: 6.7 inches, 128 GB Storage,
-    A16 Bionic Chip, Dual Camera System.
-  `,
+    description: `13.4-inch OLED, 12th Gen Intel i7, Ultra Thin.`,
     image: "/images/sample.png",
+    review: 520,
+    releaseDate: "March 1, 2022",
   },
   {
-    title: "Iphone 14 Pro Max",
-    price: 1450,
-    category: "Mobile Phone",
-    stock: 60,
-    discount: 10,
-    description: `
-    Screen Size: 6.7 inches, 128 GB Storage,
-    A16 Bionic Chip, Dual Camera System.
-  `,
+    title: "JBL Flip 6",
+    price: 129,
+    category: "Speaker",
+    stock: 150,
+    discount: 15,
+    description: `Portable Bluetooth speaker with deep bass.`,
     image: "/images/sample.png",
+    review: 380,
+    releaseDate: "September 1, 2022",
   },
   {
-    title: "Iphone 14 Pro Max",
-    price: 1450,
-    category: "Mobile Phone",
-    stock: 60,
+    title: "Logitech MX Master 3S",
+    price: 99,
+    category: "Accessories",
+    stock: 200,
     discount: 10,
-    description: `
-    Screen Size: 6.7 inches, 128 GB Storage,
-    A16 Bionic Chip, Dual Camera System.
-  `,
+    description: `Advanced wireless mouse, ergonomic design.`,
     image: "/images/sample.png",
+    review: 785,
+    releaseDate: "May 25, 2022",
   },
   {
-    title: "Iphone 14 Pro Max",
-    price: 1450,
-    category: "Mobile Phone",
-    stock: 60,
-    discount: 10,
-    description: `
-    Screen Size: 6.7 inches, 128 GB Storage,
-    A16 Bionic Chip, Dual Camera System.
-  `,
+    title: "GoPro Hero 11",
+    price: 399,
+    category: "Camera",
+    stock: 80,
+    discount: 12,
+    description: `5.3K video, waterproof, HyperSmooth 5.0.`,
     image: "/images/sample.png",
+    review: 912,
+    releaseDate: "September 15, 2022",
   },
-])
+  {
+    title: "PlayStation 5",
+    price: 499,
+    category: "Gaming Console",
+    stock: 40,
+    discount: 8,
+    description: `Next-gen console, DualSense Controller.`,
+    image: "/images/sample.png",
+    review: 2300,
+    releaseDate: "November 12, 2020",
+  },
+]);
+
 
 const productModal = ref(null);
 const selectedProduct = ref({});
@@ -367,18 +441,87 @@ useSeoMeta({
 
 <style>
 
+.left-10 {
+  left: 10px;
+}
+
+.bottom-10 {
+  bottom: 10px;
+}
+
+.left-20 {
+  left: 20px;
+}
+
+.bottom-20 {
+  bottom: 20px;
+}
+
+.left-30 {
+  left: 30px;
+}
+
+.bottom-30 {
+  bottom: 30px;
+}
+
+.hero-container {
+  background-image: url('/images/product-banner.png');
+  /* Replace with your image URL */
+  background-size: cover;
+  background-position: center;
+  height: 500px;
+  position: relative;
+  overflow: hidden;
+  margin: 10px 0;
+  border-radius: 20px;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  /* Adjust darkness */
+  z-index: 1;
+}
+
+.content {
+  position: relative;
+  z-index: 2;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  max-width: 550px;
+  margin: 0 auto;
+  position: relative;
+}
+
+input.form-control {
+  flex: 1;
+  padding-right: 100px;
+  height: 5vh;
+  /* Add space for the button */
+}
+
+.btn-search {
+  height: 4vh;
+  background-color: #0D394F;
+  color: white;
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
 .box-promote {
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-@media (max-width: 991.98px) {
-  .box-promote {
-    display: flex;
-    justify-content: start;
-    align-items: center;
-  }
 }
 
 .text-blue {
@@ -439,9 +582,10 @@ html.dark span {
 
 .cat-card {
   position: relative;
+  display: block;
+  overflow: hidden;
   background-color: black;
 }
-
 .cat-desc {
   position: absolute;
 }
@@ -450,6 +594,9 @@ html.dark span {
   color: white
 }
 
+.cat-desc p {
+  color: white;
+}
 .cat-btn {
   padding: 0px;
   background: transparent;
@@ -591,9 +738,32 @@ html.dark .box-product .img {
 }
 
 @media (max-width: 992px) {
+  .hero-container {
+    height: 250px;
+    margin: 0 0 12px 0;
+    border-radius: 20px;
+  }
+
+  .product-name {
+    font-size: smaller;
+  }
+
+  .pro-desc {
+    font-size: 12px;
+  }
+
+  .item-price {
+    font-size: smaller;
+  }
+
   .no-border {
     border: none !important;
     border-right: none !important;
+  }
+  .box-promote {
+    display: flex;
+    justify-content: start;
+    align-items: center;
   }
 }
 

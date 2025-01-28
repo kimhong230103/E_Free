@@ -16,12 +16,12 @@
             </div>
 
             <div class="col-md-7">
-              <div class="d-flex align-items-center">
-                <span>{{ product.rate }}</span>
+              <div class="d-flex justify-content-between py-1">
+                <span>{{ product.review }} {{ $t('reviews') }} </span>
                 <span>{{ product.releaseDate }}</span>
               </div>
               <h5 class="text-orange">
-                ${{ product.price }}
+                ${{ product.price - (product.price * product.discount) / 100 }}
               </h5>
               <p class="text-gray py-1">
                 <strong class="text-blue">{{ $t('category') }}:</strong> {{ product.category }}
@@ -46,10 +46,10 @@
                   <button class="btn btn-sm px-2" @click="increaseQuantity">+</button>
               </div>
                 <div class="w-100 d-flex align-items-center gap-3">
-                  <button class="btn btn-blue ms-auto" style="font-size: small;" @click="orderNow">
+                  <button class="btn btn-blue ms-auto py-2" style="font-size: smaller;" @click="orderNow">
                     {{ $t("order_now") }}
                   </button>
-                  <div class="btn btn-blue">
+                  <div class="btn btn-blue py-1">
                     <img src="/svg/cart.svg" alt="">
                   </div>
                 </div>
@@ -77,7 +77,7 @@ defineProps({
       stock: 0,
       discount: 0,
       releaseDate: "12, December, 2024",
-      rate: 123,
+      review: 123,
       description: "No description provided",
       image: "/images/sample.png",
     }),
