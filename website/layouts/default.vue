@@ -96,6 +96,22 @@ export default {
   color: #253696;
 }
 
+.text-orange {
+  color: var(--theme-default);
+}
+
+.btn-blue, .btn-blue:hover {
+  background-color: #253696;
+  color: white;
+  border: 2px solid white;
+}
+
+.btn-orange, .btn-orange:hover {
+  background-color: var(--theme-default);
+  color: white;
+  border: 2px solid white;
+}
+
 .box-fix-telegram{
   position: fixed;
   bottom: 20px;

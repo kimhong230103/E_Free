@@ -1,19 +1,19 @@
 <template>
-    <div class="py-5">
-        <h2 class="text-primary mb-4 text-center fw-bold">Our Shop Categories</h2>
+    <div class="py-2 py-lg-4">
+        <h2 class="text-blue mb-2 mb-lg-4 text-center fw-bold title">Our Shop Categories</h2>
         <div class="d-flex justify-content-between align-items-center gap-3">
             <button @click="scrollLeft" class="scroll-arrow cursor-pointer">
-                <img src="/svg/arrow.svg" alt="" />
+                <img src="/svg/arrow.svg" class="scroll-icon" alt="" />
             </button>
-            <div class="d-flex flex-nowrap gap-2 gap-md-3 gap-lg-5 overflow-hidden" ref="scrollContainer">
+            <div class="d-flex flex-nowrap gap-2 gap-md-3 gap-lg-5 py-2 overflow-x-hidden" ref="scrollContainer">
                 <div v-for="(category, index) in categories" :key="index" class="category-box text-center"
                     :class="{ active: activeCategory === category.id }" @click="setActiveCategory(category.id)">
-                    <img :src="category.icon" class="img-fluid" alt="" />
+                    <img :src="category.icon" class="cat-img img-fluid" alt="" />
                     <p class="mt-2 cat-text">{{ category.name }}</p>
                 </div>
             </div>
             <button @click="scrollRight" class="scroll-arrow cursor-pointer" style="transform: rotate(180deg);">
-                <img src="/svg/arrow.svg" alt="" />
+                <img src="/svg/arrow.svg" class="scroll-icon" alt="" />
             </button>
         </div>
     </div>
@@ -107,10 +107,35 @@ const scrollToIndex = (index) => {
     flex-shrink: 0;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 576px) {
     .category-box {
-        width: 120px;
-        height: 120px;
+        width: 60px;
+        height: 60px;
+    }
+
+    .title {
+        font-size: large;
+    }
+
+    .cat-img {
+        width: 40px;
+        height: 40px;
+    }
+
+    .scroll-arrow {
+        border: none;
+        background-color: whitesmoke;
+        padding: 5px;
+        border-radius: 100%;
+    }
+
+    .cat-text {
+        display: none;
+    }
+
+    .scroll-icon {
+        width: 20px;
+        height: 20px;
     }
 }
 

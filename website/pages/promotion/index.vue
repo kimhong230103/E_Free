@@ -1,19 +1,6 @@
 <template>
     <div class="container mx-auto">
-        <div class="hero-container d-flex align-items-center justify-content-center">
-            <div class="overlay"></div>
-            <div class="text-center content">
-                <h1 class="display-10 fw-bold text-white mb-4">Finding Your Promotion Product</h1>
-                <div class="search-bar position-relative">
-                    <input type="text" class="form-control rounded-pill px-4" placeholder="Search..." />
-                    <button class="btn-search rounded-pill px-4 position-absolute end-0 top-50 translate-middle-y me-2">
-                        Search
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <Category />
+      <Category />
         <!-- <div class="py-5">
             <h2 class="text-primary mb-4 text-center fw-bold">Our Shop Categories</h2>
             <div class="d-flex justify-content-between align-items-center gap-3">
@@ -185,7 +172,7 @@
                     <figure class="p-10 box-shadow">
                       <div class="img-card img-promotion w-100">
                         <img width="80%"
-                          src="https://off.com.ph/_next/image?url=https%3A%2F%2Fedge.sitecorecloud.io%2Fscjohnsonana080-dart-production-40df%2Fmedia%2Fproject%2Fdart%2Foff%2Fphilippines%2Fhomepage%2Fcategory-images%2Foff_ph_4x3_720x540_category_card-overtime.png%3Fh%3D540%26iar%3D0%26w%3D720&w=3840&q=75"
+                          src="/images/sample.png"
                           alt="">
                       </div>
                       <div class="txt py-2">
