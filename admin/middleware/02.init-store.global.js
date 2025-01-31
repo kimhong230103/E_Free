@@ -24,7 +24,6 @@ export default defineNuxtRouteMiddleware(async (to) => {
       token: token,
       logged: true,
     });
-    console.log('store init');
     await initStore.fetchData();
   }
 });

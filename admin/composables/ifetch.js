@@ -32,11 +32,8 @@ export function ifetch(url, data, responseType = "json",typeMethod='POST') {
       }
     },
     async onResponseError({ response, error }) {
-      console.log(response);
-      
       loadingStore.setInprogress(false);
       const status = response.status;
-      console.log('ifetch return status ', status)
       if (status == 401) {
         userStore.clearToken()
         clearError({redirect: '/auth/login'})

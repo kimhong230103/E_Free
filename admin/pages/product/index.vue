@@ -40,7 +40,7 @@
       :tableHeader="tableHeader"
       :tableData="lists"
       :pagination="pagination"
-      @paginationChange="getData"
+      @paginationChange="getDataByPage"
       ref="formTable"
       >
       <template #action="{ row }">
@@ -53,7 +53,7 @@
                     class="me-3"
                     name="material-symbols:edit-square-outline"
                   />
-                  <span>Edit</span>
+                  <span>{{ $t("edit") }}</span>
                 </div>
               </a>
             </li>
@@ -66,13 +66,11 @@
           <IDropdownOption
               label="delete"
               icon="mdi:trash-can-outline"
-              v-can="permissionConst.DELETE"
               @click="deleteItem(row)"
           />
           <IDropdownOption
               :label="$t('view')+' '+ $t('description')"
               icon="material-symbols:visibility-outline"
-              v-can="permissionConst.VIEW"
               @click="showModal(row)"
           />
           </IDropdown>
@@ -97,11 +95,11 @@
         <span class="fw-bold">{{ currencyFormat(price) }}</span>
       </template>
       <template #image="{ row }">
-          <img v-if="!row.imageUrl" height="40px" :src="getImagePath(row.imageUrl)" alt="">
-          <img v-else height="40px" :src="row.imageUrl" :alt="row.imageUrl">
+          <img v-if="!row.basedImageUrl" height="40px" :src="getImagePath(row.basedImageUrl)" alt="">
+          <img v-else height="40px"  @error="onImageError(row)" :src="row.basedImageUrl" :alt="row.basedImageUrl">
       </template>
       </IFormTable>
-    <ActionModal
+    <iViewDescription
       ref="modal"
       @closeModal="closeModal"
       :listDescription="listDescription"
@@ -110,7 +108,7 @@
 </template>
 
 <script setup>
-import ActionModal from "~/components/blog/modal.vue";
+import iViewDescription from "~/components/iComponents/iViewDescription.vue";
 import { moduleKey } from "~/constants/moduleKey";
 import { appConst } from "~/constants/app";
 import { permissionConst } from "~/constants/permission";
@@ -122,6 +120,9 @@ import menuTypeEnum from "~/composables/enum/menuTypeEnum";
 import businessTypeEnum from "~/composables/enum/businessTypeEnum";
 import { useCategoryType } from "~/store/category_type";
 import { useUserStore } from "~/store/user";
+import { useCategoryList } from "~/store/category_list.js";
+const categoryList = useCategoryList();
+const userStore = useUserStore();
 import { get } from "@vueuse/core";
 const useLanguage = useLanguageStore();
 const languageList = ref(useLanguage.lists);
@@ -210,6 +211,7 @@ const onResetFilter = () => {
 let lists = ref([]);
 
 onMounted(() => {
+  getDataCategory();
   getData();
   if (checkCookieExpiration()) {
     console.log('Access token is still valid.');
@@ -218,11 +220,33 @@ onMounted(() => {
     useUserStore().clearToken();
   }
 });
+const getDataCategory = async () => {
+  await fetch("https://efree.cheakautomate.online/gateway/CATEGORY/api/v1/categories", {
+    method: 'GET', // Specify the method as GET
+    headers: {
+        'Content-Type': 'application/json',
+        Authorization: "",  
+    }
+  })
+  .then(response => {
+      if (!response.ok) {
+          throw new Error('Network response was not ok ' + response.statusText);
+      }
+      return response.json(); // Parse the JSON from the response
+  })
+  .then(data => {
+    categoryList.setData(data.payload);
+  })
+  .catch(error => {
+    console.error('There has been a problem with your fetch operation:', error);
+    categoryList.setData([]);
+  })
+};
 const openAddModal = () => {
   goTo({ path: "/product/actions" });
 };
 const update = async (row) => {
-  await goTo({ path: "/product/actions", query: { id: row.id } });
+  await goTo({ path: "/product/actions", query: { id: row.productId } });
 };
 
 const getInput = () => {
@@ -235,18 +259,35 @@ const getInput = () => {
   };
 };
 const showModal = (row) => {
-  listDescription.value = row.post_translate;
+  
+  listDescription.value = [
+    {
+      language_id: 1,
+      language_code: "en",
+      description: row.descriptionEn
+    },
+    {
+      language_id: 2,
+      language_code: "kh",
+      description: row.descriptionKh
+    }
+  ];
   modal.value.showModal(listDescription.value);
 };
+const getDataByPage = (page) => {
+  pagination.value.currentPage = page;
+  getData();
+}
 const getData = async () => {
   const input = getInput();
+
   input.filter.business_id=businessTypeEnum.kdas
   try {
-    await fetch(`https://efree.cheakautomate.online/gateway/PRODUCT/api/v1/products/paginate?page=${pagination.value.currentPage}&size=${pagination.value.per_page}&sortBy=${formHeader.value.sortBy}&direction=${formHeader.value.sortType}`, {
+    await fetch(`https://efree.cheakautomate.online/gateway/PRODUCT/api/v1/products/paginate?page=${pagination.value.currentPage}&size=${formHeader.value.tableSize}&sortBy=${formHeader.value.sortBy}&direction=${formHeader.value.sortType}`, {
     method: 'GET', // Specify the method as GET
     headers: {
         'Content-Type': 'application/json',
-        Authorization: "",  
+        Authorization: userStore.logged ? `Bearer ${userStore.token}` : "",
     }
   })
   .then(response => {
@@ -268,12 +309,24 @@ const getData = async () => {
 
 const setInput = (data) => {
   lists.value = data.payload.content;
-  pagination.value.currentPage = parseInt(data.payload.page.pageNumber)+1;
-  pagination.value.per_page = data.payload.page.size;
-  pagination.value.total = data.payload.page.totalPages;
+  pagination.value.currentPage = parseInt(data.payload.page.number)+1;
+  pagination.value.per_page = formHeader.value.tableSize;
+  pagination.value.total =  data.payload.page.totalElements;
+  pagination.value.to = (data.payload.page.number+1) * formHeader.value.tableSize;
+  pagination.value.from = (data.payload.page.number) * formHeader.value.tableSize + 1;
+  pagination.value.last_page = data.payload.page.totalPages;
 };
-
-
+const test = ref({
+  currentPage: 1,
+  per_page: 10,
+  total: 0,
+  to: 0,
+  from: 0,
+  last_page: 2,
+});
+const onImageError = (row) =>{
+  row.basedImageUrl = appConst.defaultImage
+}
 const deleteItem = (row) => {
   const { $i18n } = useNuxtApp();
   swal({
@@ -287,10 +340,31 @@ const deleteItem = (row) => {
     showLoaderOnConfirm: true,
     preConfirm: () => {
       return new Promise(async (resolve) => {
-        let input = { id: row.id};
-        const data = await ifetch(blogAPI.delete, input);
-        iAlert().success();
-        getData();
+        try {
+          await fetch(`https://efree.cheakautomate.online/gateway/PRODUCT/api/v1/products/${row.productId}`, {
+            method: 'DELETE', // Specify the method as GET
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: userStore.logged ? `Bearer ${userStore.token}` : "",
+            }
+          })
+          .then(response => {
+              if (!response.ok) {
+                  throw new Error('Network response was not ok ' + response.statusText);
+              }
+              return response.json(); // Parse the JSON from the response
+          })
+          .then(data => {
+            
+            iAlert().success();
+            getData();
+          })
+          .catch(error => {
+            console.error('There has been a problem with your fetch operation:', error);
+          })
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        }
         resolve();
       });
     },

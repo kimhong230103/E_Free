@@ -293,8 +293,6 @@ const chooseImage = () => {
 };
 const onFileChange = ($event) => {
   const files = $event.target.files || $event.dataTransfer.files;
-  console.log(files[0].size);
-  console.log(2 * 1024 * 1024);
   if (files[0]) {
     if (files[0].size > 4 * 1024 * 1024) {
       form.logo = "";

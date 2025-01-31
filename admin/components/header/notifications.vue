@@ -255,7 +255,6 @@ const readNotification = async (item) => {
 
 //deposit
 const checkBankDepositAction = async (item) => {
-  console.log(item);
   checkDepositBankShow.value = true;
   nextTick(() => {
     modalDepositCheckBank.value.showModal(item);
