@@ -1,5 +1,5 @@
 <template>
-    <div class="container mx-auto">
+    <div class="container mx-auto" style="min-height: 80vh">
         <Payment @paymentSuccess="handlePaymentSuccess" />
         <div class="row g-4 d-flex flex-column justify-content-between align-items-center">
             <!-- My Card Section -->
@@ -8,7 +8,7 @@
                     <h3 class="fw-bold text-blue">{{ $t('ordered_product') }}</h3>
                     <div class="d-flex gap-2">
                         <button class="btn btn-orange py-2 px-4">{{ $t('favorite') }}</button>
-                        <button class="btn btn-blue py-2 px-4">{{ $t('history') }}</button>
+                        <a href="/history" class="btn btn-blue py-2 px-4">{{ $t('history') }}</a>
                     </div>
                 </div>
 

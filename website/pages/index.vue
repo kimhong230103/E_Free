@@ -6,31 +6,9 @@
     <div class="row">
       <div class="col-12">
         <div class="row">
-          <div class="hero-container d-flex align-items-center justify-content-center">
-            <div class="overlay"></div>
-            
-            <!-- Desktop View -->
-            <div class="d-none d-lg-block text-center content">
-                <h1 class="display-10 fw-bold text-white mb-4">Finding your product Here!</h1>
-                <div class="search-bar position-relative">
-                    <input type="text" class="form-control rounded-pill px-4 h-125" placeholder="Search..." />
-                    <button class="btn-search rounded-pill px-4 position-absolute end-0 top-50 translate-middle-y me-2 h-75">
-                        Search
-                    </button>
-                </div>
-            </div>
-
-            <!-- Mobile View -->
-            <div class="d-block d-lg-none text-center content w-75">
-              <h4 class="display-10 fw-bold text-white mb-2">Finding your product Here!</h4>
-              <div class="search-bar position-relative">
-                  <input type="text" class="form-control rounded-pill px-4 h-100" placeholder="Search..." />
-                  <button class="btn-search rounded-pill px-4 position-absolute end-0 top-50 translate-middle-y me-2 h-75">
-                      Search
-                  </button>
-              </div>
-            </div>
-        </div>
+          <div class="d-flex align-items-center justify-content-center">
+            <img class="banner-img " src="/images/product-banner.png" alt="">
+          </div>
           <!-- Status -->
           <div class="col-12">
             <div class="w-100 card p-3">
@@ -427,6 +405,31 @@ const showProductDetails = (product) => {
   productModal.value.openModal();
 };
 
+const getPromotionProduct = async () => {
+
+await fetch("https://efree.cheakautomate.online/gateway/CATEGORY/api/v1/categories", {
+    method: 'GET', // Specify the method as GET
+    headers: {
+        'Content-Type': 'application/json',
+        Authorization: "",
+    }
+})
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok ' + response.statusText);
+        }
+        return response.json(); // Parse the JSON from the response
+    })
+    .then(data => {
+        console.log("data", data);
+        categoryList.value = data.payload;
+    })
+    .catch(error => {
+        console.error('There has been a problem with your fetch operation:', error);
+    })
+
+}
+
 useSeoMeta({
   title: "E-Free",
   ogTitle: "E-Free",
@@ -465,9 +468,7 @@ useSeoMeta({
   bottom: 30px;
 }
 
-.hero-container {
-  background-image: url('/images/product-banner.png');
-  /* Replace with your image URL */
+.banner-img {
   background-size: cover;
   background-position: center;
   height: 500px;
@@ -738,7 +739,7 @@ html.dark .box-product .img {
 }
 
 @media (max-width: 992px) {
-  .hero-container {
+  .banner-img {
     height: 250px;
     margin: 0 0 12px 0;
     border-radius: 20px;

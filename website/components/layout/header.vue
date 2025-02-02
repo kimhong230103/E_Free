@@ -88,15 +88,6 @@
                   }}</el-button>
                 <el-button @click="signIn()" class="btn-signin max-992-none" round>{{ $t("sign_in")
                   }}</el-button>
-                <!-- <el-button @click="forgotPassword()" type="primary" class="btn-login max-992-none" round>{{
-                  $t("forgot_password")
-                  }}</el-button>
-                <el-button @click="emailVerification()" type="primary" class="btn-login max-992-none" round>{{
-                  $t("email_verification")
-                  }}</el-button>
-                <el-button @click="resetPassword()" type="primary" class="btn-login max-992-none" round>{{
-                  $t("reset_password")
-                  }}</el-button> -->
               </div>
 
               <!-- <el-switch size="large" v-model="darkMode" :active-action-icon="Moon" :inactive-action-icon="Sunny"
@@ -113,15 +104,6 @@
       <SignIn ref="signInRef" @closeModal="closeModalSignIn" @switchToSignUp="signUp" @switchToForgotPassword="openForgotPasswordModal" />
     </div>
     <ForgotPassword ref="forgotPasswordModal" />
-    <!-- <div v-if="showForgotPasswordModal">
-      <ForgotPassword ref="forgotPasswordRef" />
-    </div>
-    <div v-if="showEmailVerificationModal">
-      <EmailVerification ref="EmailVerificationRef" />
-    </div>
-    <div v-if="showResetPasswordModal">
-      <ResetPassword ref="ResetPasswordRef" />
-    </div> -->
     <div v-if="isFormProfilePopup" class="control-profile-popup">
       <Modal :action_type="action_type" @closeProfilePopup="closeProfilePopup"></Modal>
     </div>

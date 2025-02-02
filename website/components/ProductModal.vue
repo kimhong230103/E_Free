@@ -11,30 +11,34 @@
         </div>
         <div class="modal-body">
           <div class="row">
-            <div class="col-md-5 text-center">
-              <img :src="product.image" alt="Product Image" class="img-fluid rounded fixed-size-img" />
+            <div class="col-md-5 text-center position-relative">
+              <img :src="product.image" alt="Product Image" class="h-75 img-fluid rounded fixed-size-img" />
+              <div class="position-absolute bottom-0 d-flex justify-content-center">
+                <img style="height: 60px;" :src="product.image" alt="Product Image" class="rounded" />
+                <img style="height: 60px;" :src="product.image" alt="Product Image" class="rounded" />
+              </div>
             </div>
 
             <div class="col-md-7">
-              <div class="d-flex justify-content-between py-1">
-                <span>{{ product.review }} {{ $t('reviews') }} </span>
-                <span>{{ product.releaseDate }}</span>
+              <div class="d-flex justify-content-between py-2">
+                <h6>{{ product.review }} {{ $t('reviews') }} </h6>
+                <h6>{{ product.releaseDate }}</h6>
               </div>
               <h5 class="text-orange">
                 ${{ product.price - (product.price * product.discount) / 100 }}
               </h5>
-              <p class="text-gray py-1">
+              <h6 class="text-gray py-2">
                 <strong class="text-blue">{{ $t('category') }}:</strong> {{ product.category }}
-              </p>
-              <p class="text-gray py-1">
+              </h6>
+              <h6 class="text-gray py-2">
                 <strong class="text-blue">{{ $t('stock') }}:</strong> {{ product.stock }}
-              </p>
-              <p class="text-gray py-1">
+              </h6>
+              <h6 class="text-gray py-2">
                 <strong class="text-blue">{{ $t('discount') }}:</strong> {{ product.discount }}%
-              </p>
-              <p class="text-gray py-1">
+              </h6>
+              <h6 class="text-gray py-2">
                 <strong class="text-blue">{{ $t('description') }}:</strong> {{ product.description }}
-              </p>
+              </h6>
 
               <hr>
               <div class="d-flex justify-content-between align-items-center">
@@ -45,12 +49,12 @@
                   </div>
                   <button class="btn btn-sm px-2" @click="increaseQuantity">+</button>
               </div>
-                <div class="w-100 d-flex align-items-center gap-3">
-                  <button class="btn btn-blue ms-auto py-2" style="font-size: smaller;" @click="orderNow">
+                <div class="w-100 h-100 d-flex align-items-center gap-3">
+                  <button class="btn btn-blue ms-auto py-2" @click="orderNow">
                     {{ $t("order_now") }}
                   </button>
                   <div class="btn btn-blue py-1">
-                    <img src="/svg/cart.svg" alt="">
+                    <img style="height: 30px;" src="/svg/cart.svg" alt="">
                   </div>
                 </div>
               </div>
