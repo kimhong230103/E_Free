@@ -49,7 +49,7 @@
                           @change="v$.categoryId.$touch"
                         >
                           <option value="" selected>{{ $t("please_select") }}</option>
-                          <option v-for="(item,index) in categories" :value="index">
+                          <option v-for="(item,index) in categories" :value="item.id">
                             {{ getNameByLang(item.name) }}
                           </option>
                         </select>
@@ -180,8 +180,16 @@
                           {{ $t("image") }}
                         </p>
                         <div class="text-center">
-                          <img
+                          <img 
+                            v-if="nullToVoid(form.img)==''"
                             :src="getImagePath(form.img,'post')"
+                            width="220"
+                            style="height: 220px; object-fit: cover"
+                            class="rounded mx-auto d-block img-fluid"
+                          />
+                          <img 
+                            v-else
+                            :src="form.img"
                             width="220"
                             style="height: 220px; object-fit: cover"
                             class="rounded mx-auto d-block img-fluid"
@@ -230,7 +238,7 @@
                   <div class="form-group">
                     <label for="unit">{{ $t("unit") }}</label>
                     <input
-                      v-model="form.weighType"
+                      v-model="form.weightType"
                       type="text"
                       class="form-control mb-2"
                       id="unit"
@@ -364,7 +372,7 @@
                                 @click="removeGallery(item.id,index)"
                               ></Icon>
                               <img
-                                :src="getImagePath(item.image, 'gallery')"
+                                :src="item"
                                 class="m-3"
                                 alt=""
                                 height="200"
@@ -434,6 +442,7 @@
   import { useLanguageStore } from "~/store/language";
   import { useCategoryType } from "~/store/category_type";
   import { useUserStore } from "~/store/user";
+  const userStore = useUserStore();
   const languageStore = useLanguageStore();
   const language = ref(languageStore.lists);
   const modalShowCropperImage = ref(null);
@@ -449,7 +458,7 @@
     descriptionKh: '',
     price: '',
     stockQty: '',
-    weighType: '',
+    weightType: '',
     weight: '',
     dimension:'',
     brand: '',
@@ -472,7 +481,9 @@
   const categories = ref([]);
   const categoryList = useCategoryList();
   
-  
+  const imageName = ref(null);
+  const imageFile = ref(null);
+  const imageOfGallery = ref([]);
   const route = useRoute();
   const fileInput = ref(null);
   const cropImageModal = ref(null);
@@ -486,6 +497,7 @@
     form.publish_date = moment(date).format("YYYY-MM-DD");
   }
   const getListCategory =  () => {
+    
     categoryList.lists.forEach((item) => {
     let name = {
         'en': item.nameEn,
@@ -528,7 +540,7 @@
   
   onMounted(() => {
     if (!isEmpty(route.query)) {
-      getData(route.query);
+      getData(route.query.id);
     } else {
       setDefaultForm();
     }
@@ -547,10 +559,38 @@
   //     form.name=form.post_translate[index].name
   //   }
   // }
+  const typeImage = ref(null);
+  const uploadGallery = ()=>{
+    typeImage.value = "gallery";
+    fileInput.value.click();
+  }
+  const removeGallery = (id , index) =>{
+    const { $i18n } = useNuxtApp();
+    swal({
+      title: $i18n.t("are_you_sure"),
+      text: $i18n.t("cannot_revert_this"),
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: $i18n.t("ok"),
+      cancelButtonText: $i18n.t("cancel"),
+      reverseButtons: true,
+      showLoaderOnConfirm: true,
+      preConfirm: () => {
+        return new Promise(async (resolve) => {
+          form.gallery.splice(index,1);
+          iAlert().success();
+          resolve();
+        });
+      },
+      allowOutsideClick: () => !swal.isLoading(),
+    });
+    
+  }
   function convertString(input) {
       return input.toLowerCase().replace(/ /g, '-');
   }
   const chooseImage = () => {
+    typeImage.value = "image"
     fileInput.value.click();
   };
   const onFileChange = ($event) => {
@@ -588,10 +628,24 @@
     }
     
     cropImageModal.value.showModal($event);
+    if(typeImage.value == "image"){
+      imageFile.value = files[0];
+      imageName.value = files[0].name;
+    }else if(typeImage.value == "gallery"){
+      imageOfGallery.value.push({
+        imageFile: files[0],
+        imageName: files[0].name
+      })
+    }
     fileInput.value.value = null; 
   };
   const imagecroped = (data) =>{
-    form.img = data;
+    if(typeImage.value=="image"){
+      form.img = data;
+    }
+    else if(typeImage.value == "gallery"){
+      form.gallery.push(data);
+    }
   }
   
   const getInput = () => {
@@ -615,7 +669,7 @@
       isSecondHand: form.isSecondHand,
       secondHandDescription: form.secondHandDescription,
       status: form.status,
-      weighType: form.weighType,
+      weightType: form.weighType,
       weight: form.weight,
       dimension: form.dimension,
       shippingClass: form.shippingClass,
@@ -630,34 +684,174 @@
   };
   
   const setInput = (res) => {
-
+    form.id = res.productId;
+    form.img = res.basedImageUrl;
+    form.categoryId = res.categoryId;
+    form.nameEn = res.nameEn;
+    form.nameKh = res.nameKh;
+    form.descriptionEn = res.descriptionEn;
+    form.descriptionKh = res.descriptionKh;
+    form.price = res.price;
+    form.stockQty = res.stockQty;
+    form.metaTitle = res.metaTitle;
+    form.metaDescription = res.metaDescription;
+    form.isSecondHand = res.isSecondHand;
+    form.secondHandDescription = res.secondHandDescription;
+    form.status = res.status;
+    form.weightType = res.weightType;
+    form.weight = res.weight;
+    form.dimension = res.dimension;
+    form.shippingClass = res.shippingClass;
+    form.brand = res.brand;
+    form.warrantyPeriod = res.warrantyPeriod;
+    form.returnPolicy = res.returnPolicy;
+    form.isFeatured = res.isFeatured;
+    form.brand = res.brand;
+    form.categoryId = res.category.id;
   };
   
   const getData = async (id) => {
-    let data = await ifetch(blogAPI.getListUpdate, { id: id });
-    setInput(data);
+    await fetch("https://efree.cheakautomate.online/gateway/PRODUCT/api/v1/products/"+id, {
+      method: 'GET', // Specify the method as GET
+      headers: {
+          'Content-Type': 'application/json',
+          Authorization: "",  
+      }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok ' + response.statusText);
+        }
+        return response.json(); // Parse the JSON from the response
+    })
+    .then(data => {
+      
+      setInput(data.payload);
+    })
+    .catch(error => {
+      console.error('There has been a problem with your fetch operation:', error);
+    })
+    await fetch("https://efree.cheakautomate.online/gateway/PRODUCT/api/v1/product-images/list/"+id, {
+      method: 'GET', // Specify the method as GET
+      headers: {
+          'Content-Type': 'application/json',
+          Authorization: "",  
+      }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok ' + response.statusText);
+        }
+        return response.json(); // Parse the JSON from the response
+    })
+    .then(data => {
+      
+      setInputGallery(data.payload);
+    })
+    .catch(error => {
+      console.error('There has been a problem with your fetch operation:', error);
+    })
   };
-  
+  const setInputGallery = (res) => {
+    res.forEach((element,index) => {
+      if(!element.isBased){
+        form.gallery.push(element.imageBaseUrl);
+      }
+    });
+  }
   const save = async (type) => {
     const result = await v$.value.$validate();
     if (result) {
-      let url = "";
-      if (!isEmpty(route.query)) {
-        url = blogAPI.update;
-      }
-      let input = getInput();
       
-      await ifetch(url, input);
-      if (type === "add") {
-        setDefaultForm();
-        iAlert().success();
-      } else if (type === "close") {
-        goTo({ path: "/product/" });
-        iAlert().success();
+      let url = "https://efree.cheakautomate.online/gateway/PRODUCT/api/v1/products";
+      let method = "POST";
+      if (!isEmpty(route.query)) {
+        url = url+"/" + route.query.id;
+        method = "PUT";
       }
+      await fetch(url, {
+        method: method, // Specify the method as GET
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: userStore.logged ? `Bearer ${userStore.token}` : "",
+        },
+        body: JSON.stringify(form),
+      }).then((response) => response.json())
+      .then(async (data) =>{
+        if(nullToVoid(imageFile.value) != "" && nullToVoid(imageName.value) != ""){
+          const myHeaders = new Headers();
+          myHeaders.append("Authorization", userStore.logged ? `Bearer ${userStore.token}` : "");
+          const formdata = new FormData();
+          formdata.append("file", imageFile.value, imageName.value);
+          formdata.append("request", JSON.stringify({
+                  descriptionEn: "Base image of product",
+                  descriptionKh: ""
+                }));
+          const requestOptions = {
+            method: "POST",
+            headers: myHeaders,
+            body: formdata,
+            redirect: "follow"
+          };
+          await fetch(`https://efree.cheakautomate.online/gateway/PRODUCT/api/v1/product-images/single/${data.payload.productId}`, 
+            requestOptions
+          ).then((response) => response.json())
+          .then((dataBaseImage) => {
+            
+          })
+        }
+        if(form.gallery.length > 0){
+          const myHeaders = new Headers();
+          myHeaders.append("Authorization", userStore.logged ? `Bearer ${userStore.token}` : "");
+          const formdata = new FormData();
+          imageOfGallery.value.forEach((item) => {
+            formdata.append("files", item.imageFile, item.imageName);
+          })
+          // formdata.append("file", imageFile.value, imageName.value);
+          const requestOptions = {
+            method: "POST",
+            headers: myHeaders,
+            body: formdata,
+            redirect: "follow"
+          };
+          await fetch(`https://efree.cheakautomate.online/gateway/PRODUCT/api/v1/product-images/multiple/${data.payload.productId}`, 
+            requestOptions
+          ).then((response) => response.json())
+          .then((dataMultiImage) => {
+            
+          })
+        }
+        imageFile.value = null;
+        imageName.value = null;
+        imageOfGallery.value = [];
+        iAlert().success();
+        goTo({ path: "/product/" });
+      })
+      .catch((error) => {
+        console.error(error);
+      });
     } else {
       useNuxtApp().$showToast({ msg: "Invalid Input.", type: "error" });
     }
+    // const result = await v$.value.$validate();
+    // if (result) {
+    //   let url = "";
+    //   if (!isEmpty(route.query)) {
+    //     url = blogAPI.update;
+    //   }
+    //   let input = getInput();
+      
+    //   await ifetch(url, input);
+    //   if (type === "add") {
+    //     setDefaultForm();
+    //     iAlert().success();
+    //   } else if (type === "close") {
+    //     goTo({ path: "/product/" });
+    //     iAlert().success();
+    //   }
+    // } else {
+    //   useNuxtApp().$showToast({ msg: "Invalid Input.", type: "error" });
+    // }
   };
   
   const setDefaultForm = () => {

@@ -141,13 +141,14 @@ const editorConfig = ref({
     uploadImage: {
       customUpload: async (file, insertFn) => {
         const reader = new FileReader();
+        reader.readAsDataURL(file);
         reader.onload = async () => {
           try {
             const base64String = await convertToWebp(file, false);
             const formData = { image: base64String, type: "image" };
-            const data = await ifetch(editorAPI.store, formData);
-            const src = getImagePath(data.image, "imagesEditor");
-            insertFn(src, "", src);
+            // const data = await ifetch(editorAPI.store, formData);
+            // const src = getImagePath(data.image, "imagesEditor");
+            insertFn(base64String, "");
           } catch (error) {
             console.error("Failed to upload image:", error);
           }
@@ -161,10 +162,10 @@ const editorConfig = ref({
         reader.onload = async () => {
           try {
             const base64String = reader.result;
-            const formData = { video: base64String, type: "video" };
-            const data = await ifetch(editorAPI.store, formData);
-            const src = getVideoPath(data.video, "videosEditor");
-            insertFn(src, "");
+            // const formData = { video: base64String, type: "video" };
+            // const data = await ifetch(editorAPI.store, formData);
+            // const src = getVideoPath(data.video, "videosEditor");
+            insertFn(base64String, "");
           } catch (error) {
             console.error("Failed to upload video:", error);
           }

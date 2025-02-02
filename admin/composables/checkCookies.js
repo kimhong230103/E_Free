@@ -13,12 +13,10 @@ export const checkCookieExpiration = () => {
 
   // Retrieve the expiration time stored in another cookie
   const expireTime = Cookies.get(`${cookieKey}_expire`);
-  console.log("cookieKey",cookieKey, expireTime);
   
   if (expireTime) {
     const expireDate = parseInt(expireTime, 10);
     const now = new Date().getTime(); // Get the current time in milliseconds
-    console.log("now",now, "expireDate",expireDate);
     
     if (now >= parseInt(expireDate, 10)) { // Compare with the expiration time
       console.log('Access token cookie has expired.');

@@ -4,7 +4,6 @@ import Cookies from "js-cookie";
 
 let alreadyDone = false;
 export default defineNuxtRouteMiddleware(async (to) => {
-  console.log(alreadyDone);
   if (alreadyDone) {
     return null;
   }

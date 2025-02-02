@@ -36,7 +36,7 @@
         </IDropdown>
       </template>
       <template #image="{row}">
-        <img :src="row.imageUrl" height="40px" :alt="row.imageUrl">
+        <img :src="row.imageUrl" @error="onImageError(row)" height="40px" :alt="row.imageUrl">
         <!-- <img src="D:/ITCB_News/Admin/Image/logo-news.png" height="40px" alt=""> -->
       </template>
       <template #kh_name="{row}">
@@ -147,6 +147,9 @@ onMounted(() => {
     useUserStore().clearToken();
   }
 });
+const onImageError = (row) =>{
+  row.imageUrl = appConst.defaultImage
+}
 const setInput = (data) => {
   lists.value = data.data;
   pagination.value = data.pagination;
@@ -167,10 +170,6 @@ watch(
   }
 );
 const getData = async () => {
-  const input = getInput();
-  branch_id.value=branchStore.branch_id
-  input.filter.branch_id=branch_id.value
-  
   const data = await fetch("https://efree.cheakautomate.online/gateway/CATEGORY/api/v1/categories", {
     method: 'GET', // Specify the method as GET
     headers: {
@@ -187,7 +186,6 @@ const getData = async () => {
   .then(data => {
     categoryList.setData(data.payload);
     lists.value = data.payload;
-    console.log("lists",lists.value);
   })
   .catch(error => {
     console.error('There has been a problem with your fetch operation:', error);

@@ -576,6 +576,20 @@
     "warranty_period":"រយៈពេលធានា",
     "please_upload": "សូមបញ្ចូល",
     "gallery":"រូបភាព",
-    "brand":"ម៉ាក"
+    "brand":"ម៉ាក",
+    "view_promotion":"មើលការប្រម៉ូត",
+    "id":"លេខសំគាល់",
+    "typeEn": "ប្រភេទអង់គ្លេស",
+    "typeKh": "ប្រភេទខ្មែរ",
+    "promoCode": "កូដប្រម៉ូត",
+    "startDate": "កាលបរិច្ឆេទចាប់ផ្តើម",
+    "endDate": "កាលបរិច្ឆេទបញ្ចប់",
+    "discount": "បញ្ចុះតម្លៃ",
+    "maxDiscount": "បញ្ចុះតម្លៃធំបំផុត",
+    "applicableCustomer": "អតិថិជនដែលអាចអនុវត្តបាន",
+    "usageLimit": "ដែនកំណត់ការប្រើប្រាស់",
+    "endDate_is_required": "កាលបរិច្ឆេទបញ្ចប់គឺត្រូវបានទាមទារ",
+    "import_product_data_from_excell": "នាំចូលទិន្នន័យពីឯកសារ Excel",
+    "import": "នាំចូល"
   }
 }

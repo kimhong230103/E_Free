@@ -32,10 +32,10 @@
                 </div>
                 <!-- @start image type  -->
                 <div class="row mb-2">
-                  <div class="col-12">
+                  <div class="col-12 col-lg-6">
                     <div class="form-group">
                       <label class="required">{{ $t("page") }}</label>
-                      <select class="form-control" v-model="form.page" :class="{ 'is-invalid': v$.page.$error }"
+                      <select class="form-control" v-model="form.page" :disabled="true" :class="{ 'is-invalid': v$.page.$error }"
                         @change="pageChange">
                         <option :value="null" disabled>
                           {{ $t("please_select") }}
@@ -45,6 +45,23 @@
                         </option>
                       </select>
                       <span class="invalid-feedback" v-if="v$.page.$error">{{ v$.page.$errors[0].$message }}</span>
+                    </div>
+                  </div>
+                  <div class="col-12 col-lg-6">
+                    <div class="form-group">
+                      <label class="required">{{ $t("position") }}</label>
+                      <select class="form-control" :disabled="true" v-model="form.position_id"
+                        :class="{ 'is-invalid': v$.position_id.$error }" @change="positionChange">
+                        <option :value="null" disabled>
+                          {{ $t("please_select") }}
+                        </option>
+                        <option v-for="item in position_list" :key="item.index" :value="item.id">
+                          {{ $t(item.key) }}
+                        </option>
+                      </select>
+                      <span class="invalid-feedback" v-if="v$.position_id.$error">{{
+                        v$.position_id.$errors[0].$message
+                      }}</span>
                     </div>
                   </div>
                 </div>
@@ -79,28 +96,6 @@
                     </div>
                   </div>
                 </div> -->
-
-
-                <!-- @start position  -->
-                <div class="row mb-2">
-                  <div class="col-12">
-                    <div class="form-group">
-                      <label class="required">{{ $t("position") }}</label>
-                      <select class="form-control" :disabled="afterPageChange" v-model="form.position_id"
-                        :class="{ 'is-invalid': v$.position_id.$error }" @change="positionChange">
-                        <option :value="null" disabled>
-                          {{ $t("please_select") }}
-                        </option>
-                        <option v-for="item in position_list" :key="item.index" :value="item.id">
-                          {{ $t(item.key) }}
-                        </option>
-                      </select>
-                      <span class="invalid-feedback" v-if="v$.position_id.$error">{{
-                        v$.position_id.$errors[0].$message
-                      }}</span>
-                    </div>
-                  </div>
-                </div>
                 <!-- @start name  -->
                 <div class="row mb-2">
                   <div class="col-12">
@@ -249,6 +244,7 @@ import { bannerAPI } from "~/constants/api";
 import WangEditor from "~/components/WangEdiot.vue";
 import ModalCropperImage from "~/components/ModalCropperImage.vue";
 import { platformTypeEnum, positionBannerListEnum } from "~/composables/enum";
+import { set } from "date-fns";
 
 const props = defineProps({
   actionType: appConst.modalAction.add,
@@ -258,14 +254,14 @@ const state = reactive({
 });
 const defaultForm = {
   id: null,
-  page: null,
+  page: 1,
   platform_type: null,
   name: null,
   type: null,
   status: statusEnum.enable,
   image: null,
   image_mobile: null,
-  position_id: null,
+  position_id: 1,
 };
 let targetFile = ref(null);
 let aspectRatio = ref(null);
@@ -347,6 +343,7 @@ watch(
 // );
 
 const showModal = async (editId = null, editItem = {}) => {
+  setDefaultForm();
   state.modal_demo.show();
   if (editId) {
     const { id,
@@ -384,11 +381,10 @@ const showModal = async (editId = null, editItem = {}) => {
     form.description = description
     form.old_image=image
     form.old_image_mobile=image_mobile
-    
     pageChange();
 
   }
-
+  
 };
 
 const chooseImage = () => {
@@ -675,6 +671,15 @@ const closeModal = (isRefresh = false) => {
 
 const setDefaultForm = () => {
   Object.assign(form, defaultForm);
+  const pageLoad = bannerPageEnum.getKey(form.page);
+  let position = '';
+  position_list.value = positionBannerListEnum[pageLoad];
+  position_list.value.forEach((obj) => {
+    if (obj.id == form.position_id) {
+      position = obj.value
+    }
+  })
+  platform_list.value = platformTypeEnum[pageLoad][position];
   v$.value.$reset();
 };
 

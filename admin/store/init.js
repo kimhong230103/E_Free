@@ -35,7 +35,6 @@ export const useInitStore = defineStore("init", () => {
       return response.json(); // Parse the JSON from the response
   })
   .then(data => {
-      console.log(data); // Handle the data from the response
   })
   .catch(error => {
       console.error('There has been a problem with your fetch operation:', error);
@@ -45,7 +44,6 @@ export const useInitStore = defineStore("init", () => {
   }
   function setData(data) {
     userStore.setData(data);
-    console.log("UserStore",userStore.$state);
     // userTypeStore.setData(data["user_type"]);
     // userTypeStore.setListAll(data["user_type_all"]);
     // companyStore.setData(data["company"]);

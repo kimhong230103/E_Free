@@ -307,7 +307,6 @@ const save = async (event) => {
           requestOptions
         ).then((response) => response.json())
         .then((data) => {
-          console.log("dataResponse",data);
           
         })
       }
@@ -323,7 +322,7 @@ const save = async (event) => {
       }
     })
     .catch((error) => {
-      console.log(error);
+      console.error(error);
     });
   } else {
     useNuxtApp().$showToast({ msg: "Invalid Input.", type: "error" });
