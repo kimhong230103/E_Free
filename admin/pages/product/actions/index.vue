@@ -762,6 +762,7 @@
   const save = async (type) => {
     const result = await v$.value.$validate();
     if (result) {
+      
       let url = "https://efree.cheakautomate.online/gateway/PRODUCT/api/v1/products";
       let method = "POST";
       if (!isEmpty(route.query)) {

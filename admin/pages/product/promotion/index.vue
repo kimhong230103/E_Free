@@ -1,7 +1,7 @@
 <template>
   <div class="">
     <IFormHeader
-      title="banner"
+      title="promotion"
       :sortColumn="tableHeader"
       :moduleKey="moduleKey"
       :enableFilter="false"
@@ -12,6 +12,15 @@
       @reloadData="getData"
       @filterClick="getData"
     >
+      <template #top-button-action>
+        <button class="btn btn-warning" @click="goTo({ path: '/product' })">
+          <Icon
+            name="material-symbols:arrow-back-ios-rounded"
+            size="20"
+          ></Icon>
+          {{ $t("back") }}
+        </button>
+      </template>
     </IFormHeader>
     
     <IFormTable
@@ -26,12 +35,12 @@
           <IDropdownOption
             label="edit"
             icon="material-symbols:edit-square-outline"
-            @click="editItem(row.id, row)"
+            @click="editItem(row.promotionId, row)"
           />
           <IDropdownOption
             label="delete"
             icon="mdi:trash-can-outline"
-            @click="deleteItem(row.id)"
+            @click="deleteItem(row.promotionId)"
           />
         </IDropdown>
       </template>
@@ -45,6 +54,9 @@
       <template #en_name="{row}">
         <span>{{ row.nameEn }}</span>
       </template>
+      <template #endDate="{row}">
+        <span>{{ dateTimeFormat(row.endDate) }}</span>
+      </template>
     </IFormTable>
 
     <ActionModal
@@ -56,7 +68,7 @@
 </template>
 
 <script setup>
-import ActionModal from "~/components/banner/modal.vue";
+import ActionModal from "~/components/promotion/modal.vue";
 import { categoryAPI } from "~/constants/api";
 import { appConst, msgConst } from "~/constants/app";
 import { permissionConst } from "~/constants/permission";
@@ -64,7 +76,8 @@ import { useCategoryList } from "~/store/category_list.js";
 import { useCategoryType } from "~/store/category_type.js";
 import { useBranchStore } from "~/store/branch";
 import { useUserStore } from "~/store/user";
-
+import { ro } from "date-fns/locale";
+// "2024-12-31T23:59:59" ,27-02-2025 13:32:00
 let tableHeader = [
   {
     label: "action",
@@ -76,38 +89,48 @@ let tableHeader = [
   },
 
   {
-    label: "image",
-    key: "image",
+    label: "typeEn",
+    key: "typeEn",
     sort: false,
     textAlign: "left",
     textAlign: "center",
   },
 
   {
-    label: "kh_name",
-    key: "kh_name",
+    label: "typeKh",
+    key: "typeKh",
     sort: true,
     textAlign: "left",
   },
   {
-    label: "en_name",
-    key: "en_name",
+    label: "discount",
+    key: "discount",
     sort: true,
     textAlign: "left",
   },
-  // {
-  //   label: "created_at",
-  //   key: "created_at",
-  //   sort: true,
-  //   classes: "createdby-col",
-  //   textAlign: "center",
-  //   textAlignHeader: "center",
-  // },
-  // {
-  //   label: "copy_link",
-  //   key: "copy_link",
-  //   textAlign: "center",
-  // },
+  {
+    label: "maxDiscount",
+    key: "maxDiscount",
+    sort: true,
+    textAlign: "left",
+  },
+  {
+    label: "usageLimit",
+    key: "usageLimit",
+    sort: true,
+    textAlign: "left",
+  },
+  {
+    label: "applicableCustomer",
+    key: "applicableCustomer",
+    sort: true,
+    textAlign: "left",
+  },
+  {
+    label: "endDate",
+    key: "endDate",
+    textAlign: "center",
+  },
 ];
 let lists = ref([]);
 const formHeader = ref(null);
@@ -131,15 +154,14 @@ const filter = reactive({
   search: "",
   branch_id: null,
 });
-
+const route = useRoute();
 const addNew = () => {
   actionType.value = appConst.modalAction.add;
-  modal.value.showModal();
+  modal.value.showModal(null,null,route.query.id);
 };
 
 onMounted(() => {
   getData();
-  // getTest()
   if (checkCookieExpiration()) {
     console.log('Access token is still valid.');
   } else {
@@ -170,7 +192,8 @@ watch(
   }
 );
 const getData = async () => {
-  const data = await fetch("https://efree.cheakautomate.online/gateway/CATEGORY/api/v1/categories", {
+  var id = route.query.id
+  const data = await fetch(`https://efree.cheakautomate.online/gateway/PRODUCT/api/v1/promotions/list/${id}`, {
     method: 'GET', // Specify the method as GET
     headers: {
         'Content-Type': 'application/json',
@@ -184,23 +207,15 @@ const getData = async () => {
       return response.json(); // Parse the JSON from the response
   })
   .then(data => {
-    categoryList.setData(data.payload);
     lists.value = data.payload;
   })
   .catch(error => {
     console.error('There has been a problem with your fetch operation:', error);
-    categoryList.setData([]);
-    categoryList.setPagination({
-      currentPage: 1,
-      per_page: 10,
-      total: 0,
-      to: 0,
-      from: 0,
-      last_page: 0,
-    })
   })
 };
-const deleteItem = (id) => {
+// Authorization: userStore.logged ? `Bearer ${userStore.token}` : "",  
+const deleteItem = (promotionId) => {
+  let productId = route.query.id
   const { $i18n } = useNuxtApp();
   swal({
     title: $i18n.t("are_you_sure"),
@@ -213,7 +228,7 @@ const deleteItem = (id) => {
     showLoaderOnConfirm: true,
     preConfirm: () => {
       return new Promise(async (resolve) => {
-        await fetch("https://efree.cheakautomate.online/gateway/CATEGORY/api/v1/categories/" + id, {
+        await fetch(`https://efree.cheakautomate.online/gateway/PRODUCT/api/v1/promotions/${productId}/${promotionId}`, {
           method: 'DELETE', // Specify the method as GET
           headers: {
               'Content-Type': 'application/json',
@@ -247,7 +262,7 @@ const copyLinkCategory = async (slug) => {
 
 const editItem = async (id, row) => {
   actionType.value = appConst.modalAction.update;
-  modal.value.showModal(id, row);
+  modal.value.showModal(id, row,route.query.id);
 };
 
 const closeModal = (refresh) => {

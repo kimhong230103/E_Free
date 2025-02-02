@@ -16,25 +16,15 @@
       @reloadData="getData"
       @resetFilterClick="onResetFilter"
     >
-      <!-- <template #filter>
-        <div class="row">
-          <div class="col-3">
-            <div class="form-group">
-              <label for="">{{ $t("question") }}</label>
-              <select v-model="filter.question_id" class="form-control">
-                <option :value="null">{{ $t("please_select") }}</option>
-                <option
-                  v-for="(item, index) in questions"
-                  :key="index"
-                  :value="item.id"
-                >
-                  {{ item.title }}
-                </option>
-              </select>
-            </div>
-          </div>
-        </div>
-      </template> -->
+    <template #top-button-action>
+        <button class="btn btn-success" @click="importExcell">
+          <Icon
+            name="mdi:database-import"
+            size="20"
+          ></Icon>
+          {{ $t("import") }}
+        </button>
+      </template>
     </IFormHeader>
       <IFormTable
       :tableHeader="tableHeader"
@@ -73,6 +63,18 @@
               icon="material-symbols:visibility-outline"
               @click="showModal(row)"
           />
+          <li @click="viewPromotion(row)">
+              <a  class="dropdown-item">
+                <div class="d-flex align-items-center">
+                  <Icon
+                    size="18"
+                    class="me-3"
+                    name="material-symbols:table-eye-outline-sharp"
+                  />
+                  <span>{{ $t("view_promotion") }}</span>
+                </div>
+              </a>
+            </li>
           </IDropdown>
       </template>
       <template #business_id="{business_id}">
@@ -103,6 +105,14 @@
       ref="modal"
       @closeModal="closeModal"
       :listDescription="listDescription"
+    />
+    <input
+      ref="fileInput"
+      style="display: none"
+      type="file"
+      accept=".xlsx"
+      :multiple="false"
+      @change="onFileChange"
     />
   </div>
 </template>
@@ -135,6 +145,11 @@ const tableHeader = ref([
     classes: "action-dropdown",
   },
   {
+    label: "id",
+    key: "productId",
+    textAlign: "center",
+  },
+  {
     label: "image",
     key: "image",
     textAlign: "center",
@@ -159,11 +174,11 @@ const tableHeader = ref([
     key: "price",
     textAlign: "right",
   },
-  {
-    label: "meta_title",
-    key: "metaTitle",
-    textAlign: "center",
-  },
+  // {
+  //   label: "meta_title",
+  //   key: "metaTitle",
+  //   textAlign: "center",
+  // },
   // {
   //   label: "status",
   //   key: "status",
@@ -172,7 +187,7 @@ const tableHeader = ref([
 ]);
 
 
-
+const fileInput = ref(null);
 const listDescription = ref([]);
 const branchStore = useBranchStore();
 const modal = ref();
@@ -220,6 +235,60 @@ onMounted(() => {
     useUserStore().clearToken();
   }
 });
+const importExcell = async () => {
+  const { $i18n } = useNuxtApp();
+  swal({
+    title: $i18n.t("are_you_sure"),
+    text: $i18n.t("import_product_data_from_excell"),
+    icon: "question",
+    showCancelButton: true,
+    confirmButtonText: $i18n.t("ok"),
+    cancelButtonText: $i18n.t("cancel"),
+    reverseButtons: true,
+    showLoaderOnConfirm: true,
+    preConfirm: () => {
+      return new Promise(async (resolve) => {
+        resolve();
+        fileInput.value.click();
+      });
+    },
+    // allowOutsideClick: () => !swal.isLoading(),
+  });
+}
+const onFileChange = async ($event) => {
+  const file = $event.target.files[0];
+  const file_name = file.name;
+  try {
+    const myHeaders = new Headers();
+      myHeaders.append("Authorization", userStore.logged ? `Bearer ${userStore.token}` : "");
+      const formdata = new FormData();
+      formdata.append("importFile", file, file_name);
+      const requestOptions = {
+        method: "POST",
+        headers: myHeaders,
+        body: formdata,
+        redirect: "follow"
+      };
+    await fetch(`https://efree.cheakautomate.online/gateway/PRODUCT/api/v1/products/import`, requestOptions)
+    .then(response => {
+      if (!response.ok) {
+          throw new Error('Network response was not ok ' + response.statusText);
+      }
+      return response.json(); // Parse the JSON from the response
+    })
+    .then(data => {
+      getData();
+    })
+    .catch(error => {
+      console.error('There has been a problem with your fetch operation:', error);
+    })
+  } catch (error) {
+    console.error("Error fetching data:", error);
+  }
+}
+const viewPromotion = async (row) => {
+  await goTo({ path: "/product/promotion", query: { id: row.productId } });
+}
 const getDataCategory = async () => {
   await fetch("https://efree.cheakautomate.online/gateway/CATEGORY/api/v1/categories", {
     method: 'GET', // Specify the method as GET

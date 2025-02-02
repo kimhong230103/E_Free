@@ -1,7 +1,7 @@
 <template>
   <div :class="[{ 'border-none': showBorder }, showCard ? 'card' : '']">
     <div class="card-body">
-      <div class="table-responsive table-striped">
+      <div class="table-responsive table-striped overflow-visible">
 
         <table
           :class="{

@@ -613,6 +613,20 @@
     "warranty_period": "Warranty Period",
     "please_upload": "Please Upload",
     "gallery":"Gallery",
-    "brand": "Brand"
+    "brand": "Brand",
+    "view_promotion": "View Promotion",
+    "id": "ID",
+    "typeEn": "Type En",
+    "typeKh": "Type Kh",
+    "promoCode": "Promotion Code",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "discount": "Discount",
+    "maxDiscount": "Max Discount",
+    "applicableCustomer": "Applicable Customer",
+    "usageLimit": "Usage Limit",
+    "endDate_is_required": "End Date is required",
+    "import_product_data_from_excell": "Import product data from excell",
+    "import": "Import"
   }
 }

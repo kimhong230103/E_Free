@@ -4,8 +4,7 @@ export default defineNuxtConfig({
   builder: "vite",
   css: ["@/assets/scss/app.scss"],
   ssr: false,
-  target: 'static', 
-
+  // target: 'static', 
   components: [
     {
       path: "~/components",
