@@ -127,14 +127,14 @@ export default defineNuxtConfig({
     transpile: ["@vuepic/vue-datepicker"],
   },
 
-  // vite: {
-  //     build: {
-  //         chunkSizeWarningLimit: 10000
-  //     }
-  // }
-  // experimental: {
-  //   payloadExtraction: false,
-  // },
+  vite: {
+      build: {
+          chunkSizeWarningLimit: 10000
+      }
+  }
+  experimental: {
+    payloadExtraction: false,
+  },
 
   compatibilityDate: "2024-10-04"
 });
