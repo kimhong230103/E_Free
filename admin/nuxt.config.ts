@@ -132,9 +132,9 @@ export default defineNuxtConfig({
   //         chunkSizeWarningLimit: 10000
   //     }
   // }
-  experimental: {
-    payloadExtraction: false,
-  },
+  // experimental: {
+  //   payloadExtraction: false,
+  // },
 
   compatibilityDate: "2024-10-04"
 });
