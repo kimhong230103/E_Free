@@ -1,11 +1,20 @@
+# Setup
 ARG NODE_VERSION=21.7.3
-FROM node:${NODE_VERSION}-alpine
+FROM node:${NODE_VERSION}-slim as base
+ARG PORT=3000
+WORKDIR /src
 
-WORKDIR /app
-COPY package.json package-lock.json* ./
-RUN npm install
+# Install dependencies and build
+FROM base as build
+COPY --link package.json package-lock.json .
+RUN npm install --force
+COPY --link . .
+RUN npm run build
 
-COPY . .
-
-EXPOSE 3000
-CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
+# Run the application
+FROM base
+ENV PORT=$PORT
+# ENV NODE_ENV=production
+COPY --from=build /src/.output /src/.output
+EXPOSE $PORT
+CMD ["node", ".output/server/index.mjs"]
