@@ -9,34 +9,30 @@ pipeline {
     }
 
     stages {
-        stage('Build Project') {
+        // Build Admin Dashboard
+        stage('Build Admin Dashboard') {
             steps {
-                // Build Admin Dashboard
-                stage('Build Admin Dashboard') {
-                    steps {
-                        dir('admin') {
-                            sh 'echo "Building Admin Dashboard..."'
-                            script {
-                                docker.withRegistry("", "${BASE_REGISTRY}") {
-                                    def adminDashboardImage = docker.build("$BASE_REGISTRY_USER/efree-admin-dashboard:$VERSION")
-                                    adminDashboardImage.push()
-                                }
-                            }
+                dir('admin') {
+                    sh 'echo "Building Admin Dashboard..."'
+                    script {
+                        docker.withRegistry("", "${BASE_REGISTRY}") {
+                            def adminDashboardImage = docker.build("$BASE_REGISTRY_USER/efree-admin-dashboard:$VERSION")
+                            adminDashboardImage.push()
                         }
                     }
                 }
+            }
+        }
 
-                // Build Website Client
-                stage('Build Website Client') {
-                    steps {
-                        dir('website') {
-                            sh 'echo "Building Website Client..."'
-                            script {
-                                docker.withRegistry("", "${BASE_REGISTRY}") {
-                                    def clientAppImage = docker.build("$BASE_REGISTRY_USER/efree-client-app:$VERSION")
-                                    clientAppImage.push()
-                                }
-                            }
+        // Build Website Client
+        stage('Build Website Client') {
+            steps {
+                dir('website') {
+                    sh 'echo "Building Website Client..."'
+                    script {
+                        docker.withRegistry("", "${BASE_REGISTRY}") {
+                            def clientAppImage = docker.build("$BASE_REGISTRY_USER/efree-client-app:$VERSION")
+                            clientAppImage.push()
                         }
                     }
                 }
