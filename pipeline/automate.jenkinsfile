@@ -1,12 +1,14 @@
 pipeline {
 
-    agent any
+    agent {
+        any
+    }
 
     environment {
         ENV = "${env.GIT_BRANCH == 'origin/prod' ? 'prod' : 'dev'}"
         TELEGRAM_TOKEN = credentials('telegram-token')
-        REGISTRY = "${REGISTRY}"
         VERSION = "${env.BUILD_NUMBER}"
+        BASE_REGISTRY = "dockerhub"
     }
 
     stages {
@@ -16,20 +18,32 @@ pipeline {
                     steps {
                         dir('admin') {
                             sh 'echo "Building Admin Dashboard..."'
-                            sh 'docker build -t ${REGISTRY}/efree-admin-dashboard:${VERSION} .'
+                            script {
+                                docker.withRegistry("", "${env.BASE_REGISTRY}") {
+                                    def adminDashboardImage = docker.build("$BASE_REGISTRY_USER/efree-admin-dashboard:$VERSION")
+                                    adminDashboardImage.push()
+                                }
+                            }
                         }
                     }
                 }
+                
                 stage('Build Website Client') {
                     steps {
                         dir('website') {
                             sh 'echo "Building Website Client..."'
-                            sh 'docker build -t ${REGISTRY}/efree-client-app:${VERSION} .'
+                            script {
+                                docker.withRegistry("", "${env.BASE_REGISTRY}") {
+                                    def clientAppImage = docker.build("$BASE_REGISTRY_USER/efree-client-app:$VERSION")
+                                    clientAppImage.push()
+                                }
+                            }
                         }
                     }
                 }
             }
         }
+    }
 
         // stage('Push Docker Image') {
         //     steps {
@@ -64,7 +78,7 @@ pipeline {
         //         cleanWs()
         //     }
         // }
-    }
+    // }
 
     // post {
     //     always {

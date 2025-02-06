@@ -15,6 +15,7 @@ check_commit_message "$commit_message"
 
 echo "Committing changes with message: '$commit_message'..."
 git commit -m "$commit_message"
+
 echo "Pushing changes to the remote repository..."
 git push
 
