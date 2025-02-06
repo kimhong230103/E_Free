@@ -17,7 +17,7 @@ pipeline {
                             sh 'echo "Building Admin Dashboard..."'
                             script {
                                 docker.withRegistry("", "${BASE_REGISTRY}") {
-                                    def adminDashboardImage = docker.build("$BASE_REGISTRY_USER/efree-admin-dashboard:$VERSION", "--file Dockerfile .")
+                                    def adminDashboardImage = docker.build("$BASE_REGISTRY_USER/efree-admin-dashboard:1.0.$VERSION", ".")
                                     adminDashboardImage.push()
                                 }
                             }
@@ -31,7 +31,7 @@ pipeline {
                             sh 'echo "Building Website Client..."'
                             script {
                                 docker.withRegistry("", "${BASE_REGISTRY}") {
-                                    def clientAppImage = docker.build("$BASE_REGISTRY_USER/efree-client-app:$VERSION"), "--file Dockerfile ."
+                                    def clientAppImage = docker.build("$BASE_REGISTRY_USER/efree-client-app:1.0.$VERSION", ".")
                                     clientAppImage.push()
                                 }
                             }
