@@ -1,12 +1,11 @@
 pipeline {
 
     agent any
-    
+
     environment {
         ENV = "${env.GIT_BRANCH == 'origin/prod' ? 'prod' : 'dev'}"
         TELEGRAM_TOKEN = credentials('telegram-token')
         VERSION = "${env.BUILD_NUMBER}"
-        BASE_REGISTRY = "dockerhub"
     }
 
     stages {
@@ -17,8 +16,8 @@ pipeline {
                         dir('admin') {
                             sh 'echo "Building Admin Dashboard..."'
                             script {
-                                docker.withRegistry("", "${env.BASE_REGISTRY}") {
-                                    def adminDashboardImage = docker.build("$BASE_REGISTRY_USER/efree-admin-dashboard:$VERSION")
+                                docker.withRegistry("", "${BASE_REGISTRY}") {
+                                    def adminDashboardImage = docker.build("$BASE_REGISTRY_USER/efree-admin-dashboard:$VERSION", "--file Dockerfile .")
                                     adminDashboardImage.push()
                                 }
                             }
@@ -31,8 +30,8 @@ pipeline {
                         dir('website') {
                             sh 'echo "Building Website Client..."'
                             script {
-                                docker.withRegistry("", "${env.BASE_REGISTRY}") {
-                                    def clientAppImage = docker.build("$BASE_REGISTRY_USER/efree-client-app:$VERSION")
+                                docker.withRegistry("", "${BASE_REGISTRY}") {
+                                    def clientAppImage = docker.build("$BASE_REGISTRY_USER/efree-client-app:$VERSION"), "--file Dockerfile ."
                                     clientAppImage.push()
                                 }
                             }
