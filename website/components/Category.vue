@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
     <div class="py-2 py-lg-4">
         <h2 class="text-blue mb-2 mb-lg-4 text-center fw-bold title">Our Shop Categories</h2>
         <div class="d-flex justify-content-between align-items-center gap-3">
@@ -80,7 +80,42 @@ const scrollToIndex = (index) => {
         });
     }
 };
+</script> -->
+<template>
+    <div class="py-2 py-lg-4">
+        <h2 class="text-blue mb-2 mb-lg-4 text-center fw-bold title">Our Shop Categories</h2>
+        <div class="d-flex justify-content-between align-items-center gap-3">
+            <button @click="scrollLeft" class="scroll-arrow cursor-pointer">
+                <img src="/svg/arrow.svg" class="scroll-icon" alt="" />
+            </button>
+            <div class="d-flex flex-nowrap gap-2 gap-md-3 gap-lg-5 py-2 overflow-x-hidden" ref="scrollContainer">
+                <div v-for="category in list" :key="category.id" class="category-box text-center"
+                    :class="{ active: selectedCategory === category.id }"
+                    @click="selectCategory(category.id)">
+                    <img :src="category.imageUrl || defaultIcon" class="cat-img img-fluid" alt="" />
+                    <p class="mt-2 cat-text">{{ category.name }}</p>
+                </div>
+            </div>
+            <button @click="scrollRight" class="scroll-arrow cursor-pointer" style="transform: rotate(180deg);">
+                <img src="/svg/arrow.svg" class="scroll-icon" alt="" />
+            </button>
+        </div>
+    </div>
+</template>
+
+<script setup>
+import { ref } from "vue";
+
+defineProps(["list"]);
+const emit = defineEmits(["categorySelected"]);
+const selectedCategory = ref(null);
+
+const selectCategory = (id) => {
+    selectedCategory.value = id;
+    emit("categorySelected", id);
+};
 </script>
+
 
 <style scoped>
 .scroll-arrow {

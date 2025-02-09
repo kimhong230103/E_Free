@@ -4,7 +4,7 @@
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title text-blue fw-bold w-100">{{ product.title }}</h5>
+          <h5 class="modal-title text-blue fw-bold w-100">{{ $i18n.locale === 'en' ? product.nameEn : product.nameKh }}</h5>
           <div class="cursor-pointer" @click="closeModal">
             <Icon name="solar:close-circle-bold" size="30px" style="color: #253696;" />
           </div>
@@ -12,32 +12,31 @@
         <div class="modal-body">
           <div class="row">
             <div class="col-md-5 text-center position-relative">
-              <img :src="product.image" alt="Product Image" class="h-75 img-fluid rounded fixed-size-img" />
-              <div class="position-absolute bottom-0 d-flex justify-content-center">
-                <img style="height: 60px;" :src="product.image" alt="Product Image" class="rounded" />
-                <img style="height: 60px;" :src="product.image" alt="Product Image" class="rounded" />
-              </div>
+              <img :src="product.basedImageUrl" alt="Product Image" class="h-75 img-fluid rounded fixed-size-img" />
+              <!-- <div class="position-absolute bottom-0 d-flex justify-content-center">
+                <img style="height: 60px;" :src="product.basedImageUrl" alt="Product Image" class="rounded" />
+                <img style="height: 60px;" :src="product.basedImageUrl" alt="Product Image" class="rounded" />
+              </div> -->
             </div>
 
             <div class="col-md-7">
-              <div class="d-flex justify-content-between py-2">
-                <h6>{{ product.review }} {{ $t('reviews') }} </h6>
-                <h6>{{ product.releaseDate }}</h6>
+              <div class="d-flex justify-content-start py-2">
+                <h6>{{ product.createdAt }}</h6>
               </div>
               <h5 class="text-orange">
-                ${{ product.price - (product.price * product.discount) / 100 }}
+                ${{ product.price - (product.price * 15) / 100 }}
               </h5>
               <h6 class="text-gray py-2">
-                <strong class="text-blue">{{ $t('category') }}:</strong> {{ product.category }}
+                <strong class="text-blue">{{ $t('category') }}:</strong> {{ $i18n.locale === 'en' ? product.category.nameEn : product.category.nameKh }}
               </h6>
               <h6 class="text-gray py-2">
-                <strong class="text-blue">{{ $t('stock') }}:</strong> {{ product.stock }}
+                <strong class="text-blue">{{ $t('stock') }}:</strong> {{ product.stockQty }}
               </h6>
               <h6 class="text-gray py-2">
-                <strong class="text-blue">{{ $t('discount') }}:</strong> {{ product.discount }}%
+                <strong class="text-blue">{{ $t('discount') }}:</strong> {{ 15 }}%
               </h6>
               <h6 class="text-gray py-2">
-                <strong class="text-blue">{{ $t('description') }}:</strong> {{ product.description }}
+                <strong class="text-blue">{{ $t('description') }}:</strong> {{ $i18n.locale === 'en' ? product.descriptionEn : product.descriptionKh }}
               </h6>
 
               <hr>
@@ -67,26 +66,36 @@
 </template>
 
 <script setup>
-import { ref, defineExpose } from "vue";
+import { ref, defineExpose, } from "vue";
 
 // Props for dynamic product data
-defineProps({
+const props = defineProps({
   product: {
     type: Object,
     required: false,
     default: () => ({
-      title: "Product Title",
+      nameEn: "Product Name",
+      nameKh: "ឈ្មោះផលិតផល",
       price: 0,
-      category: "Unknown Category",
-      stock: 0,
-      discount: 0,
-      releaseDate: "12, December, 2024",
-      review: 123,
-      description: "No description provided",
-      image: "/images/sample.png",
+      category: {
+        "id": "da198196-de4a-493a-9a2b-e49d841922e6",
+        "nameEn": "Electronics",
+        "nameKh": "គ្រឿងអេឡិចត្រូនិក",
+        "descriptionEn": "",
+        "descriptionKh": "",
+        "imageUrl": "https://efree.cheakautomate.online/gateway/resource/file/37bdebbd-a34d-4d2f-9834-5f842fb4c34e.png",
+        "downloadUrl": "https://efree.cheakautomate.online/gateway/resource/api/v1/files/download/37bdebbd-a34d-4d2f-9834-5f842fb4c34e.png",
+        "isActive": true
+      },
+      stockQty: 0,
+      createdAt: "2025-01-26T04:39:51.08783",
+      descriptionEn: "No description provided",
+      descriptionKh: "អត់មានពិពណ៌នាទេ",
+      basedImageUrl: "/images/sample.png",
     }),
   },
 });
+
 
 // State
 const showModal = ref(false);

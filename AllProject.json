@@ -1,0 +1,56 @@
+{
+    "Dog":[
+        {
+            "productId": "49c4b218-87df-4c22-ab82-0b616f643e82",
+            "nameEn": "Math",
+            "nameKh": "គណិត",
+            "descriptionEn": "<p>Description Of Book</p>",
+            "descriptionKh": "<p>ពិពណ៌នាអំពីសៀវភៅ</p>",
+            "price": 1300.50,
+            "stockQty": 21,
+            "status": true,
+            "weightType": "ក្បាល",
+            "weight": 1.00,
+            "dimension": "18cm x 22cm",
+            "brand": "សំណេរ",
+            "warrantyPeriod": "1 month",
+            "isFeatured": true,
+            "isNewArrival": true,
+            "isBestSeller": false,
+            "shippingClass": "Standard",
+            "returnPolicy": "30-day return policy",
+            "metaTitle": "Math",
+            "metaDescription": "Math Description",
+            "isSecondHand": false,
+            "secondHandDescription": "",
+            "basedImageUrl": "https://efree.cheakautomate.online/gateway/resource/file/1c87b3a6-3317-4108-83c2-eb3b006684a0.jpg",
+            "createdAt": "2025-01-26T04:39:51.08783",
+            "updatedAt": "2025-02-02T07:52:36.134829"
+        }
+    ],
+    "Smartphone":[
+        {
+
+        }
+    ],
+    "Tablet":[
+        {
+
+        }
+    ],
+    "Book":[
+        {
+
+        }
+    ],
+    "Toys":[
+        {
+
+        }
+    ],
+    "Sports":[
+        {
+
+        }
+    ]
+}

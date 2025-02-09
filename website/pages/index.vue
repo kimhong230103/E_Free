@@ -53,28 +53,30 @@
           <div class="col-12">
             <div class="w-100 card p-3">
               <div class="head-product-today w-100 d-flex justify-content-between">
-                <h5 class="title fw-bold max-576-none">{{ $t('promotion') }}</h5>
-                <h6 class="fw-bold min-576-none">{{ $t('promotion') }}</h6>
+                <h5 class="title fw-bold max-576-none">{{ $t('all_product') }}</h5>
+                <h6 class="fw-bold min-576-none">{{ $t('all_product') }}</h6>
                 <a href="/promotion">{{ $t('see_all') }}</a>
               </div>
               <div class="row">
-                <div v-for="(item, index) in productPromotion" :key="index"
+                <div v-for="(item, index) in products" :key="index"
                   class="col-6 col-md-4 col-xl-3 p-10 box-product-promotion rounded-10">
                   <figure class="p-10 box-shadow" @click="showProductDetails(item)">
-                    <div class="img-card img-promotion w-100">
-                      <img width="80%" :src="item.image" alt="">
+                    <div class="img-card w-100">
+                      <img height="200px" :src="item.basedImageUrl" alt="">
                     </div>
                     <div class="txt py-2">
                       <div class="d-flex justify-content-between align-items-center mb-2">
                         <p class="d-block product-name text-truncate">
-                          {{ item.title }}
+                          {{ $i18n.locale === 'en' ? item.nameEn : item.nameKh }}
                         </p>
                       </div>
-                      <p class="pro-desc text-truncate-two-lines mb-2">{{ item.description }}</p>
+                      <p class="pro-desc text-truncate-two-lines mb-2">
+                        {{ $i18n.locale === 'en' ? item.descriptionEn : item.descriptionKh }}
+                      </p>
                       <hr class="hr-promotion">
                       <span class="d-flex justify-content-between gap-1 price my-1">
                         <p>{{ $t('price') }} <span class="item-price text-danger text-decoration-line-through">${{ item.price }}</span></p>
-                        <b class="item-price fw-bold me-2">${{ item.price - (item.price * item.discount) / 100 }}</b>
+                        <b class="item-price fw-bold me-2">${{ item.price - (item.price * 15) / 100 }}</b>
                       </span>
                     </div>
                   </figure>
@@ -83,94 +85,6 @@
             </div>
           </div>
 
-          <!-- Product Today -->
-          <!-- <div class="col-12">
-            <div class="w-100 card p-3">
-              <div class="head-product-today w-100 d-flex justify-content-between">
-                <h5 class="!text-blue-900 !font-bold  max-576-none">{{ $t('product_today') }}</h5>
-                <h6 class="fw-bold min-576-none">{{ $t('product_today') }}</h6>
-                <span>{{ $t('see_all') }}</span>
-              </div>
-              <div class="row">
-                <div class="row">
-                  <div v-for="(item, index) in 4" :key="index"
-                    class="col-6 col-md-4 col-xl-3 p-10 box-product rounded-10">
-                    <figure class="p-10 box-shadow">
-                      <div class="img-card img-promotion w-100">
-                        <img width="80%"
-                          src="https://off.com.ph/_next/image?url=https%3A%2F%2Fedge.sitecorecloud.io%2Fscjohnsonana080-dart-production-40df%2Fmedia%2Fproject%2Fdart%2Foff%2Fphilippines%2Fhomepage%2Fcategory-images%2Foff_ph_4x3_720x540_category_card-overtime.png%3Fh%3D540%26iar%3D0%26w%3D720&w=3840&q=75"
-                          alt="">
-                      </div>
-                      <div class="txt py-2">
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                          <p class="d-block product-name">
-                            Milk
-                          </p>
-
-                        </div>
-                        <p class="pro-desc mb-2">Our expert guides will take you on a knowledge</p>
-                        <span class="list-star d-flex">
-                          <Icon name="material-symbols:star" size="20" style="color: var(--theme-default);" />
-                          <Icon name="material-symbols:star" size="20" style="color: var(--theme-default);" />
-                          <Icon name="material-symbols:star" size="20" style="color: var(--theme-default);" />
-                          <Icon name="material-symbols:star" size="20" style="color: var(--theme-default);" />
-                          <Icon name="material-symbols:star" size="20" />
-                        </span>
-                        <hr class="hr-promotion">
-                        <span class="d-flex justify-content-between align-items-center price my-1">
-                          <p>price <span class="text-danger">$50</span></p>
-                          <b class="fw-bold me-2">$30</b>
-                        </span>
-                      </div>
-                    </figure>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div> -->
-
-          <!-- Popular Product -->
-          <!-- <div class="col-12">
-            <div class="w-100 card p-3">
-              <div class="head-product-today w-100 d-flex justify-content-between">
-                <h5 class="text-blue fw-bold max-576-none">{{ $t('top_product') }}</h5>
-                <h6 class="fw-bold min-576-none">{{ $t('top_product') }}</h6>
-                <span>{{ $t('see_all') }}</span>
-              </div>
-              <div class="row">
-                <div v-for="(item, index) in 4" :key="index"
-                  class="col-6 col-md-4 col-xl-3 p-10 box-product rounded-10">
-                  <figure class="p-10 box-shadow">
-                    <div class="img-card img-promotion w-100">
-                      <img width="80%"
-                        src="https://off.com.ph/_next/image?url=https%3A%2F%2Fedge.sitecorecloud.io%2Fscjohnsonana080-dart-production-40df%2Fmedia%2Fproject%2Fdart%2Foff%2Fphilippines%2Fhomepage%2Fcategory-images%2Foff_ph_4x3_720x540_category_card-overtime.png%3Fh%3D540%26iar%3D0%26w%3D720&w=3840&q=75"
-                        alt="">
-                    </div>
-                    <div class="txt py-2">
-                      <div class="d-flex justify-content-between align-items-center mb-2">
-                        <p class="d-block product-name">
-                          Milk
-                        </p>
-                      </div>
-                      <p class="pro-desc mb-2">Our expert guides will take you on a knowledge</p>
-                      <span class="list-star d-flex">
-                        <Icon name="material-symbols:star" size="20" style="color: var(--theme-default);" />
-                        <Icon name="material-symbols:star" size="20" style="color: var(--theme-default);" />
-                        <Icon name="material-symbols:star" size="20" style="color: var(--theme-default);" />
-                        <Icon name="material-symbols:star" size="20" style="color: var(--theme-default);" />
-                        <Icon name="material-symbols:star" size="20" />
-                      </span>
-                      <hr class="hr-promotion">
-                      <span class="d-flex justify-content-between align-items-center price my-1">
-                        <p>price <span class="text-danger">$50</span></p>
-                        <b class="fw-bold me-2">$30</b>
-                      </span>
-                    </div>
-                  </figure>
-                </div>
-              </div>
-            </div>
-          </div> -->
 
           <!-- Top Category-->
           <div class="container w-100 col-12 pb-5">
@@ -266,7 +180,7 @@
   </div>
 </template>
 <script setup>
-import { ref } from "vue";
+import { ref,onMounted } from "vue";
 import ProductModal from "@/components/ProductModal.vue";
 
 const productPromotion = ref([
@@ -405,39 +319,50 @@ const showProductDetails = (product) => {
   productModal.value.openModal();
 };
 
-const getPromotionProduct = async () => {
+const products = ref([]); // Reactive variable to store products
 
-await fetch("https://efree.cheakautomate.online/gateway/CATEGORY/api/v1/categories", {
-    method: 'GET', // Specify the method as GET
-    headers: {
-        'Content-Type': 'application/json',
-        Authorization: "",
-    }
-})
-    .then(response => {
+const getAllProduct = async () => {
+    try {
+        const response = await fetch("https://efree.cheakautomate.online/gateway/PRODUCT/api/v1/products/paginate?page=1&size=3&sortBy=createdAt&direction=desc", {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: "", // Ensure this is properly set if required
+            }
+        });
+
         if (!response.ok) {
-            throw new Error('Network response was not ok ' + response.statusText);
+            throw new Error(`HTTP error! Status: ${response.status}`);
         }
-        return response.json(); // Parse the JSON from the response
-    })
-    .then(data => {
-        console.log("data", data);
-        categoryList.value = data.payload;
-    })
-    .catch(error => {
-        console.error('There has been a problem with your fetch operation:', error);
-    })
 
-}
+        const data = await response.json();
+        console.log("Fetched Products:", data);
 
-useSeoMeta({
-  title: "E-Free",
-  ogTitle: "E-Free",
-  ogImage: "/e-free-logo.png",
-  twitterCard: "/e-free-logo.png",
-  description: "ផលិតផលល្អ លឿន រហ័ស ទាន់ចិត្ត",
-  ogDescription: "ផលិតផលល្អ លឿន រហ័ស ទាន់ចិត្ត",
-});
+        // Store products in reactive state
+        products.value = data.payload.content; 
+
+    } catch (error) {
+        console.error("Fetch error:", error);
+    }
+};
+
+// watchEffect(() => {
+//     if (products.value) {
+//         useSeoMeta({
+//             title: "E-Free",
+//             ogTitle: "E-Free",
+//             ogImage: "/e-free-logo.png",
+//             twitterCard: "/e-free-logo.png",
+//             description: "ផលិតផលល្អ លឿន រហ័ស ទាន់ចិត្ត",
+//             ogDescription: "ផលិតផលល្អ លឿន រហ័ស ទាន់ចិត្ត",
+//         });
+//     }
+// });
+
+
+onMounted(() => {
+  getAllProduct();
+})
 
 
 </script>
@@ -686,6 +611,7 @@ html .dark .head-product-today span:hover {
 
 .img-card {
   border-radius: 10px;
+  text-align: center;
 }
 
 .rounded-10 {
